@@ -477,6 +477,60 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between;
   margin-bottom:10px}
 
+/* ── PACIENTE 360° ──────────────────────── */
+.pac-list{display:flex;flex-direction:column;gap:5px;max-height:320px;overflow-y:auto;margin-top:10px}
+.pac-li{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:var(--rads);
+  cursor:pointer;transition:all .15s;border:1px solid transparent;background:var(--li)}
+.pac-li:hover{background:var(--blue-ll);border-color:var(--bdr);transform:translateX(2px)}
+.pac-li.sel{background:var(--blue-ll);border-color:var(--blue-m);box-shadow:0 0 0 2px rgba(0,48,135,.08)}
+.pac-av{width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+.pac-av-lg{width:56px;height:56px;border-radius:16px;font-size:20px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pac-hdr{background:linear-gradient(135deg,#001e5e 0%,var(--blue) 100%);
+  border-radius:var(--rad);padding:20px 22px;margin-bottom:16px;color:#fff;
+  display:flex;align-items:center;gap:16px;box-shadow:var(--sh-hover)}
+.pac-hdr-info{flex:1;min-width:0}
+.pac-hdr-name{font-size:19px;font-weight:800;line-height:1.2;letter-spacing:-.02em}
+.pac-hdr-sub{font-size:12px;opacity:.6;margin-top:5px;display:flex;gap:14px;flex-wrap:wrap}
+.pac-hdr-sub span{display:flex;align-items:center;gap:4px}
+.pac-stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.pac-sbox{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rads);
+  padding:14px 16px;box-shadow:var(--sh);text-align:center}
+.pac-sn{font-size:26px;font-weight:800;line-height:1;color:var(--blue);letter-spacing:-.02em}
+.pac-sl{font-size:11px;color:var(--mu);margin-top:4px;font-weight:500}
+.pac-sec{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.pac-sec-hdr{padding:11px 16px;border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;background:var(--li);
+  transition:background .15s}
+.pac-sec-hdr:hover{background:var(--blue-ll)}
+.pac-sec-hdr h3{font-size:13px;font-weight:700;flex:1;color:var(--tx2)}
+.pac-sec-body{padding:14px 16px}
+.pac-empty{font-size:13px;color:var(--mu);font-style:italic;padding:4px 0}
+.pac-incap-total{display:inline-flex;align-items:center;gap:6px;background:var(--blue-l);
+  color:var(--blue);padding:5px 14px;border-radius:12px;font-size:12px;font-weight:700;margin-bottom:10px}
+.pac-case-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--rads);
+  background:var(--li);margin-bottom:7px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.pac-case-row:hover{background:var(--blue-ll);border-color:var(--bdr);transform:translateX(2px)}
+
+/* ── Modal edición paciente ── */
+.pac-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;
+  display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .15s}
+.pac-modal{background:var(--card);border-radius:var(--rad);box-shadow:0 20px 60px rgba(0,0,0,.25);
+  width:100%;max-width:440px;overflow:hidden}
+.pac-modal-hdr{padding:16px 20px;background:linear-gradient(135deg,#001e5e,var(--blue));
+  color:#fff;display:flex;align-items:center;gap:10px}
+.pac-modal-hdr h3{font-size:15px;font-weight:700;flex:1;margin:0}
+.pac-modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.pac-modal-row label{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;
+  letter-spacing:.05em;display:block;margin-bottom:4px}
+.pac-modal-row input{width:100%;padding:9px 11px;border:1.5px solid var(--bdr);border-radius:var(--rads);
+  font-size:13.5px;font-family:inherit;color:var(--tx);background:var(--li);transition:border-color .15s}
+.pac-modal-row input:focus{outline:none;border-color:var(--blue);background:var(--card)}
+.pac-modal-foot{padding:12px 20px 16px;display:flex;gap:9px;justify-content:flex-end;
+  border-top:1px solid var(--bdr)}
+
 /* ── RESPONSIVE ──────────────────────── */
 @media(max-width:640px){
   .stats{grid-template-columns:repeat(2,1fr)}
@@ -552,6 +606,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="ntab" id="tab-rep" onclick="goTab('rep')">
       <i class="ti ti-report-medical"></i> Reporte de Caso
+    </div>
+    <div class="ntab" id="tab-pac" onclick="goTab('pac')">
+      <i class="ti ti-user-circle"></i> Paciente 360°
     </div>
     <div class="ntab" id="tab-cfg" onclick="goTab('cfg')">
       <i class="ti ti-settings"></i> Configuración
@@ -722,7 +779,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   <div style="background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)">
     <div style="font-size:11px;font-weight:800;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px"><i class="ti ti-category" style="color:var(--blue)"></i> Tipo de análisis</div>
     <select id="doc-analysis-type" class="rep-sel" style="flex:1;min-width:260px">
-      <option value="caso" selected>Caso laboral (Mesa/Comité) — extracción completa con línea del tiempo</option>
+      <option value="caso" selected="">Caso laboral (Mesa/Comité) — extracción completa con línea del tiempo</option>
       <option value="examen">Examen ocupacional — extracción de diagnósticos, conductas y seguimiento</option>
     </select>
   </div>
@@ -769,7 +826,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
           <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
           <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
         </div>
-        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple onchange="handleRepFiles(this.files)" style="display:none">
+        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple="" onchange="handleRepFiles(this.files)" style="display:none">
       </div>
       <div id="rep-files-list" style="margin-top:10px"></div>
     </div>
@@ -780,7 +837,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <label class="rep-opt-row">
           <span class="rep-opt-lbl">Tipo de reporte</span>
           <select id="rep-tipo" class="rep-sel">
-            <option value="breve" selected>Breve ejecutivo (recomendado)</option>
+            <option value="breve" selected="">Breve ejecutivo (recomendado)</option>
             <option value="detallado">Detallado clínico-laboral</option>
             <option value="empleador">Para empleador (sin datos sensibles)</option>
             <option value="arl">Para ARL / interconsulta</option>
@@ -789,7 +846,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <label class="rep-opt-row">
           <span class="rep-opt-lbl">Nivel de anonimización</span>
           <select id="rep-anon" class="rep-sel">
-            <option value="parcial" selected>Parcial — mantener nombre y cédula</option>
+            <option value="parcial" selected="">Parcial — mantener nombre y cédula</option>
             <option value="iniciales">Iniciales — solo iniciales del nombre</option>
             <option value="total">Total — sin datos identificables</option>
           </select>
@@ -797,20 +854,58 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <label class="rep-opt-row">
           <span class="rep-opt-lbl">Incluir recomendaciones</span>
           <select id="rep-recom" class="rep-sel">
-            <option value="si" selected>Sí — incluir conductas sugeridas</option>
+            <option value="si" selected="">Sí — incluir conductas sugeridas</option>
             <option value="no">No — solo síntesis del caso</option>
           </select>
         </label>
       </div>
-      <button class="btn-pri" style="width:100%;margin-top:10px" id="rep-gen-btn" onclick="generarReporte()" disabled>
+      <button class="btn-pri" style="width:100%;margin-top:10px" id="rep-gen-btn" onclick="generarReporte()" disabled="">
         <i class="ti ti-sparkles"></i> Generar reporte
       </button>
     </div>
   </div>
 
+  <!-- ── Vincular a paciente ── -->
+  <div class="rep-card" id="rep-link-panel" style="margin-bottom:14px">
+    <p class="rep-card-lbl"><i class="ti ti-user-check"></i> 3. Vincular a paciente del sistema <span style="font-weight:400;color:var(--mu)">(opcional — activa datos estructurados)</span></p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <select id="rep-patient-sel" class="rep-sel" style="flex:1;min-width:200px" onchange="onRepPatientChange()">
+        <option value="">— Sin vincular (solo documentos) —</option>
+      </select>
+      <button class="btn-sec" onclick="selectPacient(null);goTab('pac')" title="Ver perfil completo" id="rep-open-pac-btn" style="display:none">
+        <i class="ti ti-user-circle"></i> Ver 360°
+      </button>
+    </div>
+    <div id="rep-patient-info" style="margin-top:8px"></div>
+  </div>
+
   <div id="rep-status"></div>
   <div id="rep-result"></div>
 </div>
+
+<!-- ══════ PAGE — PACIENTE 360° ══════════ -->
+<div class="page" id="page-pac">
+  <p class="sec-title">Paciente 360°</p>
+  <p class="sec-sub">Historial clínico-laboral completo: casos · incapacidades · exámenes · línea del tiempo</p>
+
+  <div class="add-panel" style="margin-bottom:18px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px;position:relative">
+        <i class="ti ti-search" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--mu);font-size:15px;pointer-events:none"></i>
+        <input type="text" id="pac-srch" oninput="renderPac()"
+          placeholder="Buscar por nombre o cédula…"
+          style="width:100%;padding:9px 12px 9px 34px;border-radius:var(--rads);border:1px solid var(--bdr);
+                 background:var(--li);color:var(--tx);font-size:13px;font-family:inherit">
+      </div>
+      <button class="btn-sec" onclick="selectPacient(null)" title="Volver a la lista" id="pac-back-btn" style="display:none">
+        <i class="ti ti-arrow-left"></i> Lista
+      </button>
+    </div>
+    <div class="pac-list" id="pac-list"></div>
+  </div>
+
+  <div id="pac-detail"></div>
+</div><!-- /page-pac -->
 
 <!-- ══════ PAGE 4 — CONFIGURACIÓN ══════════ -->
 <div class="page" id="page-cfg">
@@ -840,7 +935,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
       <div class="cfg-row">
         <label>Modelo</label>
         <select id="cfg-groq-model">
-          <option value="llama-3.3-70b-versatile" selected>Llama 3.3 70B (recomendado)</option>
+          <option value="llama-3.3-70b-versatile" selected="">Llama 3.3 70B (recomendado)</option>
           <option value="llama-3.1-8b-instant">Llama 3.1 8B (más rápido)</option>
           <option value="gemma2-9b-it">Gemma 2 9B</option>
           <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
@@ -862,7 +957,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <label>Modelo Gemini</label>
         <div style="display:flex;gap:6px;align-items:center;flex:1">
           <select id="cfg-gemini-model" style="flex:1">
-            <option value="gemini-2.0-flash-lite" selected>Gemini 2.0 Flash Lite (recomendado)</option>
+            <option value="gemini-2.0-flash-lite" selected="">Gemini 2.0 Flash Lite (recomendado)</option>
             <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
             <option value="gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash Preview</option>
             <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
@@ -887,7 +982,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
         <label>Modelo Claude</label>
         <select id="cfg-model">
           <option value="claude-opus-4-5">Claude Opus 4.5 (máxima calidad)</option>
-          <option value="claude-sonnet-4-5" selected>Claude Sonnet 4.5 (recomendado)</option>
+          <option value="claude-sonnet-4-5" selected="">Claude Sonnet 4.5 (recomendado)</option>
           <option value="claude-haiku-4-5">Claude Haiku 4.5 (más rápido)</option>
         </select>
       </div>
@@ -962,7 +1057,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     <div class="cfg-title"><i class="ti ti-database"></i> Gestión de datos</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
       <button class="btn-sec" onclick="exportData()"><i class="ti ti-download"></i> Exportar JSON</button>
-      <button class="btn-sec" onclick="exportCSV()"><i class="ti ti-table-export"></i> Exportar CSV</button>
+      <button class="btn-sec" onclick="exportCSV()"><i class="ti ti-table-export"></i> CSV Exámenes</button>
+      <button class="btn-sec" onclick="exportIncapsCSV()"><i class="ti ti-clipboard-list"></i> CSV Incapacidades</button>
       <button class="btn-sec" onclick="document.getElementById('import-input').click()">
         <i class="ti ti-upload"></i> Importar JSON</button>
       <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(this)">
@@ -981,7 +1077,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <!-- Datos embebidos — no editar manualmente -->
-<script id="data-store" type="application/json">{"inc":{"cases":{"aragon":{"open":true,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"puentes":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"vera":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"herrera":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}}},"custom":[],"openCustom":{}},"exa":{"persons":[],"open":{}},"docs":[]}</script>
+<script id="data-store" type="application/json">{"inc":{"cases":{"aragon":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{},"incaps":[]},"puentes":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{},"incaps":[]},"vera":{"open":true,"tareasDone":{},"novedades":[{"fecha":"16/05/2026 11:13 p. m.","texto":"nueva incapacidad 25 de mayo del 2026","tipo":"medico"},{"fecha":"16/05/2026 11:10 p. m.","texto":"[Análisis IA] A continuación, se presentan los datos extraídos del documento con las etiquetas solicitadas:\n\n═══════ DATOS DE IDENTIFICACIÓN ★ ═══════\n- Nombre completo: VERA FORERO PABLO EMILIO\n- Número de cédula: 7,331,805\n- Edad / fecha de nacimiento: 61 años / 05-10-1964\n- EPS / Aseguradora: NUEVA EPS\n- Cargo / puesto: No especificado\n- Empresa / Contrato al que pertenece: No especificado\n\n═══════ DIAGNÓSTICOS ★ ═══════\n- Diagnóstico principal (con código CIE-10 si aparece): N40X - Hiperplasia de la próstata, M545 - Lumbago no especificado\n- Diagnóstico secundario: No especificado\n- Hallazgos clínicos r…"}],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{},"incaps":[]},"herrera":{"open":false,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{},"incaps":[]}},"custom":[],"openCustom":{}},"exa":{"persons":[],"open":{}},"docs":[],"patients":{"7331805":{"id":"7331805","ccDisplay":"CC 7.331.805","nombre":"Pablo Emilio Vera Forero","eps":"","empresa":"Contrato por obra","contrato":"FINALIZADO 31/01/2026","cargo":"","fechaNacimiento":null,"edad":null,"sexo":null,"seedId":"vera","createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z","_sources":{}},"17423854":{"id":"17423854","ccDisplay":"CC 17.423.854","nombre":"Luis Carlos Aragón Flores","eps":"","empresa":"Ecopetrol Rubiales","contrato":"Contrato 3048740","cargo":"","fechaNacimiento":null,"edad":null,"sexo":null,"seedId":"aragon","createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z","_sources":{}},"1077968308":{"id":"1077968308","ccDisplay":"CC 1.077.968.308","nombre":"July Katherine Herrera Acevedo","eps":"","empresa":"Ecopetrol Rubiales","contrato":"Operadora Instalaciones Superficie","cargo":"","fechaNacimiento":null,"edad":null,"sexo":null,"seedId":"herrera","createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z","_sources":{}},"1124824312":{"id":"1124824312","ccDisplay":"CC 1.124.824.312","nombre":"Óscar Hernán Puentes González","eps":"","empresa":"Ecopetrol Rubiales","contrato":"Operador Planta B · Campo Rubiales","cargo":"","fechaNacimiento":null,"edad":null,"sexo":null,"seedId":"puentes","createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z","_sources":{}}},"cases2":{"case_aragon":{"id":"case_aragon","patientId":"17423854","tipo":"comite","estado":"activo","seedId":"aragon","accentColor":"#D85A30","diagnosticoPrincipal":"Enfermedad gastrointestinal (origen común)","ui":{"open":false},"createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z"},"case_puentes":{"id":"case_puentes","patientId":"1124824312","tipo":"mesa","estado":"activo","seedId":"puentes","accentColor":"#BA7517","diagnosticoPrincipal":"Cirugía meniscal rodilla derecha (203 días acumulados)","ui":{"open":true},"createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z"},"case_vera":{"id":"case_vera","patientId":"7331805","tipo":"comite","estado":"activo","seedId":"vera","accentColor":"#A32D2D","diagnosticoPrincipal":"Post-incapacidad sin restricciones (05/05). Nueva incapacidad pendiente concepto","ui":{"open":true},"createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z"},"case_herrera":{"id":"case_herrera","patientId":"1077968308","tipo":"mesa","estado":"activo","seedId":"herrera","accentColor":"#185FA5","diagnosticoPrincipal":"Síndrome Túnel Carpiano bilateral G560 (359 días acumulados)","ui":{"open":true},"createdAt":"2026-05-17T15:41:40.030Z","updatedAt":"2026-05-17T15:41:40.030Z"}},"incapacities":[],"exams2":[],"tasks2":[{"id":"a1","caseId":"case_aragon","txt":"Revisar y emitir concepto sobre la nueva incapacidad recibida el 14/05/2026","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"a2","caseId":"case_aragon","txt":"Programar examen post-incapacidad si no hay alta de la EPS al 22/06/2026","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"a3","caseId":"case_aragon","txt":"Mantener seguimiento — 90 días previos con misma patología gastrointestinal","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"p1","caseId":"case_puentes","txt":"Verificar asistencia a cita de Ortopedia el 27/05/2026 y solicitar resultado","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"p2","caseId":"case_puentes","txt":"Gestionar espacio en Comité de Medicina Laboral (CML) — pendiente hace semanas","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"p3","caseId":"case_puentes","txt":"Definir reintegro o prórroga según resultado ortopédico del 27/05","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"v1","caseId":"case_vera","txt":"Emitir concepto médico sobre la nueva incapacidad recibida el 07/05/2026","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"v2","caseId":"case_vera","txt":"Articular con gerencia de proyecto (Juan Rueda) — situación contractual","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"v3","caseId":"case_vera","txt":"Determinar ruta legal/médica dado que el contrato por obra ya venció el 31/01/2026","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"h1","caseId":"case_herrera","txt":"Gestionar cita de control con Ortopedia — urgente, más de 6 semanas pendiente","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"h2","caseId":"case_herrera","txt":"Coordinar con Mesa Laboral ARL para prestaciones económicas y asistenciales","prio":"alta","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"h3","caseId":"case_herrera","txt":"Documentar el gap administrativo del 11 al 12/05/2026 en el expediente","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"},{"id":"h4","caseId":"case_herrera","txt":"Definir plan rehabilitador y concepto de reintegro tras valoración ortopédica","prio":"media","done":false,"doneAt":null,"source":"seed","createdAt":"2026-05-17T15:41:40.030Z"}],"timeline2":[{"id":"tl_mp9y0mda_8h6d2","patientId":"7331805","caseId":"case_vera","fecha":"16/05/2026 11:13 p. m.","tipo":"medico","texto":"nueva incapacidad 25 de mayo del 2026","source":"manual","sourceDocId":null,"createdAt":"2026-05-17T15:41:40.030Z"},{"id":"tl_mp9y0mda_kyb72","patientId":"7331805","caseId":"case_vera","fecha":"16/05/2026 11:10 p. m.","tipo":"novedad","texto":"[Análisis IA] A continuación, se presentan los datos extraídos del documento con las etiquetas solicitadas:\n\n═══════ DATOS DE IDENTIFICACIÓN ★ ═══════\n- Nombre completo: VERA FORERO PABLO EMILIO\n- Número de cédula: 7,331,805\n- Edad / fecha de nacimiento: 61 años / 05-10-1964\n- EPS / Aseguradora: NUEVA EPS\n- Cargo / puesto: No especificado\n- Empresa / Contrato al que pertenece: No especificado\n\n═══════ DIAGNÓSTICOS ★ ═══════\n- Diagnóstico principal (con código CIE-10 si aparece): N40X - Hiperplasia de la próstata, M545 - Lumbago no especificado\n- Diagnóstico secundario: No especificado\n- Hallazgos clínicos r…","source":"ai","sourceDocId":null,"createdAt":"2026-05-17T15:41:40.030Z"}],"documents":[],"aiAnalyses":[],"reports2":[],"schemaVersion":2}</script>
 
 <script>
 'use strict';
@@ -1100,8 +1196,9 @@ let DB = {
 };
 let IF_FILTRO = 'todos';
 let EF_FILTRO = 'todos';
-let _taskEdit = null; // {cid, tid, isCustom}
-let DOC_RESULTS = {};     // almacena resultados de análisis por id
+let _taskEdit = null; // {caseId, taskId} — v2
+let DOC_RESULTS = {};     // almacena resultados de análisis por id (texto completo)
+let DOC_JSON    = {};     // almacena JSON estructurado parseado por id
 let _docLocalText = {};   // texto extraído localmente antes de enviar a la API
 let lockTimer = null;
 let pinBuf = '';
@@ -1450,38 +1547,7 @@ function getIncapStats(incaps){
   return {count:incaps.length, totalDias:total, ultVencDate:ultFin, ultVencStr:_fmtDMY(ultFin)};
 }
 
-function addIncap(cid, isCustom){
-  const root = isCustom
-    ? DB.inc.custom.find(x=>x.id===cid)
-    : DB.inc.cases[cid];
-  if(!root) return;
-  if(!root.incaps) root.incaps=[];
-  const ini=document.getElementById(`incap-ini-${cid}`)?.value;
-  const fin=document.getElementById(`incap-fin-${cid}`)?.value;
-  const dxEl=document.getElementById(`incap-dx-${cid}`);
-  const dx=dxEl?dxEl.value.trim():'';
-  const diasManual=document.getElementById(`incap-dias-${cid}`)?.value;
-  if(!ini || !fin){ alert('Ingresa fecha de inicio y fin'); return; }
-  const di=_parseDMY(ini), df=_parseDMY(fin);
-  if(!di || !df){ alert('Formato de fecha inválido'); return; }
-  if(df<di){ alert('La fecha de fin no puede ser anterior a la de inicio'); return; }
-  let dias=Number(diasManual)||_daysBetween(di,df);
-  root.incaps.push({
-    id:'ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
-    inicio:_fmtDMY(di), fin:_fmtDMY(df), dias, dx
-  });
-  dbSave();
-  renderInc();
-}
-function delIncap(cid, icId, isCustom){
-  const root = isCustom
-    ? DB.inc.custom.find(x=>x.id===cid)
-    : DB.inc.cases[cid];
-  if(!root||!root.incaps) return;
-  root.incaps = root.incaps.filter(x=>x.id!==icId);
-  dbSave();
-  renderInc();
-}
+/* addIncap / delIncap eliminadas — sustituidas por v2AddIncap / v2DelIncap (Fase 2) */
 
 /* ════════════════════════════════════════════
    MODELO v2 — PACIENTE COMO ENTIDAD CENTRAL
@@ -1509,8 +1575,10 @@ function getPatientCases(patientId){
   return Object.values(DB.cases2).filter(c=>c.patientId===patientId);
 }
 function getOrCreatePatient(data){
+  // data: { cc, nombre, eps, empresa, contrato, cargo, fechaNacimiento, edad, sexo }
   const k = normCC(data && data.cc);
   if(!k){
+    // Sin cédula no podemos indexar — generamos un id sintético
     const synth = 'x_'+newId('cc');
     DB.patients[synth] = {
       id: synth, ccDisplay: data?.cc||'(sin cédula)',
@@ -1532,6 +1600,7 @@ function getOrCreatePatient(data){
       createdAt: isoNow(), updatedAt: isoNow(), _sources:{}
     };
   } else {
+    // Merge no-destructivo: solo rellena campos vacíos
     const p = DB.patients[k];
     ['nombre','eps','empresa','contrato','cargo','fechaNacimiento','edad','sexo'].forEach(f=>{
       if(!p[f] && data && data[f]) p[f] = data[f];
@@ -1546,10 +1615,12 @@ function getCaseStatsV2(caseId){
   return getIncapStats(incs);
 }
 
+/* ─── Migración v1 → v2 (idempotente) ─── */
 function migrate_v1_to_v2(){
   if(DB.schemaVersion && DB.schemaVersion>=2 && Object.keys(DB.patients).length>0){
     return {migrated:false, reason:'already v2'};
   }
+  // 1. Backup del estado actual (en caso de rollback manual)
   try{
     const backupKey = 'ws_medico_v4_backup_v1';
     if(!localStorage.getItem(backupKey)){
@@ -1577,6 +1648,7 @@ function migrate_v1_to_v2(){
     before.novedades += (c.actas||[]).length;
   });
 
+  // 2. Semillar pacientes y casos desde INC_CASES (pre-cargados)
   if(typeof INC_CASES!=='undefined'){
     INC_CASES.forEach(c=>{
       const p = getOrCreatePatient({
@@ -1592,6 +1664,7 @@ function migrate_v1_to_v2(){
           ui:{open:false}, createdAt: isoNow(), updatedAt: isoNow()
         };
       }
+      // Tareas seed
       (c.tareas||[]).forEach(t=>{
         if(!DB.tasks2.some(x=>x.id===t.id)){
           DB.tasks2.push({
@@ -1603,6 +1676,7 @@ function migrate_v1_to_v2(){
     });
   }
 
+  // 3. Estado de DB.inc.cases (tareasDone, novedades, incaps, estado, tareasExtra)
   Object.entries(DB.inc?.cases||{}).forEach(([oid, cs])=>{
     const caseId = 'case_'+oid;
     if(DB.cases2[caseId]){
@@ -1610,10 +1684,12 @@ function migrate_v1_to_v2(){
       DB.cases2[caseId].ui = { open: !!cs.open };
     }
     const patientId = DB.cases2[caseId]?.patientId;
+    // tareasDone
     Object.entries(cs.tareasDone||{}).forEach(([tid, v])=>{
       const t = DB.tasks2.find(x=>x.id===tid && x.caseId===caseId);
       if(t){ t.done = !!v; if(v) t.doneAt = isoNow(); }
     });
+    // tareasExtra
     (cs.tareasExtra||[]).forEach(t=>{
       if(!DB.tasks2.some(x=>x.id===t.id)){
         DB.tasks2.push({
@@ -1623,6 +1699,7 @@ function migrate_v1_to_v2(){
         });
       }
     });
+    // novedades → timeline2
     (cs.novedades||[]).forEach(n=>{
       const isAI = String(n.texto||'').startsWith('[Análisis IA]');
       DB.timeline2.push({
@@ -1634,6 +1711,7 @@ function migrate_v1_to_v2(){
         sourceDocId: null, createdAt: isoNow()
       });
     });
+    // incaps → incapacities
     (cs.incaps||[]).forEach(ic=>{
       DB.incapacities.push({
         id: ic.id || newId('ic'), patientId, caseId,
@@ -1644,6 +1722,7 @@ function migrate_v1_to_v2(){
     });
   });
 
+  // 4. DB.inc.custom → patients + cases nuevos
   (DB.inc?.custom||[]).forEach(c=>{
     const p = getOrCreatePatient({
       cc:c.cc, nombre:c.nombre, empresa:c.empresa,
@@ -1690,6 +1769,7 @@ function migrate_v1_to_v2(){
     });
   });
 
+  // 5. DB.exa.persons → patients + exams2
   (DB.exa?.persons||[]).forEach(p=>{
     const pat = getOrCreatePatient({
       cc: p.cc, nombre: p.nombre, contrato: p.contrato, cargo: p.cargo,
@@ -1703,6 +1783,7 @@ function migrate_v1_to_v2(){
         createdAt: p.ingreso ? isoNow() : isoNow()
       });
     }
+    // Novedades de la persona → timeline2
     (p.novedades||[]).forEach(n=>{
       DB.timeline2.push({
         id: newId('tl'), patientId: pat.id, caseId: null,
@@ -1713,6 +1794,9 @@ function migrate_v1_to_v2(){
       });
     });
   });
+
+  // 6. Migrar configuración suelta de localStorage a DB.config (opcional, no destructivo)
+  // No tocamos las claves originales para mantener compatibilidad con código v1.
 
   DB.schemaVersion = SCHEMA_VERSION;
 
@@ -1729,6 +1813,7 @@ function migrate_v1_to_v2(){
   return {migrated:true, before, after};
 }
 
+/* ─── Helpers de inspección (útiles en DevTools y para Fase 2) ─── */
 function _dbStats(){
   return {
     schemaVersion: DB.schemaVersion,
@@ -1748,75 +1833,18 @@ function _dbStats(){
   };
 }
 
-function renderIncapList(cid, incaps, isCustom){
-  incaps = incaps || [];
-  const st = getIncapStats(incaps);
-  const rows = incaps.length === 0
-    ? `<p style="margin:6px 0 8px;font-size:12px;color:var(--mu);font-style:italic">Sin incapacidades registradas. Agrega la primera abajo.</p>`
-    : `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px">
-        <thead>
-          <tr style="background:var(--li);color:var(--mu);text-transform:uppercase;font-size:10px;letter-spacing:.04em">
-            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Inicio</th>
-            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Fin</th>
-            <th style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr)">Días</th>
-            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Dx</th>
-            <th style="padding:6px 4px;border-bottom:1px solid var(--bdr)"></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${incaps.slice().sort((a,b)=>{
-            const da=_parseDMY(a.inicio),db=_parseDMY(b.inicio);
-            return (db?+db:0)-(da?+da:0);
-          }).map(it=>`
-            <tr>
-              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)">${escHtml(it.inicio)}</td>
-              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)"><strong>${escHtml(it.fin)}</strong></td>
-              <td style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr);font-weight:700;color:var(--blue)">${it.dias}</td>
-              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--mu);font-size:11.5px">${escHtml(it.dx||'—')}</td>
-              <td style="padding:6px 4px;border-bottom:1px solid var(--bdr);text-align:right">
-                <button onclick="delIncap('${cid}','${it.id}',${isCustom?'true':'false'})" title="Quitar"
-                  style="background:none;border:0;color:var(--err-tx);cursor:pointer;padding:2px 4px"><i class="ti ti-trash"></i></button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>`;
-
-  return `
-    <div class="incaps-block" style="background:var(--li);border:1px solid var(--bdr);border-radius:var(--rads);padding:12px;margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-        <p style="margin:0;font-size:12px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px">
-          <i class="ti ti-clipboard-list" style="font-size:14px;color:var(--blue)"></i> Consolidado de incapacidades
-        </p>
-        <div style="display:flex;gap:8px;font-size:11.5px;flex-wrap:wrap">
-          <span style="background:#dce8f8;color:#003087;padding:4px 10px;border-radius:12px;font-weight:700">
-            ${st.totalDias} día${st.totalDias===1?'':'s'} acumulado${st.totalDias===1?'':'s'}
-          </span>
-          <span style="background:#fef3c7;color:#7c4008;padding:4px 10px;border-radius:12px;font-weight:700">
-            Vence: ${escHtml(st.ultVencStr)}
-          </span>
-        </div>
-      </div>
-      ${rows}
-      <div style="display:grid;grid-template-columns:1fr 1fr 80px 2fr auto;gap:6px;margin-top:8px">
-        <input type="date" id="incap-ini-${cid}" title="Inicio" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
-        <input type="date" id="incap-fin-${cid}" title="Fin" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
-        <input type="number" id="incap-dias-${cid}" placeholder="Días" min="1" title="Días (auto si está vacío)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
-        <input type="text" id="incap-dx-${cid}" placeholder="Diagnóstico / CIE-10 (opcional)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
-        <button class="btn-sm" onclick="addIncap('${cid}',${isCustom?'true':'false'})" style="white-space:nowrap"><i class="ti ti-plus"></i> Agregar</button>
-      </div>
-    </div>
-  `;
-}
+/* renderIncapList eliminada — sustituida por renderIncapListV2 (Fase 2) */
 
 /* ════════════════════════════════════════════
    NAVEGACIÓN
 ════════════════════════════════════════════ */
 function goTab(t){
-  ['inc','exa','doc','rep','cfg'].forEach(id=>{
+  ['inc','exa','doc','rep','pac','cfg'].forEach(id=>{
     document.getElementById('tab-'+id).classList.toggle('on',id===t);
     document.getElementById('page-'+id).classList.toggle('on',id===t);
   });
+  if(t==='pac') renderPac();
+  if(t==='rep') renderRepPatientOpts();
 }
 
 /* ════════════════════════════════════════════
@@ -1853,19 +1881,38 @@ function diasPara(s){
 }
 
 /* ════════════════════════════════════════════
-   MESA / COMITÉ LABORAL — PRE-CARGADOS
+   MESA / COMITÉ LABORAL — v2 (RENDER UNIFICADO)
+   Fuente de verdad: DB.cases2 · DB.tasks2 · DB.timeline2 · DB.incapacities
 ════════════════════════════════════════════ */
+
+/* ─── Helpers v2 ─── */
+function c2Tasks(caseId){ return DB.tasks2.filter(t=>t.caseId===caseId); }
+function c2TL(caseId){    return DB.timeline2.filter(e=>e.caseId===caseId); }
+function c2Incaps(caseId){
+  /* devuelve incapacidades con shim inicio/fin para compatibilidad con getIncapStats */
+  return DB.incapacities.filter(i=>i.caseId===caseId)
+    .map(i=>({...i, inicio:i.inicio||i.fechaInicio, fin:i.fin||i.fechaFin}));
+}
+function c2Seed(caseId){
+  const cs=DB.cases2[caseId]; if(!cs||!cs.seedId) return null;
+  return (typeof INC_CASES!=='undefined'?INC_CASES:[]).find(c=>c.id===cs.seedId)||null;
+}
+function c2Patient(caseId){
+  const cs=DB.cases2[caseId]; if(!cs) return null;
+  return DB.patients[cs.patientId]||null;
+}
+
+/* ─── Stats ─── */
 function renderIncStats(){
-  const cs=DB.inc.cases;
-  let done=0,tot=0,urg=0,nov=0,activos=0;
-  INC_CASES.forEach(c=>{
-    c.tareas.forEach(t=>{ tot++; if(cs[c.id]?.tareasDone[t.id])done++; else if(t.prio==='alta')urg++; });
-    nov+=(cs[c.id]?.novedades?.length||0);
-    if(cs[c.id]?.estado==='activo') activos++;
+  const allCases=Object.values(DB.cases2);
+  let done=0,tot=0,urg=0,events=0,activos=0;
+  allCases.forEach(cs=>{
+    c2Tasks(cs.id).forEach(t=>{ tot++; if(t.done)done++; else if(t.prio==='alta')urg++; });
+    events+=c2TL(cs.id).length;
+    if((cs.estado||'activo')==='activo') activos++;
   });
-  DB.inc.custom.forEach(c=>{ nov+=(c.actas?.length||0); if((c.estado||'activo')==='activo') activos++; });
-  const total=INC_CASES.length+DB.inc.custom.length;
-  const pct = tot ? Math.round(done/tot*100) : 0;
+  const total=allCases.length;
+  const pct=tot?Math.round(done/tot*100):0;
   document.getElementById('inc-stats').innerHTML=`
     <div class="sbox">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -1899,381 +1946,410 @@ function renderIncStats(){
         <span class="sl" style="margin:0">Eventos en línea del tiempo</span>
         <i class="ti ti-timeline" style="font-size:18px;color:var(--info-tx);opacity:.55"></i>
       </div>
-      <div class="sn" style="color:var(--info-tx)">${nov}</div>
+      <div class="sn" style="color:var(--info-tx)">${events}</div>
       <div style="font-size:11px;color:var(--mu);margin-top:4px">Registros de seguimiento</div>
     </div>`;
 }
 
-function getIncFiltrados(){
-  const q=((document.getElementById('inc-srch')||{value:''}).value).toLowerCase();
-  // Pre-cargados
-  let pre=INC_CASES.filter(c=>{
-    const mf=IF_FILTRO==='todos'?true:IF_FILTRO==='comite'?c.tipo==='comite':
-             IF_FILTRO==='mesa'?c.tipo==='mesa':
-             IF_FILTRO==='activo'?DB.inc.cases[c.id]?.estado==='activo':true;
-    const mq=!q||c.nombre.toLowerCase().includes(q)||c.cc.toLowerCase().includes(q);
-    return mf&&mq;
-  });
-  // Custom
-  let cust=DB.inc.custom.filter(c=>{
-    const mf=IF_FILTRO==='todos'?true:IF_FILTRO==='comite'?c.tipo==='comite':
-             IF_FILTRO==='mesa'?c.tipo==='mesa':
-             IF_FILTRO==='activo'?c.estado==='activo':true;
-    const mq=!q||c.nombre.toLowerCase().includes(q)||(c.cc||'').includes(q)||
-              (c.radicado||'').toLowerCase().includes(q);
-    return mf&&mq;
-  });
-  return {pre,cust};
-}
-
+/* ─── Lista unificada ─── */
 function renderInc(){
   renderIncStats();
   const wrap=document.getElementById('inc-list');
-  const {pre,cust}=getIncFiltrados();
-  if(!pre.length&&!cust.length){
+  const q=((document.getElementById('inc-srch')||{value:''}).value).toLowerCase();
+  let cases=Object.values(DB.cases2).filter(cs=>{
+    const pat=c2Patient(cs.id);
+    const nombre=(pat?.nombre||'').toLowerCase();
+    const cc=(pat?.ccDisplay||'').toLowerCase();
+    const mf=IF_FILTRO==='todos'?true:
+              IF_FILTRO==='comite'?(cs.tipo==='comite'):
+              IF_FILTRO==='mesa'?(cs.tipo==='mesa'):
+              IF_FILTRO==='activo'?((cs.estado||'activo')==='activo'):true;
+    const mq=!q||nombre.includes(q)||cc.includes(q)||(cs.radicado||'').toLowerCase().includes(q);
+    return mf&&mq;
+  });
+  /* activos primero, luego createdAt desc */
+  cases.sort((a,b)=>{
+    const ae=(a.estado||'activo')==='activo'?0:1, be=(b.estado||'activo')==='activo'?0:1;
+    if(ae!==be) return ae-be;
+    return (b.createdAt||'').localeCompare(a.createdAt||'');
+  });
+  if(!cases.length){
     wrap.innerHTML=`<div class="empty"><i class="ti ti-scale"></i>${
-      INC_CASES.length+DB.inc.custom.length===0
-        ?'No hay casos registrados.'
-        :'Sin resultados para este filtro.'}</div>`;
+      Object.keys(DB.cases2).length===0?'No hay casos registrados.':'Sin resultados para este filtro.'
+    }</div>`;
     return;
   }
   wrap.innerHTML='';
-  // Renderizar pre-cargados
-  pre.forEach(c=>{
-    const cs=DB.inc.cases[c.id];
-    const done=c.tareas.filter(t=>cs.tareasDone[t.id]).length;
-    const pct=Math.round(done/c.tareas.length*100);
-    // Consolidado calculado a partir del registro de incapacidades del caso
-    const stIncap = getIncapStats(cs.incaps);
-    const vencMostrado = stIncap.count ? stIncap.ultVencStr : c.venc;
-    const diasMostrado = stIncap.count ? String(stIncap.totalDias) : c.diasAcc;
+  cases.forEach(cs=>{
+    const pat=c2Patient(cs.id);
+    const seed=c2Seed(cs.id);
+    const incaps=c2Incaps(cs.id);
+    const stIncap=getIncapStats(incaps);
+    const tasks=c2Tasks(cs.id);
+    const done=tasks.filter(t=>t.done).length, tot=tasks.length;
+    const vencMostrado=stIncap.count?stIncap.ultVencStr:(seed?.venc||cs.venc||'—');
+    const diasMostrado=stIncap.count?String(stIncap.totalDias):(seed?.diasAcc||cs.diasAcc||'—');
+    const accentColor=cs.accentColor||seed?.accentColor||'var(--blue)';
+    const nombre=pat?.nombre||seed?.nombre||cs.id;
+    const cc=pat?.ccDisplay||seed?.cc||'';
+    const open=!!(cs.ui?.open);
     const div=document.createElement('div'); div.className='card';
     div.innerHTML=`
-<div class="card-hdr" onclick="tglInc('${c.id}')">
-  <div class="accent" style="background:${c.accentColor}"></div>
+<div class="card-hdr" onclick="v2TglCase('${cs.id}')">
+  <div class="accent" style="background:${accentColor}"></div>
   <div class="card-info">
-    <p class="card-name">${escHtml(c.nombre)}</p>
-    <p class="card-meta">${escHtml(c.cc)} · Vence: <strong>${escHtml(vencMostrado)}</strong>${stIncap.count?` · <strong style="color:var(--blue)">${stIncap.totalDias} días</strong>`:''}</p>
+    <p class="card-name">${escHtml(nombre)}</p>
+    <p class="card-meta">${escHtml(cc)} · Vence: <strong>${escHtml(vencMostrado)}</strong>${stIncap.count?` · <strong style="color:var(--blue)">${stIncap.totalDias} días</strong>`:''}</p>
   </div>
   <div class="card-right">
-    <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
-    <span class="badge ${INC_ESTCLR[cs.estado]||'b-gray'}">${escHtml(cs.estado)}</span>
-    <span class="chip">${done}/${c.tareas.length}</span>
-    <i class="ti ti-chevron-down chv ${cs.open?'open':''}"></i>
-  </div>
-</div>
-${cs.open?`<div class="card-body">
-  <div class="g2" style="margin-bottom:12px">
-    <div class="di"><p class="dil">Contrato</p><p class="div2">${escHtml(c.contrato)}</p></div>
-    <div class="di"><p class="dil">Vencimiento ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2" style="color:${c.accentColor}">${escHtml(vencMostrado)}</p></div>
-    <div class="di"><p class="dil">Días acumulados ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2">${escHtml(diasMostrado)}</p></div>
-    <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(c.empresa)}</p></div>
-    <div class="di full"><p class="dil">Diagnóstico</p><p class="div2" style="font-size:12px">${escHtml(c.diagnostico)}</p></div>
-  </div>
-  ${renderIncapList(c.id, cs.incaps, false)}
-  <div class="p-row">
-    <p class="p-label">Tareas · ${done}/${c.tareas.length + (cs.tareasExtra||[]).length - (cs.tareasDeleted||[]).length} completadas</p>
-    <select class="csel" onchange="setIncEstado('${c.id}',this.value)">
-      ${INC_ESTADOS.map(e=>`<option value="${e}"${cs.estado===e?' selected':''}>${escHtml(e)}</option>`).join('')}
-    </select>
-  </div>
-  <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
-  ${renderTareasInc(c, cs)}
-  <div class="divh"></div>
-  <div class="tl-hdr">
-    <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
-    <span style="font-size:11px;color:var(--mu)">${cs.novedades.length} evento${cs.novedades.length!==1?'s':''}</span>
-  </div>
-  <div class="tl-wrap">${tlRender(cs.novedades,`(i)=>delIncNov('${c.id}',i)`)}</div>
-  <div class="tl-add">
-    <div class="tl-add-row">
-      <select class="tl-tipo-sel" id="inc-tipo-${c.id}">
-        ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}"><i class="ti ${v.icon}"></i> ${v.label}</option>`).join('')}
-      </select>
-      <button class="btn-sm" onclick="addIncNov('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
-    </div>
-    <textarea id="inc-nv-${c.id}" placeholder="Describe el evento: sesión, resultado médico, decisión, alerta de vencimiento…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
-  </div>
-</div>`:''}`;
-    wrap.appendChild(div);
-  });
-  // Renderizar custom
-  if(cust.length){
-    const sep=document.createElement('div');
-    sep.innerHTML=`<p style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 10px;display:flex;align-items:center;gap:6px"><i class="ti ti-plus-circle" style="font-size:14px"></i> Casos adicionales registrados</p>`;
-    wrap.appendChild(sep);
-    cust.forEach(c=>{
-      const open=!!DB.inc.openCustom[c.id];
-      const stCustom = getIncapStats(c.incaps);
-      const div=document.createElement('div'); div.className='card';
-      div.style.borderLeft=`4px solid ${c.tipo==='mesa'?'#7c3aed':'var(--blue)'}`;
-      div.innerHTML=`
-<div class="card-hdr" onclick="tglCasoCustom('${c.id}')">
-  <div class="card-info">
-    <p class="card-name">${escHtml(c.nombre)}</p>
-    <p class="card-meta">CC ${escHtml(c.cc)}${c.empresa?' · '+escHtml(c.empresa):''}${stCustom.count?` · Vence: <strong>${escHtml(stCustom.ultVencStr)}</strong> · <strong style="color:var(--blue)">${stCustom.totalDias} días</strong>`:''}${c.radicado?` · <span style="font-family:monospace;font-size:10px;background:var(--li);padding:1px 5px;border-radius:3px">${escHtml(c.radicado)}</span>`:''}</p>
-  </div>
-  <div class="card-right">
-    <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
-    <span class="badge ${INC_ESTCLR[c.estado]||'b-gray'}">${escHtml(c.estado||'activo')}</span>
-    ${c.actas&&c.actas.length?`<span class="chip"><i class="ti ti-notes" style="font-size:10px"></i> ${c.actas.length}</span>`:''}
+    <span class="badge ${cs.tipo==='mesa'?'b-mesa':'b-per'}">${cs.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
+    <span class="badge ${INC_ESTCLR[cs.estado]||'b-gray'}">${escHtml(cs.estado||'activo')}</span>
+    <span class="chip">${done}/${tot}</span>
     <i class="ti ti-chevron-down chv ${open?'open':''}"></i>
   </div>
 </div>
-${open?renderCasoCustomBody(c):''}`;
-      wrap.appendChild(div);
-    });
-  }
+${open?renderCaseBodyV2(cs,pat,seed,incaps,tasks,c2TL(cs.id)):''}`;
+    wrap.appendChild(div);
+  });
 }
 
-function renderCasoCustomBody(c){
-  const dias=diasPara(c.sesion);
+/* ─── Cuerpo unificado de tarjeta ─── */
+function renderCaseBodyV2(cs, pat, seed, incaps, tasks, tl){
+  const stIncap=getIncapStats(incaps);
+  const vencMostrado=stIncap.count?stIncap.ultVencStr:(seed?.venc||cs.venc||'—');
+  const diasMostrado=stIncap.count?String(stIncap.totalDias):(seed?.diasAcc||cs.diasAcc||'—');
+  const accentColor=cs.accentColor||seed?.accentColor||'var(--blue)';
+  const diagnostico=cs.diagnosticoPrincipal||seed?.diagnostico||cs.diagnostico||'—';
+  const empresa=pat?.empresa||seed?.empresa||cs.empresa||'—';
+  const contrato=pat?.contrato||seed?.contrato||cs.contrato||'—';
+  /* Alerta de sesión próxima (sólo casos sin seed) */
   let sesionBadge='';
-  if(c.sesion){
-    if(dias===null) sesionBadge='';
-    else if(dias<0) sesionBadge=`<div style="background:var(--err-bg);border:1px solid var(--err-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--err-tx)"><i class="ti ti-calendar-x"></i> Sesión vencida: ${c.sesion} (hace ${Math.abs(dias)} días)</div>`;
-    else if(dias<=5) sesionBadge=`<div style="background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--warn-tx)"><i class="ti ti-calendar-clock"></i> Próxima sesión: ${c.sesion} — ${dias===0?'¡Hoy!':dias===1?'Mañana':'En '+dias+' días'}</div>`;
-    else sesionBadge=`<div style="background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--info-tx)"><i class="ti ti-calendar-check"></i> Próxima sesión: ${c.sesion} — En ${dias} días</div>`;
+  if(!seed && cs.sesion){
+    const d=diasPara(cs.sesion);
+    if(d!==null){
+      if(d<0)      sesionBadge=`<div style="background:var(--err-bg);border:1px solid var(--err-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--err-tx)"><i class="ti ti-calendar-x"></i> Sesión vencida: ${escHtml(cs.sesion)} (hace ${Math.abs(d)} días)</div>`;
+      else if(d<=5) sesionBadge=`<div style="background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--warn-tx)"><i class="ti ti-calendar-clock"></i> Próxima sesión: ${escHtml(cs.sesion)} — ${d===0?'¡Hoy!':d===1?'Mañana':'En '+d+' días'}</div>`;
+      else          sesionBadge=`<div style="background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--info-tx)"><i class="ti ti-calendar-check"></i> Próxima sesión: ${escHtml(cs.sesion)} — En ${d} días</div>`;
+    }
   }
+  /* Campos extras para casos sin seed */
+  let extraFields='';
+  if(!seed){
+    const ef=[];
+    if(cs.cargo)   ef.push(`<div class="di"><p class="dil">Cargo</p><p class="div2">${escHtml(cs.cargo)}</p></div>`);
+    if(cs.asesor)  ef.push(`<div class="di"><p class="dil">Asesor ARL</p><p class="div2">${escHtml(cs.asesor)}</p></div>`);
+    if(cs.reprT)   ef.push(`<div class="di"><p class="dil">Repr. trabajador</p><p class="div2">${escHtml(cs.reprT)}</p></div>`);
+    if(cs.reprE)   ef.push(`<div class="di"><p class="dil">Repr. empleador</p><p class="div2">${escHtml(cs.reprE)}</p></div>`);
+    if(cs.radicado)ef.push(`<div class="di"><p class="dil">Radicado</p><p class="div2" style="font-family:monospace">${escHtml(cs.radicado)}</p></div>`);
+    if(cs.createdAt)ef.push(`<div class="di"><p class="dil">Registrado</p><p class="div2">${escHtml(cs.createdAt)}</p></div>`);
+    extraFields=ef.join('');
+  }
+  const done=tasks.filter(t=>t.done).length, tot=tasks.length;
+  const pct=tot?Math.round(done/tot*100):0;
   return `<div class="card-body">
   ${sesionBadge}
-  <div class="g3" style="margin-bottom:10px">
-    <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(c.empresa||'—')}</p></div>
-    <div class="di"><p class="dil">Cargo</p><p class="div2">${escHtml(c.cargo||'—')}</p></div>
-    <div class="di"><p class="dil">Asesor ARL</p><p class="div2">${escHtml(c.asesor||'—')}</p></div>
-    <div class="di"><p class="dil">Repr. trabajador</p><p class="div2">${escHtml(c.reprT||'—')}</p></div>
-    <div class="di"><p class="dil">Repr. empleador</p><p class="div2">${escHtml(c.reprE||'—')}</p></div>
-    <div class="di"><p class="dil">Registrado</p><p class="div2">${escHtml(c.createdAt||'')}</p></div>
-    ${c.diagnostico?`<div class="di full"><p class="dil">Motivo / diagnóstico</p><p class="div2" style="font-size:12px;white-space:pre-wrap">${escHtml(c.diagnostico)}</p></div>`:''}
+  <div class="${seed?'g2':'g3'}" style="margin-bottom:12px">
+    ${extraFields}
+    <div class="di"><p class="dil">Contrato</p><p class="div2">${escHtml(contrato)}</p></div>
+    <div class="di"><p class="dil">Vencimiento${stIncap.count?' <span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2" style="color:${accentColor}">${escHtml(vencMostrado)}</p></div>
+    <div class="di"><p class="dil">Días acumulados${stIncap.count?' <span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2">${escHtml(diasMostrado)}</p></div>
+    <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(empresa)}</p></div>
+    <div class="di full"><p class="dil">Diagnóstico</p><p class="div2" style="font-size:12px">${escHtml(diagnostico)}</p></div>
   </div>
-  ${renderIncapList(c.id, c.incaps, true)}
-  <div class="concepto-row">
-    <p class="slbl" style="margin:0"><i class="ti ti-toggle-right"></i> Estado del caso</p>
-    <select class="csel" onchange="chgEstadoCustom('${escHtml(c.id)}',this.value)">
-      ${INC_ESTADOS.map(e=>`<option value="${e}"${c.estado===e?' selected':''}>${escHtml(e)}</option>`).join('')}
+  ${renderIncapListV2(cs.id, incaps)}
+  <div class="p-row">
+    <p class="p-label">Tareas · ${done}/${tot} completadas</p>
+    <select class="csel" onchange="v2SetEstado('${cs.id}',this.value)">
+      ${INC_ESTADOS.map(e=>`<option value="${e}"${(cs.estado||'activo')===e?' selected':''}>${escHtml(e)}</option>`).join('')}
     </select>
   </div>
-  <div class="divh"></div>
-  ${renderTareasCustom(c)}
+  <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
+  ${renderTareasV2(cs.id, tasks)}
   <div class="divh"></div>
   <div class="tl-hdr">
     <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
-    <span style="font-size:11px;color:var(--mu)">${(c.actas||[]).length} evento${(c.actas||[]).length!==1?'s':''}</span>
+    <span style="font-size:11px;color:var(--mu)">${tl.length} evento${tl.length!==1?'s':''}</span>
   </div>
-  <div class="tl-wrap" id="tl-${escHtml(c.id)}">${tlRender(c.actas||[], `(i)=>delActaCustom('${escHtml(c.id)}',i)`)}</div>
+  <div class="tl-wrap">${tlRenderV2(cs.id, tl)}</div>
   <div class="tl-add">
     <div class="tl-add-row">
-      <select class="tl-tipo-sel" id="acta-tipo-${escHtml(c.id)}">
+      <select class="tl-tipo-sel" id="tl-tipo-${cs.id}">
         ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
       </select>
-      <button class="btn-sm" onclick="addActaCustom('${escHtml(c.id)}')"><i class="ti ti-plus"></i> Agregar</button>
+      <button class="btn-sm" onclick="v2AddTL('${cs.id}')"><i class="ti ti-plus"></i> Agregar</button>
     </div>
-    <textarea id="acta-${escHtml(c.id)}" placeholder="Describe el evento: sesión, resultado médico, decisión, acuerdo, alerta…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
+    <textarea id="tl-txt-${cs.id}" placeholder="Describe el evento: sesión, resultado médico, decisión, alerta de vencimiento…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
   </div>
-  <div class="divh"></div>
+  ${!seed?`<div class="divh"></div>
   <div style="display:flex;justify-content:flex-end">
-    <button class="btn-del" onclick="delCasoCustom('${escHtml(c.id)}')"><i class="ti ti-trash"></i> Eliminar caso</button>
-  </div>
+    <button class="btn-del" onclick="v2DelCase('${cs.id}')"><i class="ti ti-trash"></i> Eliminar caso</button>
+  </div>`:''}
 </div>`;
 }
 
-function tglInc(id){ DB.inc.cases[id].open=!DB.inc.cases[id].open; dbSave(); renderInc(); }
-function tglTask(cid,tid,v){ DB.inc.cases[cid].tareasDone[tid]=v; dbSave(); renderInc(); }
-function setIncEstado(cid,v){ DB.inc.cases[cid].estado=v; dbSave(); renderInc(); }
-function addIncNov(cid){
-  const el=document.getElementById('inc-nv-'+cid);
-  const txt=(el?.value||'').trim(); if(!txt)return;
-  const tipo=document.getElementById('inc-tipo-'+cid)?.value||'novedad';
-  DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:txt,tipo});
-  el.value=''; dbSave(); renderInc();
-}
-function delIncNov(cid,i){ DB.inc.cases[cid].novedades.splice(i,1); dbSave(); renderInc(); }
-
-/* ════════════════════════════════════════════
-   TAREAS — HELPERS DE RENDER
-════════════════════════════════════════════ */
-function renderTareasInc(c, cs){
-  const deleted = new Set(cs.tareasDeleted||[]);
-  const edits   = cs.tareasEdits||{};
-  // Combinar originales (con edits) + extras, filtrando eliminadas
-  const tasks = [
-    ...c.tareas
-      .filter(t=>!deleted.has(t.id))
-      .map(t=>({...(edits[t.id]?{...t,...edits[t.id]}:t), _src:'pre'})),
-    ...(cs.tareasExtra||[]).map(t=>({...t,_src:'extra'}))
-  ];
-  const total = tasks.length;
-  const done  = tasks.filter(t=>cs.tareasDone[t.id]).length;
-  let html = `<div class="task-section-lbl">
-    <span><i class="ti ti-checklist" style="margin-right:5px"></i>Tareas del caso <span style="color:var(--blue);font-weight:800">${done}/${total}</span></span>
-  </div>`;
-  if(!tasks.length){
-    html+=`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px;padding:8px 12px;background:var(--li);border-radius:10px">Sin tareas. Agrega una abajo.</p>`;
-  }
-  tasks.forEach(t=>{
-    const isDone = !!cs.tareasDone[t.id];
-    const isEd   = _taskEdit && _taskEdit.cid===c.id && _taskEdit.tid===t.id;
-    if(isEd){
-      html+=`<div class="task editing">
-        <input type="checkbox" ${isDone?'checked':''} onchange="tglTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
-        <input class="task-ei" id="te-txt-${t.id}" value="${escHtml(t.txt)}" placeholder="Descripción…">
-        <select class="task-esel" id="te-prio-${t.id}">
-          <option value="alta"${t.prio==='alta'?' selected':''}>🔴 Alta</option>
-          <option value="media"${t.prio==='media'?' selected':''}>🟡 Media</option>
-          <option value="baja"${(t.prio||'baja')==='baja'?' selected':''}>🟢 Baja</option>
-        </select>
-        <button class="task-btn ok" title="Guardar" onclick="saveIncTaskEdit('${c.id}','${t.id}','${t._src}')"><i class="ti ti-check"></i></button>
-        <button class="task-btn"    title="Cancelar" onclick="cancelTaskEdit()"><i class="ti ti-x"></i></button>
-      </div>`;
-    } else {
-      html+=`<div class="task ${isDone?'done':''}">
-        <input type="checkbox" ${isDone?'checked':''} onchange="tglTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
-        <p class="task-txt ${isDone?'done':''}">${escHtml(t.txt)}</p>
-        <span class="prio p-${t.prio||'media'}">${t.prio||'media'}</span>
-        <button class="task-btn" title="Editar tarea" onclick="startTaskEdit('${c.id}','${t.id}',false)"><i class="ti ti-pencil"></i></button>
-        <button class="task-btn del" title="Eliminar tarea" onclick="delIncTask('${c.id}','${t.id}','${t._src}')"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }
-  });
-  html+=`<div class="task-add-row">
-    <input class="task-ei" id="nt-txt-${c.id}" placeholder="✚ Describe la nueva tarea…">
-    <select class="task-esel" id="nt-prio-${c.id}">
-      <option value="alta">🔴 Alta</option>
-      <option value="media" selected>🟡 Media</option>
-      <option value="baja">🟢 Baja</option>
-    </select>
-    <button class="btn-sm" onclick="addIncTask('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
-  </div>`;
-  return html;
+/* ─── Timeline v2 (usa ID, no índice) ─── */
+function tlRenderV2(caseId, tl){
+  if(!tl||!tl.length)
+    return `<p class="tl-empty"><i class="ti ti-timeline" style="font-size:14px;margin-right:4px"></i>Sin eventos registrados. Agrega el primero abajo.</p>`;
+  return [...tl].sort((a,b)=>{
+    const da=(a.fecha||'').replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+    const db=(b.fecha||'').replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+    return db.localeCompare(da);
+  }).map(ev=>{
+    const tp=TL_TIPOS[ev.tipo]||TL_TIPOS.novedad;
+    return `<div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot" style="color:${tp.color};background:${tp.bg}"><i class="ti ${tp.icon}" style="font-size:7px;color:${tp.color}"></i></div>
+      <div class="tl-box">
+        <div class="tl-box-hdr">
+          <span class="tl-badge" style="background:${tp.bg};color:${tp.color}">${tp.label}</span>
+          <span class="tl-fecha"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(ev.fecha||'')}</span>
+        </div>
+        <p class="tl-texto">${escHtml(ev.texto||ev.nota||'')}</p>
+        <button class="tl-del" onclick="v2DelTL('${escHtml(caseId)}','${escHtml(ev.id)}')"><i class="ti ti-trash" style="font-size:11px"></i> Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function renderTareasCustom(c){
-  const tareas = c.tareas||[];
-  const done   = tareas.filter(t=>t.done).length;
+/* ─── Incapacidades v2 ─── */
+function renderIncapListV2(caseId, incaps){
+  incaps=incaps||[];
+  const st=getIncapStats(incaps);
+  const rows=incaps.length===0
+    ?`<p style="margin:6px 0 8px;font-size:12px;color:var(--mu);font-style:italic">Sin incapacidades registradas. Agrega la primera abajo.</p>`
+    :`<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px">
+        <thead>
+          <tr style="background:var(--li);color:var(--mu);text-transform:uppercase;font-size:10px;letter-spacing:.04em">
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Inicio</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Fin</th>
+            <th style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr)">Días</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Dx</th>
+            <th style="padding:6px 4px;border-bottom:1px solid var(--bdr)"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[...incaps].sort((a,b)=>{const da=_parseDMY(a.inicio),db=_parseDMY(b.inicio);return(db?+db:0)-(da?+da:0);}).map(it=>`
+            <tr>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)">${escHtml(it.inicio||'—')}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)"><strong>${escHtml(it.fin||'—')}</strong></td>
+              <td style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr);font-weight:700;color:var(--blue)">${it.dias}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--mu);font-size:11.5px">${escHtml(it.dx||'—')}</td>
+              <td style="padding:6px 4px;border-bottom:1px solid var(--bdr);text-align:right">
+                <button onclick="v2DelIncap('${escHtml(caseId)}','${it.id}')" title="Quitar"
+                  style="background:none;border:0;color:var(--err-tx);cursor:pointer;padding:2px 4px"><i class="ti ti-trash"></i></button>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  return `
+    <div class="incaps-block" style="background:var(--li);border:1px solid var(--bdr);border-radius:var(--rads);padding:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <p style="margin:0;font-size:12px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-clipboard-list" style="font-size:14px;color:var(--blue)"></i> Consolidado de incapacidades
+        </p>
+        <div style="display:flex;gap:8px;font-size:11.5px;flex-wrap:wrap">
+          <span style="background:#dce8f8;color:#003087;padding:4px 10px;border-radius:12px;font-weight:700">
+            ${st.totalDias} día${st.totalDias===1?'':'s'} acumulado${st.totalDias===1?'':'s'}
+          </span>
+          <span style="background:#fef3c7;color:#7c4008;padding:4px 10px;border-radius:12px;font-weight:700">
+            Vence: ${escHtml(st.ultVencStr)}
+          </span>
+        </div>
+      </div>
+      ${rows}
+      <div style="display:grid;grid-template-columns:1fr 1fr 80px 2fr auto;gap:6px;margin-top:8px">
+        <input type="date" id="incap-ini-${caseId}" title="Inicio" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="date" id="incap-fin-${caseId}" title="Fin" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="number" id="incap-dias-${caseId}" placeholder="Días" min="1" title="Días (auto si está vacío)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="text" id="incap-dx-${caseId}" placeholder="Diagnóstico / CIE-10 (opcional)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <button class="btn-sm" onclick="v2AddIncap('${escHtml(caseId)}')" style="white-space:nowrap"><i class="ti ti-plus"></i> Agregar</button>
+      </div>
+    </div>`;
+}
+
+/* ─── Tareas v2 ─── */
+function renderTareasV2(caseId, tasks){
+  const done=tasks.filter(t=>t.done).length;
   let html=`<div class="task-section-lbl">
-    <span><i class="ti ti-checklist" style="margin-right:5px"></i>Tareas del caso <span style="color:var(--blue);font-weight:800">${done}/${tareas.length}</span></span>
+    <span><i class="ti ti-checklist" style="margin-right:5px"></i>Tareas del caso <span style="color:var(--blue);font-weight:800">${done}/${tasks.length}</span></span>
   </div>`;
-  if(tareas.length){
-    const pct=Math.round(done/tareas.length*100);
-    html+=`<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>`;
-  } else {
+  if(!tasks.length)
     html+=`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px;padding:8px 12px;background:var(--li);border-radius:10px">Sin tareas. Agrega una abajo.</p>`;
-  }
-  tareas.forEach(t=>{
-    const isEd = _taskEdit && _taskEdit.cid===c.id && _taskEdit.tid===t.id && _taskEdit.isCustom;
+  tasks.forEach(t=>{
+    const isEd=_taskEdit&&_taskEdit.caseId===caseId&&_taskEdit.taskId===t.id;
     if(isEd){
       html+=`<div class="task editing">
-        <input type="checkbox" ${t.done?'checked':''} onchange="tglCustomTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <input type="checkbox" ${t.done?'checked':''} onchange="v2TglTask('${caseId}','${t.id}',this.checked)" style="margin-top:2px">
         <input class="task-ei" id="te-txt-${t.id}" value="${escHtml(t.txt)}" placeholder="Descripción…">
         <select class="task-esel" id="te-prio-${t.id}">
           <option value="alta"${t.prio==='alta'?' selected':''}>🔴 Alta</option>
           <option value="media"${t.prio==='media'?' selected':''}>🟡 Media</option>
           <option value="baja"${(t.prio||'baja')==='baja'?' selected':''}>🟢 Baja</option>
         </select>
-        <button class="task-btn ok" title="Guardar" onclick="saveCustomTaskEdit('${c.id}','${t.id}')"><i class="ti ti-check"></i></button>
-        <button class="task-btn"    title="Cancelar" onclick="cancelTaskEdit()"><i class="ti ti-x"></i></button>
+        <button class="task-btn ok" title="Guardar" onclick="v2SaveEdit('${caseId}','${t.id}')"><i class="ti ti-check"></i></button>
+        <button class="task-btn" title="Cancelar" onclick="cancelTaskEdit()"><i class="ti ti-x"></i></button>
       </div>`;
     } else {
       html+=`<div class="task ${t.done?'done':''}">
-        <input type="checkbox" ${t.done?'checked':''} onchange="tglCustomTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <input type="checkbox" ${t.done?'checked':''} onchange="v2TglTask('${caseId}','${t.id}',this.checked)" style="margin-top:2px">
         <p class="task-txt ${t.done?'done':''}">${escHtml(t.txt)}</p>
         <span class="prio p-${t.prio||'media'}">${t.prio||'media'}</span>
-        <button class="task-btn" title="Editar tarea" onclick="startTaskEdit('${c.id}','${t.id}',true)"><i class="ti ti-pencil"></i></button>
-        <button class="task-btn del" title="Eliminar tarea" onclick="delCustomTask('${c.id}','${t.id}')"><i class="ti ti-trash"></i></button>
+        <button class="task-btn" title="Editar tarea" onclick="v2StartEdit('${caseId}','${t.id}')"><i class="ti ti-pencil"></i></button>
+        <button class="task-btn del" title="Eliminar tarea" onclick="v2DelTask('${caseId}','${t.id}')"><i class="ti ti-trash"></i></button>
       </div>`;
     }
   });
   html+=`<div class="task-add-row">
-    <input class="task-ei" id="nct-txt-${c.id}" placeholder="✚ Describe la nueva tarea…">
-    <select class="task-esel" id="nct-prio-${c.id}">
+    <input class="task-ei" id="nt-txt-${caseId}" placeholder="✚ Describe la nueva tarea…">
+    <select class="task-esel" id="nt-prio-${caseId}">
       <option value="alta">🔴 Alta</option>
       <option value="media" selected>🟡 Media</option>
       <option value="baja">🟢 Baja</option>
     </select>
-    <button class="btn-sm" onclick="addCustomTask('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+    <button class="btn-sm" onclick="v2AddTask('${caseId}')"><i class="ti ti-plus"></i> Agregar</button>
   </div>`;
   return html;
 }
 
 /* ════════════════════════════════════════════
-   TAREAS — ACCIONES
+   MESA / COMITÉ LABORAL — v2 ACCIONES
+   Dual-write: escribe en v2 Y mantiene v1 en sincronía
 ════════════════════════════════════════════ */
-function startTaskEdit(cid, tid, isCustom){
-  _taskEdit = {cid, tid, isCustom};
-  renderInc();
+function v2TglCase(caseId){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  if(!cs.ui) cs.ui={};
+  cs.ui.open=!cs.ui.open;
+  /* v1 compat */
+  if(cs.seedId){ if(DB.inc.cases[cs.seedId]) DB.inc.cases[cs.seedId].open=cs.ui.open; }
+  else { const v1id=caseId.replace(/^case_/,''); DB.inc.openCustom[v1id]=cs.ui.open; }
+  dbSave(); renderInc();
 }
+function v2SetEstado(caseId, val){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  cs.estado=val; cs.updatedAt=isoNow();
+  if(cs.seedId){ if(DB.inc.cases[cs.seedId]) DB.inc.cases[cs.seedId].estado=val; }
+  else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId); if(c)c.estado=val; }
+  dbSave(); renderInc();
+}
+function v2AddTL(caseId){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  const el=document.getElementById('tl-txt-'+caseId);
+  const txt=(el?.value||'').trim(); if(!txt)return;
+  const tipo=document.getElementById('tl-tipo-'+caseId)?.value||'novedad';
+  const entry={id:newId('tl'), caseId, patientId:cs.patientId, fecha:nowStr(), texto:txt, tipo, source:'manual', createdAt:isoNow()};
+  DB.timeline2.push(entry);
+  if(cs.seedId){ if(DB.inc.cases[cs.seedId]) DB.inc.cases[cs.seedId].novedades.unshift({fecha:entry.fecha,texto:txt,tipo}); }
+  else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId); if(c){if(!c.actas)c.actas=[];c.actas.unshift({fecha:entry.fecha,texto:txt,tipo});} }
+  el.value=''; dbSave(); renderInc();
+}
+function v2DelTL(caseId, tlId){
+  const idx=DB.timeline2.findIndex(e=>e.id===tlId&&e.caseId===caseId); if(idx<0)return;
+  const entry=DB.timeline2.splice(idx,1)[0];
+  const cs=DB.cases2[caseId];
+  if(cs?.seedId){ const novs=DB.inc.cases[cs.seedId]?.novedades;
+    if(novs){const i=novs.findIndex(n=>n.texto===entry.texto&&n.fecha===entry.fecha);if(i>=0)novs.splice(i,1);}
+  } else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);
+    if(c?.actas){const i=c.actas.findIndex(n=>n.texto===entry.texto&&n.fecha===entry.fecha);if(i>=0)c.actas.splice(i,1);}
+  }
+  dbSave(); renderInc();
+}
+function v2TglTask(caseId, taskId, val){
+  const t=DB.tasks2.find(t=>t.id===taskId&&t.caseId===caseId); if(!t)return;
+  t.done=!!val; t.doneAt=val?isoNow():null;
+  const cs=DB.cases2[caseId];
+  if(cs?.seedId){ if(DB.inc.cases[cs.seedId]) DB.inc.cases[cs.seedId].tareasDone[taskId]=!!val; }
+  else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);
+    if(c){const ct=(c.tareas||[]).find(t2=>t2.id===taskId);if(ct)ct.done=!!val;} }
+  dbSave(); renderInc();
+}
+function v2StartEdit(caseId, taskId){ _taskEdit={caseId,taskId}; renderInc(); }
 function cancelTaskEdit(){ _taskEdit=null; renderInc(); }
-
-/* --- Pre-cargados --- */
-function saveIncTaskEdit(cid, tid, src){
-  const txt  = (document.getElementById('te-txt-'+tid)?.value||'').trim();
-  const prio = document.getElementById('te-prio-'+tid)?.value||'media';
-  if(!txt){ alert('La descripción no puede estar vacía.'); return; }
-  const cs = DB.inc.cases[cid];
-  if(src==='extra'){
-    const t = cs.tareasExtra.find(t=>t.id===tid);
-    if(t){ t.txt=txt; t.prio=prio; }
-  } else {
-    if(!cs.tareasEdits) cs.tareasEdits={};
-    cs.tareasEdits[tid]={txt,prio};
-  }
-  _taskEdit=null; dbSave(); renderInc();
-}
-function delIncTask(cid, tid, src){
-  if(!confirm('¿Eliminar esta tarea?')) return;
-  const cs = DB.inc.cases[cid];
-  if(src==='extra'){
-    cs.tareasExtra = cs.tareasExtra.filter(t=>t.id!==tid);
-  } else {
-    if(!cs.tareasDeleted) cs.tareasDeleted=[];
-    cs.tareasDeleted.push(tid);
-    delete (cs.tareasEdits||{})[tid];
-    delete (cs.tareasDone||{})[tid];
-  }
-  if(_taskEdit?.tid===tid) _taskEdit=null;
-  dbSave(); renderInc();
-}
-function addIncTask(cid){
-  const txt  = (document.getElementById('nt-txt-'+cid)?.value||'').trim();
-  const prio = document.getElementById('nt-prio-'+cid)?.value||'media';
-  if(!txt){ alert('Escribe la descripción de la tarea.'); return; }
-  const cs = DB.inc.cases[cid];
-  if(!cs.tareasExtra) cs.tareasExtra=[];
-  cs.tareasExtra.push({id:'tx_'+Date.now(), txt, prio});
-  const el=document.getElementById('nt-txt-'+cid); if(el) el.value='';
-  dbSave(); renderInc();
-}
-
-/* --- Casos custom --- */
-function tglCustomTask(cid, tid, v){
-  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
-  const t = (c.tareas||[]).find(t=>t.id===tid); if(!t)return;
-  t.done=v; dbSave(); renderInc();
-}
-function saveCustomTaskEdit(cid, tid){
-  const txt  = (document.getElementById('te-txt-'+tid)?.value||'').trim();
-  const prio = document.getElementById('te-prio-'+tid)?.value||'media';
-  if(!txt){ alert('La descripción no puede estar vacía.'); return; }
-  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
-  const t = (c.tareas||[]).find(t=>t.id===tid); if(!t)return;
+function v2SaveEdit(caseId, taskId){
+  const txt=(document.getElementById('te-txt-'+taskId)?.value||'').trim();
+  const prio=document.getElementById('te-prio-'+taskId)?.value||'media';
+  if(!txt){alert('La descripción no puede estar vacía.');return;}
+  const t=DB.tasks2.find(t=>t.id===taskId&&t.caseId===caseId); if(!t)return;
   t.txt=txt; t.prio=prio;
+  const cs=DB.cases2[caseId];
+  if(cs?.seedId){
+    const oldCs=DB.inc.cases[cs.seedId];
+    if(oldCs){
+      if((oldCs.tareasExtra||[]).some(e=>e.id===taskId)){const ext=oldCs.tareasExtra.find(e=>e.id===taskId);if(ext){ext.txt=txt;ext.prio=prio;}}
+      else{if(!oldCs.tareasEdits)oldCs.tareasEdits={};oldCs.tareasEdits[taskId]={txt,prio};}
+    }
+  } else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);
+    if(c){const ct=(c.tareas||[]).find(t2=>t2.id===taskId);if(ct){ct.txt=txt;ct.prio=prio;}} }
   _taskEdit=null; dbSave(); renderInc();
 }
-function delCustomTask(cid, tid){
-  if(!confirm('¿Eliminar esta tarea?')) return;
-  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
-  c.tareas = (c.tareas||[]).filter(t=>t.id!==tid);
-  if(_taskEdit?.tid===tid) _taskEdit=null;
+function v2AddTask(caseId){
+  const txt=(document.getElementById('nt-txt-'+caseId)?.value||'').trim();
+  const prio=document.getElementById('nt-prio-'+caseId)?.value||'media';
+  if(!txt){alert('Escribe la descripción de la tarea.');return;}
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  const taskId='task_'+Date.now();
+  DB.tasks2.push({id:taskId,caseId,txt,prio,done:false,doneAt:null,source:'user',createdAt:isoNow()});
+  const el=document.getElementById('nt-txt-'+caseId); if(el)el.value='';
+  if(cs.seedId){const oldCs=DB.inc.cases[cs.seedId];if(oldCs){if(!oldCs.tareasExtra)oldCs.tareasExtra=[];oldCs.tareasExtra.push({id:taskId,txt,prio});}}
+  else{const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);if(c){if(!c.tareas)c.tareas=[];c.tareas.push({id:taskId,txt,prio,done:false});}}
   dbSave(); renderInc();
 }
-function addCustomTask(cid){
-  const txt  = (document.getElementById('nct-txt-'+cid)?.value||'').trim();
-  const prio = document.getElementById('nct-prio-'+cid)?.value||'media';
-  if(!txt){ alert('Escribe la descripción de la tarea.'); return; }
-  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
-  if(!c.tareas) c.tareas=[];
-  c.tareas.push({id:'ct_'+Date.now(), txt, prio, done:false});
-  const el=document.getElementById('nct-txt-'+cid); if(el) el.value='';
+function v2DelTask(caseId, taskId){
+  if(!confirm('¿Eliminar esta tarea?'))return;
+  const t=DB.tasks2.find(t=>t.id===taskId&&t.caseId===caseId); if(!t)return;
+  DB.tasks2=DB.tasks2.filter(t2=>!(t2.id===taskId&&t2.caseId===caseId));
+  const cs=DB.cases2[caseId];
+  if(cs?.seedId){
+    const oldCs=DB.inc.cases[cs.seedId];
+    if(oldCs){
+      if((oldCs.tareasExtra||[]).some(e=>e.id===taskId)){oldCs.tareasExtra=oldCs.tareasExtra.filter(e=>e.id!==taskId);}
+      else{if(!oldCs.tareasDeleted)oldCs.tareasDeleted=[];oldCs.tareasDeleted.push(taskId);delete(oldCs.tareasEdits||{})[taskId];delete(oldCs.tareasDone||{})[taskId];}
+    }
+  } else { const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);
+    if(c)c.tareas=(c.tareas||[]).filter(t2=>t2.id!==taskId); }
+  if(_taskEdit?.taskId===taskId)_taskEdit=null;
+  dbSave(); renderInc();
+}
+function v2AddIncap(caseId){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  const ini=document.getElementById('incap-ini-'+caseId)?.value;
+  const fin=document.getElementById('incap-fin-'+caseId)?.value;
+  const dx=(document.getElementById('incap-dx-'+caseId)?.value||'').trim();
+  const diasManual=document.getElementById('incap-dias-'+caseId)?.value;
+  if(!ini||!fin){alert('Ingresa fecha de inicio y fin');return;}
+  const di=_parseDMY(ini),df=_parseDMY(fin);
+  if(!di||!df){alert('Formato de fecha inválido');return;}
+  if(df<di){alert('La fecha de fin no puede ser anterior a la de inicio');return;}
+  const dias=Number(diasManual)||_daysBetween(di,df);
+  const incapId='ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+  const inicioStr=_fmtDMY(di), finStr=_fmtDMY(df);
+  DB.incapacities.push({id:incapId,patientId:cs.patientId,caseId,
+    fechaInicio:inicioStr,fechaFin:finStr,inicio:inicioStr,fin:finStr,
+    dias,cie10:'',dx,entidadEmisora:'',sourceDocId:null,createdAt:isoNow()});
+  const ic1={id:incapId,inicio:inicioStr,fin:finStr,dias,dx};
+  if(cs.seedId){const r=DB.inc.cases[cs.seedId];if(r){if(!r.incaps)r.incaps=[];r.incaps.push(ic1);}}
+  else{const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);if(c){if(!c.incaps)c.incaps=[];c.incaps.push(ic1);}}
+  ['incap-ini-','incap-fin-','incap-dias-','incap-dx-'].forEach(p=>{const el=document.getElementById(p+caseId);if(el)el.value='';});
+  dbSave(); renderInc();
+}
+function v2DelIncap(caseId, incapId){
+  const idx=DB.incapacities.findIndex(i=>i.id===incapId&&i.caseId===caseId); if(idx<0)return;
+  DB.incapacities.splice(idx,1);
+  const cs=DB.cases2[caseId];
+  if(cs?.seedId){const r=DB.inc.cases[cs.seedId];if(r?.incaps)r.incaps=r.incaps.filter(x=>x.id!==incapId);}
+  else{const c=DB.inc.custom.find(c=>'case_'+c.id===caseId);if(c?.incaps)c.incaps=c.incaps.filter(x=>x.id!==incapId);}
+  dbSave(); renderInc();
+}
+function v2DelCase(caseId){
+  if(!confirm('¿Eliminar este caso?'))return;
+  const cs=DB.cases2[caseId]; if(!cs||cs.seedId){alert('Los casos pre-cargados no se pueden eliminar.');return;}
+  delete DB.cases2[caseId];
+  DB.tasks2=DB.tasks2.filter(t=>t.caseId!==caseId);
+  DB.timeline2=DB.timeline2.filter(e=>e.caseId!==caseId);
+  DB.incapacities=DB.incapacities.filter(i=>i.caseId!==caseId);
+  const v1id=caseId.replace(/^case_/,'');
+  DB.inc.custom=DB.inc.custom.filter(c=>c.id!==v1id);
+  delete DB.inc.openCustom[v1id];
   dbSave(); renderInc();
 }
 
@@ -2296,20 +2372,27 @@ function addCasoCustom(){
   const nm=(document.getElementById('ci-nombre').value||'').trim();
   const cc=(document.getElementById('ci-cc').value||'').trim();
   if(!nm||!cc){ alert('El nombre y la cédula son obligatorios.'); return; }
-  DB.inc.custom.unshift({
-    id:'cas_'+Date.now(),
-    tipo:document.getElementById('ci-tipo').value,
-    nombre:nm,cc,
-    empresa:(document.getElementById('ci-empresa').value||'').trim(),
-    cargo:(document.getElementById('ci-cargo').value||'').trim(),
-    radicado:(document.getElementById('ci-radicado').value||'').trim(),
-    sesion:(document.getElementById('ci-sesion').value||''),
-    reprT:(document.getElementById('ci-repr-t').value||'').trim(),
-    reprE:(document.getElementById('ci-repr-e').value||'').trim(),
-    asesor:(document.getElementById('ci-asesor').value||'').trim(),
-    diagnostico:(document.getElementById('ci-diag').value||'').trim(),
-    estado:'activo',actas:[],createdAt:nowDate()
-  });
+  const custId='cas_'+Date.now();
+  const tipo=document.getElementById('ci-tipo').value;
+  const empresa=(document.getElementById('ci-empresa').value||'').trim();
+  const cargo=(document.getElementById('ci-cargo').value||'').trim();
+  const radicado=(document.getElementById('ci-radicado').value||'').trim();
+  const sesion=(document.getElementById('ci-sesion').value||'');
+  const reprT=(document.getElementById('ci-repr-t').value||'').trim();
+  const reprE=(document.getElementById('ci-repr-e').value||'').trim();
+  const asesor=(document.getElementById('ci-asesor').value||'').trim();
+  const diagnostico=(document.getElementById('ci-diag').value||'').trim();
+  const createdAt=nowDate();
+  /* v1 */
+  DB.inc.custom.unshift({id:custId,tipo,nombre:nm,cc,empresa,cargo,radicado,sesion,
+    reprT,reprE,asesor,diagnostico,estado:'activo',actas:[],createdAt});
+  /* v2 */
+  const pat=getOrCreatePatient({cc,nombre:nm,empresa,cargo});
+  const caseId='case_'+custId;
+  DB.cases2[caseId]={id:caseId,patientId:pat.id,tipo,estado:'activo',seedId:null,
+    accentColor:tipo==='mesa'?'#7c3aed':'#003087',diagnosticoPrincipal:diagnostico,
+    empresa,cargo,radicado,sesion,reprT,reprE,asesor,ui:{open:false},
+    createdAt,updatedAt:isoNow()};
   ['ci-nombre','ci-cc','ci-empresa','ci-cargo','ci-radicado','ci-sesion',
    'ci-repr-t','ci-repr-e','ci-asesor','ci-diag'].forEach(id=>{
     const el=document.getElementById(id); if(el)el.value='';
@@ -2318,28 +2401,350 @@ function addCasoCustom(){
   tglForm('inc-form-body','inc-form-chv');
   dbSave(); renderInc();
 }
-function delCasoCustom(id){
-  if(!confirm('¿Eliminar este caso?')) return;
-  DB.inc.custom=DB.inc.custom.filter(c=>c.id!==id);
-  delete DB.inc.openCustom[id];
-  dbSave(); renderInc();
-}
-function tglCasoCustom(id){ DB.inc.openCustom[id]=!DB.inc.openCustom[id]; dbSave(); renderInc(); }
-function chgEstadoCustom(id,v){
-  const c=DB.inc.custom.find(c=>c.id===id); if(c){c.estado=v;dbSave();renderInc();}
-}
-function addActaCustom(id){
-  const el=document.getElementById('acta-'+id);
-  const txt=(el?.value||'').trim(); if(!txt)return;
-  const c=DB.inc.custom.find(c=>c.id===id); if(!c)return;
-  if(!c.actas) c.actas=[];
-  const tipo=document.getElementById('acta-tipo-'+id)?.value||'sesion';
-  c.actas.unshift({fecha:nowStr(),texto:txt,tipo});
-  el.value=''; dbSave(); renderInc();
+/* delCasoCustom kept for backward compat — v2DelCase is the canonical version */
+function delCasoCustom(id){ v2DelCase('case_'+id); }
+function tglCasoCustom(id){ v2TglCase('case_'+id); }
+function chgEstadoCustom(id,v){ v2SetEstado('case_'+id,v); }
+function addActaCustom(id){ /* proxied: use tl-txt element if exists, else acta element */
+  const elNew=document.getElementById('tl-txt-case_'+id);
+  const elOld=document.getElementById('acta-'+id);
+  if(elNew){ v2AddTL('case_'+id); return; }
+  if(elOld){
+    const txt=(elOld.value||'').trim(); if(!txt)return;
+    const c=DB.inc.custom.find(c=>c.id===id); if(!c)return;
+    if(!c.actas)c.actas=[];
+    const tipo=document.getElementById('acta-tipo-'+id)?.value||'sesion';
+    c.actas.unshift({fecha:nowStr(),texto:txt,tipo});
+    elOld.value=''; dbSave(); renderInc();
+  }
 }
 function delActaCustom(cid,i){
   const c=DB.inc.custom.find(c=>c.id===cid);
   if(c&&c.actas){c.actas.splice(i,1);dbSave();renderInc();}
+}
+
+/* ════════════════════════════════════════════
+   PACIENTE 360°
+════════════════════════════════════════════ */
+let _PAC_ID = null; // patientId seleccionado
+
+function renderPac(){
+  const q=((document.getElementById('pac-srch')||{value:''}).value).toLowerCase();
+  const listEl=document.getElementById('pac-list');
+  const detailEl=document.getElementById('pac-detail');
+  const backBtn=document.getElementById('pac-back-btn');
+  if(!listEl||!detailEl) return;
+
+  const pats=Object.values(DB.patients).filter(p=>{
+    if(!q) return true;
+    return (p.nombre||'').toLowerCase().includes(q)||(p.ccDisplay||'').includes(q);
+  }).sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''));
+
+  if(!pats.length){
+    listEl.innerHTML=`<p style="font-size:13px;color:var(--mu);font-style:italic;padding:8px 2px">
+      ${Object.keys(DB.patients).length===0
+        ?'Sin pacientes registrados aún — abre la pestaña Mesa/Comité o Exámenes y agrega casos.'
+        :'Sin resultados.'}</p>`;
+    detailEl.innerHTML='';
+    return;
+  }
+
+  listEl.innerHTML=pats.map(p=>{
+    const cases=Object.values(DB.cases2).filter(c=>c.patientId===p.id);
+    const cids=new Set(cases.map(c=>c.id));
+    const incaps=DB.incapacities.filter(i=>i.patientId===p.id||cids.has(i.caseId));
+    const totalDias=incaps.reduce((s,i)=>s+Number(i.dias||0),0);
+    const activos=cases.filter(c=>(c.estado||'activo')==='activo').length;
+    const clr=avclr(Math.abs(p.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0)));
+    const isSelected=_PAC_ID===p.id;
+    return `<div class="pac-li${isSelected?' sel':''}" onclick="selectPacient('${escHtml(p.id)}')">
+      <div class="pac-av" style="${clr}">${ini(p.nombre)}</div>
+      <div style="flex:1;min-width:0">
+        <p style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(p.nombre)}</p>
+        <p style="font-size:11.5px;color:var(--mu);margin-top:1px">${escHtml(p.ccDisplay||'—')}${p.empresa?' · '+escHtml(p.empresa):''}</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end">
+        ${activos?`<span class="badge b-info">${activos} caso${activos>1?'s':''}</span>`:''}
+        ${totalDias?`<span class="badge b-warn">${totalDias} días</span>`:''}
+      </div>
+      <i class="ti ti-chevron-right" style="color:var(--mu);font-size:14px;flex-shrink:0"></i>
+    </div>`;
+  }).join('');
+
+  /* Si hay paciente seleccionado, renderizar detalle */
+  if(_PAC_ID && DB.patients[_PAC_ID]){
+    detailEl.innerHTML=renderPacDetail(_PAC_ID);
+    if(backBtn) backBtn.style.display='';
+  } else {
+    detailEl.innerHTML='';
+    if(backBtn) backBtn.style.display='none';
+  }
+}
+
+function selectPacient(pid){
+  _PAC_ID=pid;
+  renderPac();
+  if(pid) document.getElementById('pac-detail')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* Abre el 360° del paciente vinculado a un caso */
+function openPacFrom(caseId){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  goTab('pac');
+  _PAC_ID=cs.patientId;
+  renderPac();
+  setTimeout(()=>document.getElementById('pac-detail')?.scrollIntoView({behavior:'smooth',block:'start'}),120);
+}
+
+function tglPacSec(secId){
+  const el=document.getElementById(secId);
+  const chv=document.getElementById('chv-'+secId);
+  if(!el)return;
+  const open=el.style.display!=='none';
+  el.style.display=open?'none':'';
+  if(chv) chv.style.transform=open?'rotate(-90deg)':'';
+}
+
+function renderPacDetail(pid){
+  const p=DB.patients[pid]; if(!p) return '';
+  const cases=Object.values(DB.cases2).filter(c=>c.patientId===pid);
+  const _caseIds=new Set(cases.map(c=>c.id));
+  const incaps=DB.incapacities
+    .filter(i=>i.patientId===pid || _caseIds.has(i.caseId))
+    .map(i=>({...i,inicio:i.inicio||i.fechaInicio,fin:i.fin||i.fechaFin}));
+  const exams=DB.exams2.filter(e=>e.patientId===pid);
+  const tl=DB.timeline2
+    .filter(e=>e.patientId===pid || _caseIds.has(e.caseId))
+    .sort((a,b)=>{
+      const da=(a.fecha||'').replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      const db=(b.fecha||'').replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      return db.localeCompare(da);
+    });
+  const stIncap=getIncapStats(incaps);
+  const activos=cases.filter(c=>(c.estado||'activo')==='activo').length;
+  const clr=avclr(Math.abs(pid.split('').reduce((a,c)=>a+c.charCodeAt(0),0)));
+
+  /* Header */
+  const hdr=`<div class="pac-hdr">
+    <div class="pac-av-lg" style="${clr}">${ini(p.nombre)}</div>
+    <div class="pac-hdr-info">
+      <p class="pac-hdr-name">${escHtml(p.nombre)}</p>
+      <div class="pac-hdr-sub">
+        <span><i class="ti ti-id-badge"></i> ${escHtml(p.ccDisplay||'—')}</span>
+        ${p.empresa?`<span><i class="ti ti-building"></i> ${escHtml(p.empresa)}</span>`:''}
+        ${p.cargo?`<span><i class="ti ti-briefcase"></i> ${escHtml(p.cargo)}</span>`:''}
+        ${p.eps?`<span><i class="ti ti-heart"></i> ${escHtml(p.eps)}</span>`:''}
+      </div>
+    </div>
+    <button onclick="editPacField('${pid}')" title="Editar datos"
+      style="padding:7px 9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+             border-radius:9px;color:#fff;cursor:pointer;flex-shrink:0">
+      <i class="ti ti-edit" style="font-size:16px"></i>
+    </button>
+  </div>`;
+
+  /* Stats */
+  const stats=`<div class="pac-stats4">
+    <div class="pac-sbox">
+      <div class="pac-sn">${cases.length}</div>
+      <div class="pac-sl">Casos registrados</div>
+      <div style="font-size:10px;color:#10b981;margin-top:3px;font-weight:700">● ${activos} activos</div>
+    </div>
+    <div class="pac-sbox">
+      <div class="pac-sn" style="color:#D85A30">${stIncap.totalDias}</div>
+      <div class="pac-sl">Días incapacidad</div>
+      <div style="font-size:10px;color:var(--mu);margin-top:3px">${stIncap.count} registro${stIncap.count!==1?'s':''}</div>
+    </div>
+    <div class="pac-sbox">
+      <div class="pac-sn" style="color:#059669">${exams.length}</div>
+      <div class="pac-sl">Exámenes</div>
+      <div style="font-size:10px;color:var(--mu);margin-top:3px">${DB.exa.persons.filter(px=>normCC(px.cc)===pid.replace(/^x_/,'')).length} en seguimiento</div>
+    </div>
+    <div class="pac-sbox">
+      <div class="pac-sn" style="color:var(--info-tx)">${tl.length}</div>
+      <div class="pac-sl">Eventos timeline</div>
+      <div style="font-size:10px;color:var(--mu);margin-top:3px">historial completo</div>
+    </div>
+  </div>`;
+
+  /* Casos */
+  const casesHtml=cases.length===0
+    ?`<p class="pac-empty">Sin casos registrados.</p>`
+    :cases.map(cs=>{
+      const seed=c2Seed(cs.id);
+      const csIncaps=c2Incaps(cs.id);
+      const stI=getIncapStats(csIncaps);
+      const tasks=c2Tasks(cs.id);
+      const done=tasks.filter(t=>t.done).length;
+      const ac=cs.accentColor||seed?.accentColor||'var(--blue)';
+      return `<div class="pac-case-row" onclick="goTab('inc');setTimeout(()=>v2TglCase('${cs.id}'),100)">
+        <div style="width:4px;border-radius:3px;align-self:stretch;background:${ac};flex-shrink:0"></div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:13px;font-weight:700">${escHtml(seed?.nombre||p.nombre)}</p>
+          <p style="font-size:11.5px;color:var(--mu);margin-top:1px">
+            ${escHtml(cs.diagnosticoPrincipal||seed?.diagnostico||'—').substring(0,80)}
+          </p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;align-items:center">
+          <span class="badge ${cs.tipo==='mesa'?'b-mesa':'b-per'}">${cs.tipo==='mesa'?'Mesa':'Comité'}</span>
+          <span class="badge ${INC_ESTCLR[cs.estado]||'b-gray'}">${escHtml(cs.estado||'activo')}</span>
+          ${stI.count?`<span class="chip">${stI.totalDias}d</span>`:''}
+          <span class="chip">${done}/${tasks.length} tareas</span>
+          <i class="ti ti-external-link" style="font-size:12px;color:var(--mu)"></i>
+        </div>
+      </div>`;
+    }).join('');
+
+  /* Incapacidades */
+  let incapHtml='';
+  if(incaps.length===0){
+    incapHtml=`<p class="pac-empty">Sin incapacidades registradas.</p>`;
+  } else {
+    const sorted=[...incaps].sort((a,b)=>{const da=_parseDMY(a.inicio),db=_parseDMY(b.inicio);return(db?+db:0)-(da?+da:0);});
+    incapHtml=`<div class="pac-incap-total">
+      <i class="ti ti-calendar-stats" style="font-size:14px"></i>
+      Total acumulado: <strong>${stIncap.totalDias} días</strong> · Vence: <strong>${escHtml(stIncap.ultVencStr)}</strong>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+      <thead><tr style="background:var(--li);color:var(--mu);font-size:10px;text-transform:uppercase;letter-spacing:.04em">
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Inicio</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Fin</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr)">Días</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Dx</th>
+        <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Caso</th>
+      </tr></thead>
+      <tbody>
+        ${sorted.map(i=>{
+          const cs2=DB.cases2[i.caseId];
+          const seed2=cs2?c2Seed(i.caseId):null;
+          const caseLbl=seed2?.nombre?.split(' ').slice(0,2).join(' ')||'—';
+          return `<tr>
+            <td style="padding:6px 8px;border-bottom:1px solid var(--bdr)">${escHtml(i.inicio||'—')}</td>
+            <td style="padding:6px 8px;border-bottom:1px solid var(--bdr)"><strong>${escHtml(i.fin||'—')}</strong></td>
+            <td style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr);font-weight:700;color:var(--blue)">${i.dias}</td>
+            <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--mu)">${escHtml(i.dx||'—')}</td>
+            <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);font-size:11.5px;color:var(--mu)">${escHtml(caseLbl)}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  /* Exámenes */
+  const examsHtml=exams.length===0&&DB.exa.persons.filter(px=>normCC(px.cc)===pid).length===0
+    ?`<p class="pac-empty">Sin exámenes registrados.</p>`
+    :[
+      ...DB.exa.persons.filter(px=>normCC(px.cc)===pid).map(px=>`
+        <div style="background:var(--li);border-radius:var(--rads);padding:10px 13px;margin-bottom:7px;border:1px solid var(--bdr)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:6px">
+            <span class="badge ${TBADGE[px.tipo]||'b-gray'}">${escHtml(TLBL[px.tipo])}</span>
+            <span style="font-size:11px;color:var(--mu)">${escHtml(px.fecha||'—')}</span>
+          </div>
+          ${px.alt?`<p style="font-size:12.5px;margin-bottom:3px"><strong>Hallazgo:</strong> ${escHtml(px.alt)}</p>`:''}
+          ${px.plan?`<p style="font-size:12.5px;color:var(--mu)"><strong>Plan:</strong> ${escHtml(px.plan)}</p>`:''}
+        </div>`)
+    ].join('');
+
+  /* Timeline unificada */
+  const tlHtml=tl.length===0
+    ?`<p class="pac-empty">Sin eventos en la línea del tiempo.</p>`
+    :tl.slice(0,50).map(ev=>{
+      const tp=TL_TIPOS[ev.tipo]||TL_TIPOS.novedad;
+      const cs3=DB.cases2[ev.caseId];
+      const seed3=cs3?c2Seed(ev.caseId):null;
+      const caseLbl=seed3?.nombre?.split(' ').slice(0,2).join(' ')||'Caso';
+      return `<div class="tl-item">
+        <div class="tl-line"></div>
+        <div class="tl-dot" style="color:${tp.color};background:${tp.bg}"><i class="ti ${tp.icon}" style="font-size:7px;color:${tp.color}"></i></div>
+        <div class="tl-box" style="margin-bottom:8px">
+          <div class="tl-box-hdr">
+            <span class="tl-badge" style="background:${tp.bg};color:${tp.color}">${tp.label}</span>
+            <span class="tl-fecha"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(ev.fecha||'')}</span>
+            <span class="chip" style="font-size:10px">${escHtml(caseLbl)}</span>
+          </div>
+          <p class="tl-texto">${escHtml(ev.texto||ev.nota||'')}</p>
+        </div>
+      </div>`;
+    }).join('')
+    +(tl.length>50?`<p style="font-size:12px;color:var(--mu);text-align:center;padding:8px">… y ${tl.length-50} eventos más</p>`:'');
+
+  /* Ensamblar secciones plegables */
+  function sec(secId, icon, title, count, body, open=true){
+    return `<div class="pac-sec">
+      <div class="pac-sec-hdr" onclick="tglPacSec('${secId}')">
+        <i class="ti ${icon}" style="font-size:15px;color:var(--blue)"></i>
+        <h3>${title}</h3>
+        <span class="chip">${count}</span>
+        <i class="ti ti-chevron-down" id="chv-${secId}" style="color:var(--mu);font-size:14px;transition:transform .2s${open?'':';transform:rotate(-90deg)'}"></i>
+      </div>
+      <div class="pac-sec-body" id="${secId}" style="${open?'':'display:none'}">${body}</div>
+    </div>`;
+  }
+
+  return hdr+stats
+    +sec('pac-sec-casos','ti-scale','Casos Mesa/Comité Laboral',cases.length,casesHtml,true)
+    +sec('pac-sec-incap','ti-clipboard-list','Consolidado de Incapacidades',`${stIncap.count} · ${stIncap.totalDias}d`,incapHtml,true)
+    +sec('pac-sec-exa','ti-stethoscope','Exámenes Ocupacionales',exams.length||DB.exa.persons.filter(px=>normCC(px.cc)===pid).length,examsHtml,false)
+    +sec('pac-sec-tl','ti-timeline','Línea del Tiempo Unificada',tl.length,tlHtml,true);
+}
+
+/* Edición de datos del paciente — modal */
+function editPacField(pid){
+  const p=DB.patients[pid]; if(!p)return;
+  // Eliminar modal anterior si existe
+  document.getElementById('pac-edit-modal')?.remove();
+  const campos=[
+    {key:'nombre',  label:'Nombre completo', type:'text'},
+    {key:'cc',      label:'Cédula',           type:'text', readonly:true},
+    {key:'empresa', label:'Empresa',           type:'text'},
+    {key:'cargo',   label:'Cargo',             type:'text'},
+    {key:'eps',     label:'EPS',               type:'text'},
+  ];
+  const rows=campos.map(f=>`
+    <div class="pac-modal-row">
+      <label>${f.label}</label>
+      <input id="pedit-${f.key}" type="${f.type||'text'}" value="${escHtml(p[f.key]||p.ccDisplay||'')}"
+        ${f.readonly?'readonly style="opacity:.6;cursor:not-allowed"':''} placeholder="${f.label}">
+    </div>`).join('');
+  const ov=document.createElement('div');
+  ov.id='pac-edit-modal';
+  ov.className='pac-modal-overlay';
+  ov.innerHTML=`
+    <div class="pac-modal" onclick="event.stopPropagation()">
+      <div class="pac-modal-hdr">
+        <i class="ti ti-user-edit" style="font-size:18px"></i>
+        <h3>Editar datos del paciente</h3>
+        <button onclick="document.getElementById('pac-edit-modal').remove()"
+          style="background:rgba(255,255,255,.15);border:0;border-radius:7px;color:#fff;
+                 padding:5px 7px;cursor:pointer;line-height:1">
+          <i class="ti ti-x" style="font-size:15px"></i>
+        </button>
+      </div>
+      <div class="pac-modal-body">${rows}</div>
+      <div class="pac-modal-foot">
+        <button class="btn-sec" onclick="document.getElementById('pac-edit-modal').remove()">Cancelar</button>
+        <button class="btn-pri" onclick="savePacEdit('${pid}')"><i class="ti ti-device-floppy"></i> Guardar</button>
+      </div>
+    </div>`;
+  ov.addEventListener('click',()=>ov.remove());
+  document.body.appendChild(ov);
+  document.getElementById('pedit-nombre')?.focus();
+}
+function savePacEdit(pid){
+  const p=DB.patients[pid]; if(!p)return;
+  ['nombre','empresa','cargo','eps'].forEach(k=>{
+    const el=document.getElementById('pedit-'+k);
+    if(el) p[k]=(el.value||'').trim();
+  });
+  p.updatedAt=isoNow();
+  document.getElementById('pac-edit-modal')?.remove();
+  dbSave(); renderPac();
+  // Actualizar también el nombre en casos v2 del paciente (seedId=null custom)
+  Object.values(DB.cases2).filter(c=>c.patientId===pid&&!c.seedId).forEach(c=>{
+    const v1=DB.inc.custom.find(x=>'case_'+x.id===c.id);
+    if(v1&&p.nombre) v1.nombre=p.nombre;
+  });
+  dbSave();
 }
 
 /* ════════════════════════════════════════════
@@ -2393,17 +2798,21 @@ function addExa(){
   const nm=(document.getElementById('ef-nombre').value||'').trim();
   const cc=(document.getElementById('ef-cc').value||'').trim();
   if(!nm||!cc){alert('El nombre y la cédula son obligatorios.');return;}
-  DB.exa.persons.unshift({
-    id:'x'+Date.now(),nombre:nm,cc,
-    contrato:(document.getElementById('ef-contrato').value||'').trim(),
-    cargo:(document.getElementById('ef-cargo').value||'').trim(),
-    tipo:document.getElementById('ef-tipo').value,
-    fecha:(document.getElementById('ef-fecha').value||'').trim(),
-    concepto:document.getElementById('ef-concepto').value,
-    alt:(document.getElementById('ef-alt').value||'').trim(),
-    plan:(document.getElementById('ef-plan').value||'').trim(),
-    novedades:[],ingreso:nowDate()
-  });
+  const exaId='x'+Date.now();
+  const contrato=(document.getElementById('ef-contrato').value||'').trim();
+  const cargo=(document.getElementById('ef-cargo').value||'').trim();
+  const tipo=document.getElementById('ef-tipo').value;
+  const fecha=(document.getElementById('ef-fecha').value||'').trim();
+  const concepto=document.getElementById('ef-concepto').value;
+  const alt=(document.getElementById('ef-alt').value||'').trim();
+  const plan=(document.getElementById('ef-plan').value||'').trim();
+  const ingreso=nowDate();
+  /* v1 */
+  DB.exa.persons.unshift({id:exaId,nombre:nm,cc,contrato,cargo,tipo,fecha,concepto,alt,plan,novedades:[],ingreso});
+  /* v2 */
+  const pat=getOrCreatePatient({cc,nombre:nm,contrato,cargo});
+  DB.exams2.push({id:'exam_'+exaId,patientId:pat.id,tipo,fecha,ips:'',medico:'',
+    concepto,alt,plan,sourceDocId:null,createdAt:isoNow()});
   ['ef-nombre','ef-cc','ef-contrato','ef-cargo','ef-fecha','ef-alt','ef-plan'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
@@ -2585,7 +2994,7 @@ async function processDoc(file, apiKey, provider='gemini'){
 
   // Seleccionar prompt según tipo de análisis elegido
   const tipoAnalisis=document.getElementById('doc-analysis-type')?.value||'caso';
-  const promptToUse = tipoAnalisis==='examen' ? EXAM_PROMPT : ANALYSIS_PROMPT;
+  const promptToUse = tipoAnalisis==='examen' ? getExamPrompt() : getAnalysisPrompt();
 
   try{
     // Si es PDF, lo convertimos a DOCX antes de analizar (uso interno)
@@ -2654,7 +3063,11 @@ async function processDoc(file, apiKey, provider='gemini'){
   }
 }
 
-const ANALYSIS_PROMPT=`Eres un asistente médico especializado en salud ocupacional y medicina laboral en Colombia.
+function getAnalysisPrompt(){
+  const hoy=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
+  return `FECHA DE HOY: ${hoy}
+
+Eres un asistente médico especializado en salud ocupacional y medicina laboral en Colombia.
 
 Analiza el documento y extrae la información con estas etiquetas exactas (los datos marcados con ★ son CRÍTICOS para el seguimiento del caso):
 
@@ -2715,9 +3128,41 @@ Reglas:
 - Si un campo no aparece en el documento, escribe "No especificado".
 - Sé preciso y usa datos EXACTOS del documento.
 - NO inventes información ni la deduzcas.
-- Las fechas en formato DD/MM/AAAA.`;
+- Las fechas en formato DD/MM/AAAA.
 
-const EXAM_PROMPT=`Eres un asistente médico especializado en exámenes médicos ocupacionales en Colombia.
+═══════ BLOQUE JSON ESTRUCTURADO (OBLIGATORIO) ═══════
+Después de toda tu respuesta anterior, incluye EXACTAMENTE este bloque con los datos extraídos.
+Usa null para campos ausentes — NO escribas "No especificado" dentro del JSON.
+
+<json>
+{
+  "paciente": {
+    "nombre": null,
+    "cedula": null,
+    "empresa": null,
+    "cargo": null,
+    "eps": null
+  },
+  "incapacidades": [],
+  "eventos": [],
+  "concepto": null,
+  "plan": null,
+  "alertas": [],
+  "resumen": null
+}
+</json>
+
+Formato de cada incapacidad: {"inicio":"DD/MM/AAAA","fin":"DD/MM/AAAA","dias":0,"dx":"...","cie10":"..."}
+Formato de cada evento:      {"fecha":"DD/MM/AAAA","tipo":"medico","descripcion":"..."}
+Tipos de evento válidos: medico · sesion · decision · alerta · laboral · novedad
+Concepto válido: apto · no_apto · apto_rr · pendiente · pend_esp`;
+}
+
+function getExamPrompt(){
+  const hoy=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
+  return `FECHA DE HOY: ${hoy}
+
+Eres un asistente médico especializado en exámenes médicos ocupacionales en Colombia.
 
 Analiza este documento de examen ocupacional (periódico, pre-ingreso, post-incapacidad o egreso) y extrae:
 
@@ -2763,7 +3208,34 @@ Reglas:
 - Si un campo no aparece en el documento, escribe "No especificado".
 - Sé preciso y usa datos EXACTOS del documento.
 - NO inventes información.
-- Las fechas en formato DD/MM/AAAA.`;
+- Las fechas en formato DD/MM/AAAA.
+
+═══════ BLOQUE JSON ESTRUCTURADO (OBLIGATORIO) ═══════
+Incluye este bloque al final con los datos extraídos. Usa null para campos ausentes.
+
+<json>
+{
+  "paciente": {
+    "nombre": null,
+    "cedula": null,
+    "empresa": null,
+    "cargo": null,
+    "eps": null
+  },
+  "incapacidades": [],
+  "eventos": [],
+  "concepto": null,
+  "plan": null,
+  "alertas": [],
+  "resumen": null
+}
+</json>
+
+Formato de cada incapacidad: {"inicio":"DD/MM/AAAA","fin":"DD/MM/AAAA","dias":0,"dx":"...","cie10":"..."}
+Formato de cada evento:      {"fecha":"DD/MM/AAAA","tipo":"medico","descripcion":"..."}
+Tipos válidos de evento: medico · sesion · decision · alerta · laboral · novedad
+Concepto válido: apto · no_apto · apto_rr · pendiente · pend_esp`;
+}
 
 /* Convierte ArrayBuffer a base64 en chunks para evitar stack overflow en archivos grandes */
 function toBase64(ab){
@@ -2776,7 +3248,7 @@ function toBase64(ab){
 }
 
 async function analyzePDF(b64,apiKey,model,customPrompt){
-  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const prompt=customPrompt||getAnalysisPrompt();
   const resp=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{
@@ -2798,7 +3270,7 @@ async function analyzePDF(b64,apiKey,model,customPrompt){
 }
 
 async function analyzeText(txt,filename,apiKey,model,customPrompt){
-  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const prompt=customPrompt||getAnalysisPrompt();
   const resp=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{
@@ -2821,7 +3293,7 @@ async function analyzeText(txt,filename,apiKey,model,customPrompt){
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 async function analyzeGeminiPDF(b64, apiKey, model, customPrompt){
-  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const prompt=customPrompt||getAnalysisPrompt();
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const resp=await fetch(url,{
     method:'POST',
@@ -2840,7 +3312,7 @@ async function analyzeGeminiPDF(b64, apiKey, model, customPrompt){
 }
 
 async function analyzeGeminiText(txt, filename, apiKey, model, customPrompt){
-  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const prompt=customPrompt||getAnalysisPrompt();
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const resp=await fetch(url,{
     method:'POST',
@@ -2868,8 +3340,8 @@ function showManualFallback(rid, filename, ext, localText){
   const hasText = localText && localText.trim().length>0;
 
   const promptToCopy = hasText
-    ? `${ANALYSIS_PROMPT}\n\nDOCUMENTO: "${filename}"\n---\n${localText.slice(0,7000)}\n---`
-    : ANALYSIS_PROMPT;
+    ? `${getAnalysisPrompt()}\n\nDOCUMENTO: "${filename}"\n---\n${localText.slice(0,7000)}\n---`
+    : getAnalysisPrompt();
 
   body.innerHTML=`
   <div style="background:#fef9ec;border:1px solid #f5d676;border-radius:12px;padding:16px;font-size:13px;color:#78350f">
@@ -2902,7 +3374,7 @@ function showManualFallback(rid, filename, ext, localText){
 }
 
 function copyManualPrompt(rid, filename){
-  const txt = _docLocalText[rid+'_prompt'] || ANALYSIS_PROMPT;
+  const txt = _docLocalText[rid+'_prompt'] || getAnalysisPrompt();
   navigator.clipboard.writeText(txt).then(()=>{
     const el=document.getElementById('copy-ok-'+rid);
     if(el){el.style.display='';setTimeout(()=>el.style.display='none',4000);}
@@ -2917,38 +3389,140 @@ function copyManualPrompt(rid, filename){
   });
 }
 
-function showDocResult(rid,txt){
+/* ════════════════════════════════════════════
+   IA ESTRUCTURADA — Parser JSON + Auto-link
+════════════════════════════════════════════ */
+
+/* Extrae el bloque <json>...</json> del texto de la IA */
+function parseAIJson(txt){
+  try{
+    const m=txt.match(/<json>([\s\S]*?)<\/json>/i);
+    if(m) return JSON.parse(m[1].trim());
+  }catch(e){}
+  // fallback: buscar objeto JSON con clave "paciente"
+  try{
+    const m2=txt.match(/\{\s*"paciente"[\s\S]*?\}(?=\s*$)/);
+    if(m2) return JSON.parse(m2[0]);
+  }catch(e){}
+  return null;
+}
+
+/* Texto visible sin el bloque <json> (para mostrar al usuario) */
+function stripJsonBlock(txt){
+  return txt.replace(/<json>[\s\S]*?<\/json>/gi,'').replace(/═+[^\n]*BLOQUE JSON[^\n]*/gi,'').trim();
+}
+
+/* Convierte concepto v2 → valor del select */
+function normConcepto(v){
+  if(!v) return 'pendiente';
+  const s=String(v).toLowerCase();
+  if(s.includes('no apto')||s==='no_apto') return 'no_apto';
+  if(s.includes('restricc')||s==='apto_rr') return 'apto_rr';
+  if(s.includes('especialista')||s==='pend_esp') return 'pend_esp';
+  if(s==='apto'||s.startsWith('apto')) return 'apto';
+  return 'pendiente';
+}
+
+/* Panel de resultado del análisis — muestra texto + panel de auto-vinculación */
+function showDocResult(rid, txt){
   document.getElementById('st-'+rid).innerHTML=
     `<span style="color:var(--ok-tx);font-size:12px"><i class="ti ti-check"></i> Completado</span>`;
   const body=document.getElementById('body-'+rid);
   body.style.display='';
 
-  // Opciones para vincular al caso
-  const incOpts=INC_CASES.map(c=>
-    `<option value="inc_${c.id}">${c.nombre.split(' ').slice(0,2).join(' ')} (Mesa/Comité)</option>`
-  ).join('');
-  const custOpts=DB.inc.custom.map(c=>
-    `<option value="cust_${c.id}">${c.nombre.split(' ').slice(0,2).join(' ')} (caso personalizado)</option>`
-  ).join('');
+  /* Parsear JSON y guardar */
+  const parsed=parseAIJson(txt);
+  if(parsed) DOC_JSON[rid]=parsed;
+  const cleanTxt=stripJsonBlock(txt);
+
+  /* Construir panel de auto-vinculación */
+  let autoLink='';
+  if(parsed){
+    const cedula=normCC(parsed.paciente?.cedula||'');
+    const pat=cedula?findPatientByCC(cedula):null;
+    const incaps=(parsed.incapacidades||[]).filter(i=>i.inicio&&i.fin);
+    const eventos=(parsed.eventos||[]).filter(e=>e.fecha&&e.descripcion);
+
+    if(pat){
+      /* Paciente encontrado → ofrecemos importación directa */
+      const patCases=Object.values(DB.cases2).filter(c=>c.patientId===pat.id);
+      const caseOpts=patCases.map(c=>{
+        const seed=c2Seed(c.id);
+        const label=pat.nombre+(seed?` — ${seed.tipo==='mesa'?'Mesa':'Comité'}`:'');
+        return `<option value="${escHtml(c.id)}">${escHtml(label)}</option>`;
+      }).join('');
+      autoLink=`
+      <div style="background:#f0fdf5;border:1px solid #86efac;border-radius:var(--rads);padding:14px;margin-bottom:10px">
+        <p style="font-size:12px;font-weight:700;color:#145a2e;margin-bottom:10px;display:flex;align-items:center;gap:7px">
+          <i class="ti ti-user-check" style="font-size:15px"></i>
+          Paciente identificado: <strong>${escHtml(pat.nombre)}</strong> · CC ${escHtml(pat.ccDisplay)}
+        </p>
+        ${patCases.length?`
+        <div style="margin-bottom:8px">
+          <label style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em">Vincular al caso:</label>
+          <select class="route-sel" id="autocase-${rid}" style="margin-top:4px">
+            <option value="">— selecciona —</option>
+            ${caseOpts}
+          </select>
+        </div>`:''}
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px;font-size:12.5px">
+          ${incaps.length?`<label style="display:flex;align-items:center;gap:7px;cursor:pointer">
+            <input type="checkbox" id="imp-incaps-${rid}" checked style="accent-color:var(--blue)">
+            Importar <strong>${incaps.length}</strong> incapacidad${incaps.length>1?'es':''} al caso
+          </label>`:''}
+          ${eventos.length?`<label style="display:flex;align-items:center;gap:7px;cursor:pointer">
+            <input type="checkbox" id="imp-eventos-${rid}" checked style="accent-color:var(--blue)">
+            Importar <strong>${eventos.length}</strong> evento${eventos.length>1?'s':''} a la línea del tiempo
+          </label>`:''}
+          <label style="display:flex;align-items:center;gap:7px;cursor:pointer">
+            <input type="checkbox" id="imp-novedad-${rid}" checked style="accent-color:var(--blue)">
+            Guardar resumen del análisis como novedad
+          </label>
+        </div>
+        <button class="btn-pri" style="width:100%" onclick="importAIData('${rid}','${pat.id}')">
+          <i class="ti ti-sparkles"></i> Importar datos al caso
+        </button>
+      </div>`;
+    } else if(cedula){
+      /* Cédula extraída pero paciente no existe */
+      autoLink=`
+      <div style="background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:var(--rads);padding:12px;margin-bottom:10px;font-size:12.5px;color:var(--warn-tx)">
+        <p style="font-weight:700;margin-bottom:6px"><i class="ti ti-user-question"></i> Paciente no registrado · CC ${escHtml(cedula)}</p>
+        <p style="margin-bottom:8px">${escHtml(parsed.paciente?.nombre||'(nombre no detectado)')} no está en el sistema.</p>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sec" style="flex:1;font-size:12px" onclick="crearDesdeJSON('${rid}','inc')"><i class="ti ti-plus"></i> Crear caso Mesa/Comité</button>
+          <button class="btn-sec" style="flex:1;font-size:12px" onclick="crearDesdeJSON('${rid}','exa')"><i class="ti ti-stethoscope"></i> Crear en Exámenes</button>
+        </div>
+      </div>`;
+    }
+  }
+
+  /* Selector manual (siempre disponible como fallback) */
+  const allCaseOpts=Object.values(DB.cases2).map(c=>{
+    const pat2=c2Patient(c.id); const seed2=c2Seed(c.id);
+    const lbl=(pat2?.nombre||seed2?.nombre||c.id).split(' ').slice(0,3).join(' ')
+              +' ('+(c.tipo==='mesa'?'Mesa':'Comité')+')';
+    return `<option value="${escHtml(c.id)}">${escHtml(lbl)}</option>`;
+  }).join('');
   const exaOpts=DB.exa.persons.map(p=>
-    `<option value="exa_${p.id}">${p.nombre.split(' ').slice(0,2).join(' ')} — ${TLBL[p.tipo]}</option>`
+    `<option value="exa_${p.id}">${escHtml(p.nombre.split(' ').slice(0,2).join(' '))} — ${TLBL[p.tipo]}</option>`
   ).join('');
 
   body.innerHTML=`
-  <div class="analysis-box">${escHtml(txt)}</div>
+  <div class="analysis-box">${escHtml(cleanTxt)}</div>
+  ${autoLink}
   <div class="route-box">
-    <p class="route-title"><i class="ti ti-arrow-right"></i> Guardar análisis como novedad en un caso existente</p>
+    <p class="route-title"><i class="ti ti-arrow-right"></i> Guardar análisis en un caso (selección manual)</p>
     <select class="route-sel" id="rsel-${rid}">
-      <option value="">— Selecciona dónde guardar este análisis —</option>
-      <optgroup label="Mesa / Comité Laboral (pre-cargados)">${incOpts}</optgroup>
-      ${DB.inc.custom.length?`<optgroup label="Mesa / Comité Laboral (personalizados)">${custOpts}</optgroup>`:''}
+      <option value="">— Selecciona dónde guardar —</option>
+      ${allCaseOpts?`<optgroup label="Mesa / Comité Laboral">${allCaseOpts}</optgroup>`:''}
       ${DB.exa.persons.length?`<optgroup label="Exámenes Ocupacionales">${exaOpts}</optgroup>`:''}
     </select>
     <div style="display:flex;gap:8px">
       <button class="btn-pri" style="flex:1" onclick="routeDoc('${rid}')">
-        <i class="ti ti-device-floppy"></i> Guardar en el caso seleccionado
+        <i class="ti ti-device-floppy"></i> Guardar en caso seleccionado
       </button>
-      <button class="btn-sm" onclick="crearExaDesdePDF('${rid}')">
+      <button class="btn-sm" onclick="crearDesdeJSON('${rid}','exa')">
         <i class="ti ti-user-plus"></i> Crear nuevo en Exámenes
       </button>
     </div>
@@ -2960,41 +3534,176 @@ function showDocResult(rid,txt){
   </div>`;
 }
 
+/* ─── Importación automática de datos JSON al caso ─── */
+function importAIData(rid, patientId){
+  const parsed=DOC_JSON[rid]; if(!parsed)return;
+  const txt=DOC_RESULTS[rid]||'';
+
+  /* Caso a vincular: preferir el select auto, luego el manual */
+  const autoCaseEl=document.getElementById('autocase-'+rid);
+  const manualSel=document.getElementById('rsel-'+rid);
+  const caseId=autoCaseEl?.value||manualSel?.value||'';
+  const cs=caseId?DB.cases2[caseId]:null;
+
+  const doIncaps =document.getElementById('imp-incaps-'+rid)?.checked!==false;
+  const doEventos=document.getElementById('imp-eventos-'+rid)?.checked!==false;
+  const doNovedad=document.getElementById('imp-novedad-'+rid)?.checked!==false;
+
+  let imported=[];
+
+  /* Incapacidades */
+  if(doIncaps && cs){
+    const incaps=(parsed.incapacidades||[]).filter(i=>i.inicio&&i.fin);
+    incaps.forEach(ic=>{
+      const di=_parseDMY(ic.inicio), df=_parseDMY(ic.fin); if(!di||!df)return;
+      const dias=Number(ic.dias)||_daysBetween(di,df);
+      const id='ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+      DB.incapacities.push({
+        id, patientId, caseId:cs.id,
+        fechaInicio:ic.inicio, fechaFin:ic.fin, inicio:ic.inicio, fin:ic.fin,
+        dias, cie10:ic.cie10||'', dx:ic.dx||'',
+        entidadEmisora:'', sourceDocId:rid, createdAt:isoNow()
+      });
+      /* v1 compat */
+      const ic1={id, inicio:ic.inicio, fin:ic.fin, dias, dx:ic.dx||''};
+      if(cs.seedId){const r=DB.inc.cases[cs.seedId];if(r){if(!r.incaps)r.incaps=[];r.incaps.push(ic1);}}
+      else{const c=DB.inc.custom.find(c=>'case_'+c.id===cs.id.replace(/^case_/,''));if(c){if(!c.incaps)c.incaps=[];c.incaps.push(ic1);}}
+    });
+    if(incaps.length) imported.push(`${incaps.length} incapacidad${incaps.length>1?'es':''}`);
+  }
+
+  /* Eventos → timeline2 */
+  if(doEventos && cs){
+    const eventos=(parsed.eventos||[]).filter(e=>e.fecha&&e.descripcion);
+    eventos.forEach(ev=>{
+      const tipo=TL_TIPOS[ev.tipo]?ev.tipo:'novedad';
+      const entry={id:newId('tl'), patientId, caseId:cs.id, fecha:ev.fecha,
+        tipo, texto:ev.descripcion, source:'ai', sourceDocId:rid, createdAt:isoNow()};
+      DB.timeline2.push(entry);
+      /* v1 compat */
+      if(cs.seedId){if(DB.inc.cases[cs.seedId])DB.inc.cases[cs.seedId].novedades.unshift({fecha:ev.fecha,texto:ev.descripcion,tipo});}
+      else{const c=DB.inc.custom.find(c=>'case_'+c.id===cs.id.replace(/^case_/,''));if(c){if(!c.actas)c.actas=[];c.actas.unshift({fecha:ev.fecha,texto:ev.descripcion,tipo});}}
+    });
+    if(eventos.length) imported.push(`${eventos.length} evento${eventos.length>1?'s':''} en timeline`);
+  }
+
+  /* Novedad de resumen */
+  if(doNovedad && cs){
+    const resumen=parsed.resumen||`[Análisis IA] ${txt.substring(0,400)}${txt.length>400?'…':''}`;
+    const entry={id:newId('tl'), patientId, caseId:cs.id, fecha:nowStr(),
+      tipo:'novedad', texto:'[Análisis IA] '+resumen, source:'ai', sourceDocId:rid, createdAt:isoNow()};
+    DB.timeline2.push(entry);
+    if(cs.seedId){if(DB.inc.cases[cs.seedId])DB.inc.cases[cs.seedId].novedades.unshift({fecha:nowStr(),texto:entry.texto,tipo:'novedad'});}
+    else{const c=DB.inc.custom.find(c=>'case_'+c.id===cs.id.replace(/^case_/,''));if(c){if(!c.actas)c.actas=[];c.actas.unshift({fecha:nowStr(),texto:entry.texto,tipo:'novedad'});}}
+    imported.push('resumen como novedad');
+  }
+
+  if(!imported.length && !cs){
+    alert('Selecciona un caso para vincular antes de importar.');
+    return;
+  }
+  dbSave();
+  const msg=imported.length?`✅ Importado: ${imported.join(', ')}.`:'✅ Guardado.';
+  const panel=document.querySelector(`#${rid} .analysis-box`)?.closest('[id]');
+  showToast();
+  /* Reemplazar el panel de auto-link por confirmación */
+  const autoLinkDiv=document.getElementById('body-'+rid)?.querySelector('[style*="f0fdf5"],[style*="warn-bg"]');
+  if(autoLinkDiv) autoLinkDiv.outerHTML=`<div style="background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:var(--rads);padding:10px 14px;font-size:12.5px;color:var(--ok-tx);margin-bottom:10px"><i class="ti ti-check"></i> ${msg}</div>`;
+  renderInc();
+}
+
+/* ─── routeDoc: guardar manualmente + v2 ─── */
 function routeDoc(rid){
   const sel=document.getElementById('rsel-'+rid);
   const val=sel?.value||''; if(!val){alert('Selecciona un caso antes de guardar.');return;}
   const txt=DOC_RESULTS[rid]||''; if(!txt)return;
   const resumen=`[Análisis IA] ${txt.substring(0,600)}${txt.length>600?'…':''}`;
-  if(val.startsWith('inc_')){
-    const cid=val.replace('inc_','');
-    if(!DB.inc.cases[cid]) DB.inc.cases[cid]={open:false,tareasDone:{},novedades:[],estado:'activo'};
-    DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:resumen});
-    dbSave(); alert('Análisis guardado. Ve a "Mesa / Comité Laboral" para verlo.');
-  } else if(val.startsWith('cust_')){
-    const cid=val.replace('cust_','');
-    const c=DB.inc.custom.find(c=>c.id===cid);
-    if(c){ if(!c.actas)c.actas=[]; c.actas.unshift({fecha:nowStr(),texto:resumen}); dbSave(); alert('Análisis guardado.'); }
-  } else if(val.startsWith('exa_')){
+
+  if(val.startsWith('exa_')){
     const pid=val.replace('exa_','');
     const p=DB.exa.persons.find(p=>p.id===pid);
-    if(p){ p.novedades.unshift({fecha:nowStr(),texto:resumen}); dbSave(); alert('Análisis guardado.'); }
+    if(p){ p.novedades.unshift({fecha:nowStr(),texto:resumen}); dbSave(); showToast(); return; }
+    return;
+  }
+  /* Caso en v2 */
+  const cs=DB.cases2[val];
+  if(!cs){alert('Caso no encontrado.');return;}
+  const entry={id:newId('tl'), patientId:cs.patientId, caseId:val, fecha:nowStr(),
+    tipo:'novedad', texto:resumen, source:'ai', sourceDocId:rid, createdAt:isoNow()};
+  DB.timeline2.push(entry);
+  /* v1 compat */
+  if(cs.seedId){if(DB.inc.cases[cs.seedId])DB.inc.cases[cs.seedId].novedades.unshift({fecha:nowStr(),texto:resumen,tipo:'novedad'});}
+  else{const c=DB.inc.custom.find(c=>'case_'+c.id===val.replace(/^case_/,''));if(c){if(!c.actas)c.actas=[];c.actas.unshift({fecha:nowStr(),texto:resumen,tipo:'novedad'});}}
+  dbSave(); showToast(); renderInc();
+}
+
+/* ─── Crear desde JSON ─── */
+function crearDesdeJSON(rid, destino){
+  const parsed=DOC_JSON[rid];
+  const txt=DOC_RESULTS[rid]||'';
+  const p=parsed?.paciente||{};
+  const nombre=prompt('Nombre del paciente:',p.nombre||''); if(!nombre)return;
+  const cc=prompt('Cédula:',p.cedula||''); if(!cc)return;
+  const nm=nombre.trim(), ccTrim=cc.trim();
+
+  if(destino==='inc'){
+    /* Crear caso Mesa/Comité */
+    const custId='cas_'+Date.now();
+    const caseId='case_'+custId;
+    const pat2=getOrCreatePatient({cc:ccTrim,nombre:nm,empresa:p.empresa||'',cargo:p.cargo||''});
+    const tipo='comite';
+    DB.inc.custom.unshift({id:custId,tipo,nombre:nm,cc:ccTrim,
+      empresa:p.empresa||'',cargo:p.cargo||'',radicado:'',sesion:'',
+      reprT:'',reprE:'',asesor:'',
+      diagnostico:parsed?.diagnosticos?.principal||parsed?.diagnostico?.principal||'',
+      estado:'activo',actas:[{fecha:nowStr(),texto:'[Creado desde análisis IA]\n'+txt.substring(0,800),tipo:'novedad'}],
+      createdAt:nowDate()});
+    DB.cases2[caseId]={id:caseId,patientId:pat2.id,tipo,estado:'activo',seedId:null,
+      accentColor:'#003087',diagnosticoPrincipal:DB.inc.custom[0].diagnostico,
+      empresa:p.empresa||'',cargo:p.cargo||'',ui:{open:true},createdAt:nowDate(),updatedAt:isoNow()};
+    /* Importar incaps + eventos si hay */
+    _importAIToCase(parsed, caseId, pat2.id, rid, txt);
+    dbSave(); renderInc();
+    alert('✅ Caso creado en Mesa/Comité. Ve a esa pestaña para verlo.');
+  } else {
+    /* Crear en Exámenes */
+    const exaId='x'+Date.now();
+    const pat3=getOrCreatePatient({cc:ccTrim,nombre:nm,empresa:p.empresa||'',cargo:p.cargo||''});
+    DB.exa.persons.unshift({id:exaId,nombre:nm,cc:ccTrim,
+      contrato:'',cargo:p.cargo||'',tipo:'periodico',fecha:nowDate(),
+      concepto:normConcepto(parsed?.concepto),
+      alt:parsed?.diagnosticos?.principal||'',
+      plan:parsed?.plan||'Extraído de análisis IA',
+      novedades:[{fecha:nowStr(),texto:'[Creado desde análisis IA]\n'+txt.substring(0,800)}],
+      ingreso:nowDate()});
+    DB.exams2.push({id:'exam_'+exaId,patientId:pat3.id,tipo:'periodico',fecha:nowDate(),
+      ips:'',medico:'',concepto:normConcepto(parsed?.concepto),
+      alt:parsed?.diagnosticos?.principal||'',plan:parsed?.plan||'',
+      sourceDocId:rid,createdAt:isoNow()});
+    dbSave(); renderExa();
+    alert('✅ Caso creado en Exámenes Ocupacionales.');
   }
 }
-function crearExaDesdePDF(rid){
-  const txt=DOC_RESULTS[rid]||'';
-  const nombre=prompt('Nombre del paciente:',''); if(!nombre)return;
-  const cc=prompt('Cédula:',''); if(!cc)return;
-  DB.exa.persons.unshift({
-    id:'x'+Date.now(),nombre:nombre.trim(),cc:cc.trim(),
-    contrato:'',cargo:'',tipo:'periodico',fecha:nowDate(),
-    concepto:'pendiente',alt:txt.substring(0,800),
-    plan:'Extraído de análisis de documento',
-    novedades:[{fecha:nowStr(),texto:'[Creado desde análisis IA]\n'+txt}],
-    ingreso:nowDate()
+
+/* Importa incaps + eventos de un JSON parseado a un caseId (helper interno) */
+function _importAIToCase(parsed, caseId, patientId, rid, rawTxt){
+  const cs=DB.cases2[caseId]; if(!cs)return;
+  (parsed?.incapacidades||[]).filter(i=>i.inicio&&i.fin).forEach(ic=>{
+    const di=_parseDMY(ic.inicio),df=_parseDMY(ic.fin); if(!di||!df)return;
+    const dias=Number(ic.dias)||_daysBetween(di,df);
+    const id='ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+    DB.incapacities.push({id,patientId,caseId,fechaInicio:ic.inicio,fechaFin:ic.fin,
+      inicio:ic.inicio,fin:ic.fin,dias,cie10:ic.cie10||'',dx:ic.dx||'',
+      entidadEmisora:'',sourceDocId:rid||null,createdAt:isoNow()});
   });
-  dbSave();
-  alert('Caso creado. Ve a "Exámenes Ocupacionales" para completar la información.');
+  (parsed?.eventos||[]).filter(e=>e.fecha&&e.descripcion).forEach(ev=>{
+    DB.timeline2.push({id:newId('tl'),patientId,caseId,fecha:ev.fecha,
+      tipo:TL_TIPOS[ev.tipo]?ev.tipo:'novedad',texto:ev.descripcion,
+      source:'ai',sourceDocId:rid||null,createdAt:isoNow()});
+  });
 }
+
+function crearExaDesdePDF(rid){ crearDesdeJSON(rid,'exa'); }
 
 /* ════════════════════════════════════════════
    CONFIGURACIÓN
@@ -3267,7 +3976,7 @@ async function ensureDocxFromPdf(file, onStatus){
 }
 
 async function analyzeGroq(txt, filename, apiKey, model, customPrompt){
-  const prompt = customPrompt || ANALYSIS_PROMPT;
+  const prompt = customPrompt || getAnalysisPrompt();
   const resp=await fetch(GROQ_BASE,{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
@@ -3312,6 +4021,7 @@ async function testGroqKey(key){
 ══════════════════════════════════════════════════ */
 let _repFiles = [];
 let _repText = null;
+let _repPatientId = null;   // paciente vinculado al reporte actual
 
 function onRepDrag(e,active){
   e.preventDefault();
@@ -3331,6 +4041,7 @@ function handleRepFiles(files){
   for(const f of files){
     const ext=f.name.split('.').pop().toLowerCase();
     if(!accepted.includes(ext)){rejected.push(f.name);continue;}
+    // evitar duplicados por nombre+tamaño
     if(!_repFiles.some(x=>x.name===f.name && x.size===f.size)) _repFiles.push(f);
   }
   if(rejected.length) alert('Formato no soportado:\n'+rejected.join('\n'));
@@ -3367,11 +4078,12 @@ function removeRepFile(i){
 }
 
 function resetRepFile(){
-  _repFiles=[]; _repText=null;
+  _repFiles=[]; _repText=null; _repPatientId=null;
   document.getElementById('rep-gen-btn').disabled=true;
   document.getElementById('rep-status').innerHTML='';
   document.getElementById('rep-result').innerHTML='';
   renderRepFilesList();
+  renderRepPatientOpts();
   const drop=document.getElementById('rep-drop');
   drop.innerHTML=`
     <i class="ti ti-files"></i>
@@ -3383,6 +4095,152 @@ function resetRepFile(){
     </div>
     <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple onchange="handleRepFiles(this.files)" style="display:none">
   `;
+}
+
+/* ════════════════════════════════════════════
+   FASE 5 — REPORTE VINCULADO
+════════════════════════════════════════════ */
+
+function renderRepPatientOpts(){
+  const sel=document.getElementById('rep-patient-sel');
+  if(!sel) return;
+  const cur=_repPatientId||'';
+  sel.innerHTML='<option value="">— Sin vincular (solo documentos) —</option>';
+  Object.values(DB.patients)
+    .sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||''))
+    .forEach(p=>{
+      const o=document.createElement('option');
+      o.value=p.id;
+      o.textContent=(p.nombre||'(sin nombre)')+(p.cc?' · '+p.cc:'');
+      if(p.id===cur) o.selected=true;
+      sel.appendChild(o);
+    });
+  renderRepPatientInfo();
+}
+
+function onRepPatientChange(){
+  const sel=document.getElementById('rep-patient-sel');
+  _repPatientId=sel?sel.value||null:null;
+  const btn=document.getElementById('rep-open-pac-btn');
+  if(btn) btn.style.display=_repPatientId?'':'none';
+  if(_repPatientId && btn){
+    btn.onclick=()=>{ openPacFrom(Object.values(DB.cases2).find(c=>c.patientId===_repPatientId&&(c.estado||'activo')==='activo')?.id||null); };
+  }
+  renderRepPatientInfo();
+}
+
+function _repPatIncaps(patientId){
+  return DB.incapacities.filter(i=>{
+    if(i.patientId===patientId) return true;
+    const cs=DB.cases2[i.caseId];
+    return cs && cs.patientId===patientId;
+  }).sort((a,b)=>{
+    const fa=new Date(((a.fechaInicio||a.inicio||'01/01/2000')).split('/').reverse().join('-'));
+    const fb=new Date(((b.fechaInicio||b.inicio||'01/01/2000')).split('/').reverse().join('-'));
+    return fa-fb;
+  });
+}
+
+function renderRepPatientInfo(){
+  const cont=document.getElementById('rep-patient-info');
+  if(!cont) return;
+  if(!_repPatientId){cont.innerHTML='';return;}
+  const pat=DB.patients[_repPatientId];
+  if(!pat){cont.innerHTML='';return;}
+  const incaps=_repPatIncaps(_repPatientId);
+  const cases=Object.values(DB.cases2).filter(c=>c.patientId===_repPatientId);
+  const totalDias=incaps.reduce((s,i)=>s+(parseInt(i.dias)||0),0);
+  cont.innerHTML=`
+    <div style="background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:var(--rads);padding:10px 12px;font-size:12.5px;color:var(--ok-tx)">
+      <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:${incaps.length?'8px':'0'}">
+        <span><i class="ti ti-briefcase-medical"></i> <strong>${cases.length}</strong> caso${cases.length!==1?'s':''} en sistema</span>
+        <span><i class="ti ti-bed"></i> <strong>${incaps.length}</strong> incapacidad${incaps.length!==1?'es':''} · <strong>${totalDias}</strong> días acumulados</span>
+        <span style="color:var(--ok-tx)"><i class="ti ti-database-check"></i> Datos estructurados se inyectarán automáticamente</span>
+      </div>
+      ${incaps.length?`<div style="max-height:130px;overflow-y:auto;border-top:1px solid var(--ok-bdr);padding-top:6px;margin-top:2px">
+        <table style="width:100%;border-collapse:collapse;font-size:11.5px">
+          <thead><tr style="font-weight:700">
+            <td style="padding:2px 6px">Inicio</td><td style="padding:2px 6px">Fin</td>
+            <td style="padding:2px 6px">Días</td><td style="padding:2px 6px">Dx</td>
+          </tr></thead><tbody>
+          ${incaps.map(i=>`<tr style="border-top:1px solid var(--ok-bdr)">
+            <td style="padding:2px 6px">${i.fechaInicio||i.inicio||'—'}</td>
+            <td style="padding:2px 6px">${i.fechaFin||i.fin||'—'}</td>
+            <td style="padding:2px 6px;font-weight:700">${i.dias||'?'}</td>
+            <td style="padding:2px 6px">${escHtml((i.dx||'—').substring(0,40))}</td>
+          </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`:'<p style="margin:0;opacity:.7">Sin incapacidades registradas en el sistema para este paciente.</p>'}
+    </div>`;
+}
+
+function getRepStructuredBlock(patientId){
+  if(!patientId) return null;
+  const pat=DB.patients[patientId];
+  if(!pat) return null;
+  const incaps=_repPatIncaps(patientId);
+  if(!incaps.length) return null;
+  const totalDias=incaps.reduce((s,i)=>s+(parseInt(i.dias)||0),0);
+  const lastFin=incaps[incaps.length-1];
+  const finTxt=lastFin.fechaFin||lastFin.fin||'?';
+  const rows=incaps.map((i,idx)=>{
+    const dx=(i.dx||'—')+(i.cie10?' ('+i.cie10+')':'');
+    return `${idx+1} | ${i.fechaInicio||i.inicio||'?'} | ${i.fechaFin||i.fin||'?'} | ${i.dias||'?'} | ${dx} | ${i.entidad||'—'}`;
+  }).join('\n');
+  return [
+    '══════════ DATOS DE INCAPACIDADES CONFIRMADOS EN SISTEMA ══════════',
+    `Paciente: ${pat.nombre||'?'} · Cédula: ${pat.cc||'?'}`,
+    '',
+    'N° | Fecha inicio | Fecha fin | Días | Dx (CIE-10) | Entidad',
+    rows,
+    '',
+    `**TOTAL DE DÍAS DE INCAPACIDAD ACUMULADOS: ${totalDias} días**`,
+    `**FECHA DE VENCIMIENTO DE LA ÚLTIMA INCAPACIDAD: ${finTxt}**`,
+    '',
+    'INSTRUCCIÓN IMPORTANTE: En la sección "Consolidado de Incapacidades" usa EXACTAMENTE estos datos (ya validados en el sistema). Si en los documentos cargados aparecen incapacidades con fechas NO incluidas en esta lista, agrégalas al final de la tabla y recalcula el total. NO dupliques incapacidades ya listadas.',
+    '══════════════════════════════════════════════════════════════════',
+  ].join('\n');
+}
+
+function saveRepToTimeline(){
+  if(!_repPatientId) return;
+  const cases=Object.values(DB.cases2).filter(c=>c.patientId===_repPatientId&&(c.estado||'activo')==='activo');
+  const targetCaseId=cases.length?cases[0].id:
+    Object.values(DB.cases2).filter(c=>c.patientId===_repPatientId).sort((a,b)=>
+      (b.createdAt||'').localeCompare(a.createdAt||''))[0]?.id||null;
+  if(!targetCaseId){
+    alert('No se encontraron casos para este paciente en el sistema.');
+    return;
+  }
+  const tipo=document.getElementById('rep-tipo')?.value||'breve';
+  const tipoLbl={breve:'Reporte breve',detallado:'Reporte detallado',empleador:'Reporte p/empleador',arl:'Reporte p/ARL'}[tipo]||'Reporte';
+  const archivos=_repFiles&&_repFiles.length?_repFiles.map(f=>f.name).join(', '):'—';
+  const entry={
+    id:'tl_rep_'+Date.now(),
+    caseId:targetCaseId,
+    patientId:_repPatientId,
+    fecha:new Date().toISOString().slice(0,10),
+    tipo:'decision',
+    texto:`📄 ${tipoLbl} generado (${archivos})`,
+    source:'report',
+    createdAt:new Date().toISOString()
+  };
+  DB.timeline2.push(entry);
+  // v1 compat
+  const cs=DB.cases2[targetCaseId];
+  if(cs){
+    const v1=cs.seedId?DB.inc.cases[cs.seedId]:DB.inc.custom.find(c=>c.id===targetCaseId.replace(/^case_/,''));
+    if(v1){if(!v1.timeline)v1.timeline=[];v1.timeline.push({fecha:entry.fecha,tipo:'decision',nota:entry.texto});}
+  }
+  dbSave();
+  const btn=document.getElementById('rep-save-tl-btn');
+  if(btn){
+    btn.innerHTML='<i class="ti ti-check"></i> Guardado en timeline';
+    btn.disabled=true;
+    btn.style.cssText+='background:var(--ok-bg);color:var(--ok-tx);border-color:var(--ok-bdr)';
+  }
+  showToast();
 }
 
 function buildReportPrompt(tipo, anon, recom){
@@ -3401,7 +4259,10 @@ function buildReportPrompt(tipo, anon, recom){
     ? 'En el bloque "Plan de Manejo y Seguimiento" INCLUYE conductas y recomendaciones concretas y accionables.'
     : 'En el bloque "Plan de Manejo y Seguimiento" limítate a describir lo que el documento indica, SIN sugerir nuevas conductas.';
 
-  return `Eres un médico de salud ocupacional. Genera un REPORTE DE CASO consolidando la información de UNO O VARIOS documentos cargados (puede haber múltiples archivos del mismo paciente: historias clínicas, conceptos, incapacidades, exámenes, etc.). Integra todos los hallazgos en un único reporte coherente.
+  const hoy=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
+  return `FECHA DE HOY (para calcular vigencias): ${hoy}
+
+Eres un médico de salud ocupacional. Genera un REPORTE DE CASO consolidando la información de UNO O VARIOS documentos cargados (puede haber múltiples archivos del mismo paciente: historias clínicas, conceptos, incapacidades, exámenes, etc.). Integra todos los hallazgos en un único reporte coherente.
 
 MARCO LEGAL APLICABLE (debe cumplirse en todo momento):
 • Ley 23 de 1981 (art. 34 y 38) — La historia clínica es un documento privado y reservado. El secreto profesional médico es inviolable.
@@ -3537,12 +4398,17 @@ async function generarReporte(){
       }
       partes.push(`══════════ DOCUMENTO ${i+1} de ${_repFiles.length}: ${f.name} ══════════\n\n${txt}`);
     }
-    const txtUnido = partes.join('\n\n');
+    let txtUnido = partes.join('\n\n');
     _repText = txtUnido;
+
+    // Fase 5: si hay paciente vinculado, inyectar incapacidades estructuradas
+    const structuredBlock = getRepStructuredBlock(_repPatientId);
+    if(structuredBlock) txtUnido = structuredBlock + '\n\n' + txtUnido;
 
     setStatus(`Generando reporte consolidado a partir de ${_repFiles.length} documento${_repFiles.length>1?'s':''}… esto puede tardar 15-30 segundos.`);
 
     const fileLabel = _repFiles.length===1 ? _repFiles[0].name : `${_repFiles.length} documentos consolidados`;
+    // Llamar IA
     let reporte;
     if(provider==='groq'){
       const model=localStorage.getItem('arl_groq_model')||'llama-3.3-70b-versatile';
@@ -3570,6 +4436,19 @@ async function generarReporte(){
 
 function showReporte(texto){
   const fecha=new Date().toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const pat=_repPatientId?DB.patients[_repPatientId]:null;
+  const tlBtn=pat?`
+    <div style="background:var(--ok-bg);border:1px solid var(--ok-bdr);border-radius:var(--rads);padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:12.5px;color:var(--ok-tx);flex:1"><i class="ti ti-user-check"></i> Vinculado a <strong>${escHtml(pat.nombre||'Paciente')}</strong>${pat.cc?' · '+escHtml(pat.cc):''}</span>
+      <button id="rep-save-tl-btn" onclick="saveRepToTimeline()"
+        style="padding:7px 14px;border-radius:var(--rads);border:1px solid var(--ok-bdr);background:var(--card);color:var(--ok-tx);font-size:12.5px;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-clock-plus"></i> Guardar en timeline
+      </button>
+      <button onclick="openPacFrom(Object.values(DB.cases2).find(c=>c.patientId==='${_repPatientId}'&&(c.estado||'activo')==='activo')?.id||null)"
+        style="padding:7px 12px;border-radius:var(--rads);border:1px solid var(--bdr);background:var(--card);color:var(--tx2);font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-user-circle"></i> Ver 360°
+      </button>
+    </div>`:'';
   document.getElementById('rep-result').innerHTML=`
     <div class="rep-result-card">
       <div class="rep-result-hdr">
@@ -3580,6 +4459,7 @@ function showReporte(texto){
           <button onclick="imprimirReporte()" title="Imprimir"><i class="ti ti-printer"></i> Imprimir</button>
         </div>
       </div>
+      ${tlBtn}
       <div class="rep-result-body" id="rep-result-body">${escHtml(texto)}</div>
       <div class="rep-result-foot">
         <i class="ti ti-shield-lock"></i>
@@ -3655,11 +4535,23 @@ function saveLockT(){
   resetLockT(); showToast();
 }
 function exportData(){
-  const blob=new Blob([JSON.stringify({inc:DB.inc,exa:DB.exa,exportedAt:new Date().toISOString()},null,2)],
-    {type:'application/json'});
+  const payload={
+    schemaVersion: DB.schemaVersion||2,
+    // v1 (compatibilidad)
+    inc: DB.inc, exa: DB.exa,
+    // v2 (fuente canónica)
+    patients: DB.patients,
+    cases2: DB.cases2,
+    tasks2: DB.tasks2,
+    timeline2: DB.timeline2,
+    incapacities: DB.incapacities,
+    exams2: DB.exams2,
+    exportedAt: new Date().toISOString()
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='arl_workspace_'+new Date().toISOString().slice(0,10)+'.json';
+  a.download='arl_workspace_v2_'+new Date().toISOString().slice(0,10)+'.json';
   a.click(); URL.revokeObjectURL(a.href);
 }
 function exportCSV(){
@@ -3674,6 +4566,32 @@ function exportCSV(){
   a.download='arl_examenes_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click(); URL.revokeObjectURL(a.href);
 }
+function exportIncapsCSV(){
+  const H=['Paciente','Cédula','Empresa','Cargo','Caso','F. Inicio','F. Fin','Días','Dx','CIE-10','Entidad','Fuente','Registrado'];
+  const q=v=>`"${(v||'').replace(/"/g,'""')}"`;
+  const rows=DB.incapacities.map(i=>{
+    const pat=DB.patients[i.patientId]||{};
+    const cs=i.caseId?DB.cases2[i.caseId]:null;
+    const seed=cs?c2Seed(i.caseId):null;
+    const caseLbl=seed?.nombre||pat.nombre||'—';
+    return [
+      pat.nombre||'—', pat.ccDisplay||pat.cc||'—', pat.empresa||'—', pat.cargo||'—',
+      caseLbl,
+      i.fechaInicio||i.inicio||'—', i.fechaFin||i.fin||'—',
+      i.dias||'', i.dx||'—', i.cie10||'—',
+      i.entidadEmisora||i.entidad||'—',
+      i.source||'manual',
+      (i.createdAt||'').slice(0,10)
+    ].map(q);
+  });
+  if(!rows.length){alert('No hay incapacidades registradas en el sistema.');return;}
+  const csv=[H.join(','),...rows.map(r=>r.join(','))].join('\r\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='arl_incapacidades_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
 function importData(input){
   const file=input.files[0]; if(!file)return;
   const r=new FileReader();
@@ -3681,8 +4599,16 @@ function importData(input){
     try{
       const d=JSON.parse(e.target.result);
       if(!confirm(`¿Importar datos? Esto reemplazará los datos actuales.`))return;
+      // v1 (backward compat con exports anteriores)
       if(d.inc) DB.inc={...DB.inc,...d.inc};
       if(d.exa) DB.exa=d.exa;
+      // v2 (si el export es v2)
+      if(d.patients)     DB.patients    ={...DB.patients,...d.patients};
+      if(d.cases2)       DB.cases2      ={...DB.cases2,...d.cases2};
+      if(d.tasks2)       DB.tasks2      =[...new Map([...DB.tasks2,...d.tasks2].map(t=>[t.id,t])).values()];
+      if(d.timeline2)    DB.timeline2   =[...new Map([...DB.timeline2,...d.timeline2].map(t=>[t.id,t])).values()];
+      if(d.incapacities) DB.incapacities=[...new Map([...DB.incapacities,...d.incapacities].map(t=>[t.id,t])).values()];
+      if(d.exams2)       DB.exams2      =[...new Map([...DB.exams2,...d.exams2].map(t=>[t.id,t])).values()];
       dbSave(); render(); alert('✅ Datos importados correctamente.');
     }catch(err){ alert('Error al importar: '+err.message); }
   };
@@ -3691,9 +4617,14 @@ function importData(input){
 function clearAll(){
   if(!confirm('¿Borrar TODOS los datos personalizados?\n(Los casos pre-cargados se mantienen)'))return;
   if(!confirm('Confirmación final: ¿continuar?'))return;
+  // v1
   DB.inc.cases={}; DB.inc.custom=[]; DB.inc.openCustom={};
   DB.exa={persons:[],open:{}}; DB.docs=[];
+  // v2 — purgar solo datos de usuario (no seedId-based que se resiembran)
+  DB.patients={}; DB.cases2={}; DB.tasks2=[]; DB.timeline2=[];
+  DB.incapacities=[]; DB.exams2=[];
   ensureIncCases();
+  migrate_v1_to_v2();
   dbSave(); render();
   alert('Datos personalizados eliminados.');
 }
