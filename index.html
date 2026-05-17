@@ -1080,10 +1080,23 @@ const AVCLR  = ['background:#e6f1fb;color:#0c447c','background:#e1f5ee;color:#08
 /* ════════════════════════════════════════════
    ESTADO
 ════════════════════════════════════════════ */
+const SCHEMA_VERSION = 2;
 let DB = {
+  schemaVersion: SCHEMA_VERSION,
+  // ── Modelo v1 (compatibilidad — sigue siendo el que leen los renderers actuales) ──
   inc:{cases:{},custom:[],openCustom:{}},
   exa:{persons:[],open:{}},
-  docs:[]
+  docs:[],
+  // ── Modelo v2 (nueva fuente de verdad — paciente como entidad central) ──
+  patients:{},          // { [normCC]: Patient }
+  cases2:{},            // { [caseId]: Case }  (cases2 porque DB.inc.cases ya existe)
+  incapacities:[],      // [{ id, patientId, caseId, fechaInicio, fechaFin, dias, cie10, dx, entidadEmisora, sourceDocId, createdAt }]
+  exams2:[],            // [{ id, patientId, tipo, fecha, ips, medico, concepto, restricciones, plan, sourceDocId, createdAt }]
+  tasks2:[],            // [{ id, caseId, txt, prio, done, doneAt, source, createdAt }]
+  timeline2:[],         // [{ id, patientId, caseId, fecha, tipo, texto, source, sourceDocId, createdAt }]
+  documents:[],         // [{ id, patientId, caseId, filename, hashSha256, sizeBytes, uploadedAt, textExtracted, status }]
+  aiAnalyses:[],        // [{ id, documentId, patientId, caseId, provider, model, runAt, rawText, parsed, mergedFields, errors }]
+  reports2:[],          // [{ id, patientId, caseId, generatedAt, tipo, anon, recom, sourceDocIds, aiAnalysisId, contenido }]
 };
 let IF_FILTRO = 'todos';
 let EF_FILTRO = 'todos';
@@ -1190,7 +1203,22 @@ function dbLoad(){
   if(!DB.inc.openCustom) DB.inc.openCustom={};
   if(!DB.exa) DB.exa={persons:[],open:{}};
   if(!DB.docs) DB.docs=[];
+  // Asegurar estructuras v2 (en archivos viejos no existen)
+  if(!DB.patients)      DB.patients={};
+  if(!DB.cases2)        DB.cases2={};
+  if(!DB.incapacities)  DB.incapacities=[];
+  if(!DB.exams2)        DB.exams2=[];
+  if(!DB.tasks2)        DB.tasks2=[];
+  if(!DB.timeline2)     DB.timeline2=[];
+  if(!DB.documents)     DB.documents=[];
+  if(!DB.aiAnalyses)    DB.aiAnalyses=[];
+  if(!DB.reports2)      DB.reports2=[];
   ensureIncCases();
+  // Migración v1 → v2 (idempotente: solo corre la primera vez)
+  try{
+    const r = migrate_v1_to_v2();
+    if(r.migrated) console.log('[ARL] Migración a schema v2 completada', r);
+  }catch(e){ console.error('[ARL] Error en migración v1→v2:', e); }
   // Restaurar configuración de IA
   const provider=localStorage.getItem('arl_provider')||'groq';
   const prov=document.getElementById('cfg-provider');
@@ -1453,6 +1481,271 @@ function delIncap(cid, icId, isCustom){
   root.incaps = root.incaps.filter(x=>x.id!==icId);
   dbSave();
   renderInc();
+}
+
+/* ════════════════════════════════════════════
+   MODELO v2 — PACIENTE COMO ENTIDAD CENTRAL
+   ════════════════════════════════════════════
+   Helpers de identidad y migración v1 → v2.
+   Durante la Fase 1 v1 sigue siendo lo que renderean los componentes;
+   v2 es fuente de verdad paralela lista para que las siguientes fases
+   la consuman directamente. */
+
+function normCC(s){
+  if(s==null) return '';
+  return String(s).replace(/\D/g,'');
+}
+function isoNow(){ return new Date().toISOString(); }
+function newId(prefix){
+  return (prefix||'id')+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);
+}
+function findPatientByCC(cc){
+  const k = normCC(cc);
+  if(!k) return null;
+  return DB.patients[k] || null;
+}
+function getPatient(id){ return DB.patients[id] || null; }
+function getPatientCases(patientId){
+  return Object.values(DB.cases2).filter(c=>c.patientId===patientId);
+}
+function getOrCreatePatient(data){
+  const k = normCC(data && data.cc);
+  if(!k){
+    const synth = 'x_'+newId('cc');
+    DB.patients[synth] = {
+      id: synth, ccDisplay: data?.cc||'(sin cédula)',
+      nombre: data?.nombre||'', eps:data?.eps||'', empresa:data?.empresa||'',
+      contrato:data?.contrato||'', cargo:data?.cargo||'',
+      fechaNacimiento:data?.fechaNacimiento||null, edad:data?.edad||null,
+      sexo:data?.sexo||null, seedId:data?.seedId||null,
+      createdAt: isoNow(), updatedAt: isoNow(), _sources:{}
+    };
+    return DB.patients[synth];
+  }
+  if(!DB.patients[k]){
+    DB.patients[k] = {
+      id: k, ccDisplay: data?.cc||k,
+      nombre: data?.nombre||'', eps:data?.eps||'', empresa:data?.empresa||'',
+      contrato:data?.contrato||'', cargo:data?.cargo||'',
+      fechaNacimiento:data?.fechaNacimiento||null, edad:data?.edad||null,
+      sexo:data?.sexo||null, seedId:data?.seedId||null,
+      createdAt: isoNow(), updatedAt: isoNow(), _sources:{}
+    };
+  } else {
+    const p = DB.patients[k];
+    ['nombre','eps','empresa','contrato','cargo','fechaNacimiento','edad','sexo'].forEach(f=>{
+      if(!p[f] && data && data[f]) p[f] = data[f];
+    });
+    p.updatedAt = isoNow();
+  }
+  return DB.patients[k];
+}
+
+function getCaseStatsV2(caseId){
+  const incs = DB.incapacities.filter(i=>i.caseId===caseId);
+  return getIncapStats(incs);
+}
+
+function migrate_v1_to_v2(){
+  if(DB.schemaVersion && DB.schemaVersion>=2 && Object.keys(DB.patients).length>0){
+    return {migrated:false, reason:'already v2'};
+  }
+  try{
+    const backupKey = 'ws_medico_v4_backup_v1';
+    if(!localStorage.getItem(backupKey)){
+      localStorage.setItem(backupKey, JSON.stringify({
+        savedAt: isoNow(), data: {
+          inc: DB.inc, exa: DB.exa, docs: DB.docs
+        }
+      }));
+    }
+  }catch(e){ console.warn('Backup v1 falló:', e); }
+
+  const before = {
+    incCases: Object.keys(DB.inc?.cases||{}).length,
+    incCustom: (DB.inc?.custom||[]).length,
+    incaps: 0,
+    novedades: 0,
+    examPersons: (DB.exa?.persons||[]).length
+  };
+  Object.values(DB.inc?.cases||{}).forEach(cs=>{
+    before.incaps += (cs.incaps||[]).length;
+    before.novedades += (cs.novedades||[]).length;
+  });
+  (DB.inc?.custom||[]).forEach(c=>{
+    before.incaps += (c.incaps||[]).length;
+    before.novedades += (c.actas||[]).length;
+  });
+
+  if(typeof INC_CASES!=='undefined'){
+    INC_CASES.forEach(c=>{
+      const p = getOrCreatePatient({
+        cc:c.cc, nombre:c.nombre, empresa:c.empresa, contrato:c.contrato,
+        seedId:c.id
+      });
+      const caseId = 'case_'+c.id;
+      if(!DB.cases2[caseId]){
+        DB.cases2[caseId] = {
+          id: caseId, patientId: p.id, tipo: c.tipo, estado: 'activo',
+          seedId: c.id, accentColor: c.accentColor,
+          diagnosticoPrincipal: c.diagnostico||'',
+          ui:{open:false}, createdAt: isoNow(), updatedAt: isoNow()
+        };
+      }
+      (c.tareas||[]).forEach(t=>{
+        if(!DB.tasks2.some(x=>x.id===t.id)){
+          DB.tasks2.push({
+            id:t.id, caseId, txt:t.txt, prio:t.prio,
+            done:false, doneAt:null, source:'seed', createdAt:isoNow()
+          });
+        }
+      });
+    });
+  }
+
+  Object.entries(DB.inc?.cases||{}).forEach(([oid, cs])=>{
+    const caseId = 'case_'+oid;
+    if(DB.cases2[caseId]){
+      DB.cases2[caseId].estado = cs.estado || 'activo';
+      DB.cases2[caseId].ui = { open: !!cs.open };
+    }
+    const patientId = DB.cases2[caseId]?.patientId;
+    Object.entries(cs.tareasDone||{}).forEach(([tid, v])=>{
+      const t = DB.tasks2.find(x=>x.id===tid && x.caseId===caseId);
+      if(t){ t.done = !!v; if(v) t.doneAt = isoNow(); }
+    });
+    (cs.tareasExtra||[]).forEach(t=>{
+      if(!DB.tasks2.some(x=>x.id===t.id)){
+        DB.tasks2.push({
+          id:t.id, caseId, txt:t.txt, prio:t.prio||'media',
+          done:!!(cs.tareasDone||{})[t.id], doneAt:null,
+          source:'user', createdAt:isoNow()
+        });
+      }
+    });
+    (cs.novedades||[]).forEach(n=>{
+      const isAI = String(n.texto||'').startsWith('[Análisis IA]');
+      DB.timeline2.push({
+        id: newId('tl'), patientId, caseId,
+        fecha: n.fecha || isoNow(),
+        tipo: n.tipo || (isAI?'novedad':'novedad'),
+        texto: n.texto || '',
+        source: isAI ? 'ai' : 'manual',
+        sourceDocId: null, createdAt: isoNow()
+      });
+    });
+    (cs.incaps||[]).forEach(ic=>{
+      DB.incapacities.push({
+        id: ic.id || newId('ic'), patientId, caseId,
+        fechaInicio: ic.inicio, fechaFin: ic.fin,
+        dias: Number(ic.dias)||0, cie10: '', dx: ic.dx||'',
+        entidadEmisora: '', sourceDocId: null, createdAt: isoNow()
+      });
+    });
+  });
+
+  (DB.inc?.custom||[]).forEach(c=>{
+    const p = getOrCreatePatient({
+      cc:c.cc, nombre:c.nombre, empresa:c.empresa,
+      cargo:c.cargo, contrato:c.contrato
+    });
+    const caseId = 'case_'+c.id;
+    if(!DB.cases2[caseId]){
+      DB.cases2[caseId] = {
+        id: caseId, patientId: p.id, tipo: c.tipo, estado: c.estado||'activo',
+        seedId: null, accentColor: c.tipo==='mesa'?'#7c3aed':'#003087',
+        diagnosticoPrincipal: c.diagnostico||'',
+        radicado: c.radicado||'', sesion: c.sesion||'',
+        asesor: c.asesor||'', reprT: c.reprT||'', reprE: c.reprE||'',
+        ui:{open: !!(DB.inc?.openCustom||{})[c.id]},
+        createdAt: c.createdAt || isoNow(), updatedAt: isoNow()
+      };
+    }
+    (c.tareas||[]).forEach(t=>{
+      if(!DB.tasks2.some(x=>x.id===t.id)){
+        DB.tasks2.push({
+          id:t.id, caseId, txt:t.txt, prio:t.prio||'media',
+          done:!!t.done, doneAt:t.done?isoNow():null,
+          source:'user', createdAt:isoNow()
+        });
+      }
+    });
+    (c.actas||[]).forEach(a=>{
+      DB.timeline2.push({
+        id: newId('tl'), patientId: p.id, caseId,
+        fecha: a.fecha || isoNow(),
+        tipo: a.tipo || 'novedad',
+        texto: a.texto || '',
+        source: String(a.texto||'').startsWith('[Análisis IA]') ? 'ai' : 'manual',
+        sourceDocId: null, createdAt: isoNow()
+      });
+    });
+    (c.incaps||[]).forEach(ic=>{
+      DB.incapacities.push({
+        id: ic.id || newId('ic'), patientId: p.id, caseId,
+        fechaInicio: ic.inicio, fechaFin: ic.fin,
+        dias: Number(ic.dias)||0, cie10:'', dx: ic.dx||'',
+        entidadEmisora:'', sourceDocId:null, createdAt: isoNow()
+      });
+    });
+  });
+
+  (DB.exa?.persons||[]).forEach(p=>{
+    const pat = getOrCreatePatient({
+      cc: p.cc, nombre: p.nombre, contrato: p.contrato, cargo: p.cargo,
+      eps: p.eps
+    });
+    if(!DB.exams2.some(x=>x.id===p.id)){
+      DB.exams2.push({
+        id: p.id, patientId: pat.id, tipo: p.tipo, fecha: p.fecha||p.ingreso||'',
+        ips: p.ips||'', medico: p.medico||'', concepto: p.concepto||'',
+        restricciones: [], plan: p.plan||'', sourceDocId: null,
+        createdAt: p.ingreso ? isoNow() : isoNow()
+      });
+    }
+    (p.novedades||[]).forEach(n=>{
+      DB.timeline2.push({
+        id: newId('tl'), patientId: pat.id, caseId: null,
+        fecha: n.fecha || isoNow(), tipo: n.tipo || 'novedad',
+        texto: n.texto || '',
+        source: String(n.texto||'').startsWith('[Análisis IA]') ? 'ai' : 'manual',
+        sourceDocId: null, createdAt: isoNow()
+      });
+    });
+  });
+
+  DB.schemaVersion = SCHEMA_VERSION;
+
+  const after = {
+    patients: Object.keys(DB.patients).length,
+    cases: Object.keys(DB.cases2).length,
+    incapacities: DB.incapacities.length,
+    timeline: DB.timeline2.length,
+    exams: DB.exams2.length,
+    tasks: DB.tasks2.length
+  };
+
+  console.log('[migrate v1→v2] OK', {before, after});
+  return {migrated:true, before, after};
+}
+
+function _dbStats(){
+  return {
+    schemaVersion: DB.schemaVersion,
+    v1: {
+      cases: Object.keys(DB.inc?.cases||{}).length,
+      custom: (DB.inc?.custom||[]).length,
+      examPersons: (DB.exa?.persons||[]).length
+    },
+    v2: {
+      patients: Object.keys(DB.patients).length,
+      cases: Object.keys(DB.cases2).length,
+      incapacities: DB.incapacities.length,
+      timeline: DB.timeline2.length,
+      exams: DB.exams2.length,
+      tasks: DB.tasks2.length
+    }
+  };
 }
 
 function renderIncapList(cid, incaps, isCustom){
