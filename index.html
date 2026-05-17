@@ -2122,14 +2122,14 @@ function docIcon(ext){
 
 async function processDoc(file, apiKey, provider='gemini'){
   const rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
-  const ext=file.name.split('.').pop().toLowerCase();
+  const origExt=file.name.split('.').pop().toLowerCase();
   const wrap=document.getElementById('doc-results');
 
-  // Crear tarjeta placeholder
+  // Crear tarjeta placeholder (usa nombre y extensión originales)
   const card=document.createElement('div');
   card.id=rid; card.className='doc-card';
   card.innerHTML=`<div class="doc-hdr">
-    ${docIcon(ext)}
+    ${docIcon(origExt)}
     <div class="doc-info">
       <p class="doc-name">${escHtml(file.name)}</p>
       <p class="doc-meta">${fmtBytes(file.size)}</p>
@@ -2140,6 +2140,9 @@ async function processDoc(file, apiKey, provider='gemini'){
   </div>
   <div id="body-${rid}" class="doc-body" style="display:none"></div>`;
   wrap.insertBefore(card,wrap.firstChild);
+
+  const stEl = document.getElementById('st-'+rid);
+  const setSt = (msg)=>{ if(stEl) stEl.innerHTML = `<span class="spinner"></span> ${msg}`; };
 
   const isGemini = provider==='gemini';
   const isGroq   = provider==='groq';
@@ -2154,8 +2157,17 @@ async function processDoc(file, apiKey, provider='gemini'){
   const promptToUse = tipoAnalisis==='examen' ? EXAM_PROMPT : ANALYSIS_PROMPT;
 
   try{
+    // Si es PDF, lo convertimos a DOCX antes de analizar (uso interno)
+    if(origExt==='pdf'){
+      setSt('Convirtiendo PDF a DOCX…');
+      file = await ensureDocxFromPdf(file, setSt);
+    }
+    const ext = file.name.split('.').pop().toLowerCase();
+    setSt('Analizando con IA…');
+
     let result='';
     if(ext==='pdf'){
+      // Fallback: si la conversión a DOCX falló y seguimos con PDF original
       const ab=await file.arrayBuffer();
       _docLocalText[rid]=null;
       if(isGroq){
@@ -2717,16 +2729,19 @@ async function testGeminiKey(key){
 ══════════════════════════════════════════════════ */
 const GROQ_BASE = 'https://api.groq.com/openai/v1/chat/completions';
 
+async function ensurePdfJs(){
+  if(window.pdfjsLib) return;
+  await new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc=
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(); };
+    s.onerror=rej; document.head.appendChild(s);
+  });
+}
+
 async function extractPDFText(arrayBuffer){
-  if(!window.pdfjsLib){
-    await new Promise((res,rej)=>{
-      const s=document.createElement('script');
-      s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-      s.onload=()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc=
-        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(); };
-      s.onerror=rej; document.head.appendChild(s);
-    });
-  }
+  await ensurePdfJs();
   const pdf=await window.pdfjsLib.getDocument({data:arrayBuffer}).promise;
   let text='';
   for(let i=1;i<=Math.min(pdf.numPages,30);i++){
@@ -2735,6 +2750,89 @@ async function extractPDFText(arrayBuffer){
     text+=content.items.map(it=>it.str).join(' ')+'\n';
   }
   return text.trim()||'(No se pudo extraer texto del PDF)';
+}
+
+/* ───── Conversión PDF → DOCX (uso interno) ─────
+   Toma el texto del PDF (extraído con PDF.js) y lo empaqueta como un
+   archivo .docx mínimo válido (zip con XML). Devuelve un nuevo File.
+   Se llama automáticamente antes de cualquier análisis para uniformar
+   el flujo: todo termina pasando por la ruta DOCX (mammoth + IA). */
+function _xmlEsc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+async function pdfFileToDocxFile(pdfFile){
+  if(typeof JSZip==='undefined') throw new Error('JSZip no disponible (necesario para convertir PDF a DOCX)');
+  await ensurePdfJs();
+  const ab = await pdfFile.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({data:ab}).promise;
+  // Extraer texto página por página (un parráfo por línea de texto)
+  const paragraphs = [];
+  const maxPages = Math.min(pdf.numPages, 50);
+  for(let i=1;i<=maxPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    // Encabezado de página
+    paragraphs.push(`══════════ Página ${i} de ${pdf.numPages} ══════════`);
+    // Reconstruir líneas agrupando por Y (PDF.js entrega items con coordenadas)
+    const lines = {};
+    for(const it of content.items){
+      const y = it.transform ? Math.round(it.transform[5]) : 0;
+      (lines[y] = lines[y] || []).push(it.str);
+    }
+    const ys = Object.keys(lines).map(Number).sort((a,b)=>b-a); // top→bottom
+    for(const y of ys){
+      const line = lines[y].join(' ').replace(/\s+/g,' ').trim();
+      if(line) paragraphs.push(line);
+    }
+    paragraphs.push(''); // separador entre páginas
+  }
+  if(paragraphs.length===0) paragraphs.push('(No se pudo extraer texto del PDF)');
+
+  // Construir DOCX mínimo (estructura OOXML)
+  const zip = new JSZip();
+  zip.file('[Content_Types].xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`);
+  zip.folder('_rels').file('.rels',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+  const body = paragraphs.map(line =>
+    line === ''
+      ? '<w:p/>'
+      : `<w:p><w:r><w:t xml:space="preserve">${_xmlEsc(line)}</w:t></w:r></w:p>`
+  ).join('');
+  zip.folder('word').file('document.xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr/></w:body></w:document>`);
+
+  const blob = await zip.generateAsync({
+    type:'blob',
+    mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  });
+  const newName = pdfFile.name.replace(/\.pdf$/i, '.docx');
+  return new File([blob], newName, {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+}
+
+/* Si el archivo es PDF lo convierte a DOCX; si ya es DOCX/DOC lo deja igual.
+   Cualquier otro formato (PPTX, etc.) se devuelve sin cambios para que
+   el flujo original lo maneje. */
+async function ensureDocxFromPdf(file, onStatus){
+  if(!file) return file;
+  const ext = (file.name.split('.').pop()||'').toLowerCase();
+  if(ext!=='pdf') return file;
+  if(typeof onStatus==='function') onStatus(`Convirtiendo ${file.name} a DOCX…`);
+  try{
+    return await pdfFileToDocxFile(file);
+  }catch(e){
+    console.warn('Falló conversión PDF→DOCX, se usará el PDF original:', e);
+    return file; // fallback: dejar el PDF original
+  }
 }
 
 async function analyzeGroq(txt, filename, apiKey, model, customPrompt){
@@ -2962,6 +3060,17 @@ async function generarReporte(){
   document.getElementById('rep-result').innerHTML='';
 
   try{
+    // Paso 1: convertir todos los PDFs a DOCX (uso interno, flujo uniforme)
+    for(let i=0;i<_repFiles.length;i++){
+      const f=_repFiles[i];
+      if((f.name.split('.').pop()||'').toLowerCase()==='pdf'){
+        setStatus(`Convirtiendo PDF a DOCX (${i+1}/${_repFiles.length}): ${escHtml(f.name)}`);
+        _repFiles[i] = await ensureDocxFromPdf(f);
+      }
+    }
+    renderRepFilesList();
+
+    // Paso 2: extraer texto de TODOS los archivos (ya como DOCX) y concatenar
     const partes=[];
     for(let i=0;i<_repFiles.length;i++){
       const f=_repFiles[i];
@@ -2969,6 +3078,7 @@ async function generarReporte(){
       const ext=f.name.split('.').pop().toLowerCase();
       let txt='';
       if(ext==='pdf'){
+        // Fallback: solo si la conversión a DOCX falló
         const ab=await f.arrayBuffer();
         txt=await extractPDFText(ab);
       } else {
