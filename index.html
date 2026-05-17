@@ -760,17 +760,18 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 
   <div class="rep-grid">
     <div class="rep-card">
-      <p class="rep-card-lbl"><i class="ti ti-upload"></i> 1. Subir documento</p>
+      <p class="rep-card-lbl"><i class="ti ti-upload"></i> 1. Subir documentos (uno o varios)</p>
       <div class="drop-zone" id="rep-drop" onclick="document.getElementById('rep-file').click()" ondragover="onRepDrag(event,true)" ondragleave="onRepDrag(event,false)" ondrop="onRepDrop(event)" style="margin-bottom:0">
-        <i class="ti ti-file-upload"></i>
-        <p class="drop-title">Arrastra o selecciona el archivo</p>
-        <p class="drop-sub">Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+        <i class="ti ti-files"></i>
+        <p class="drop-title">Arrastra o selecciona archivos</p>
+        <p class="drop-sub">Puedes subir varios documentos · Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
         <div class="fmt-tags">
           <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
           <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
         </div>
-        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple onchange="handleRepFiles(this.files)" style="display:none">
       </div>
+      <div id="rep-files-list" style="margin-top:10px"></div>
     </div>
 
     <div class="rep-card">
@@ -2780,7 +2781,7 @@ async function testGroqKey(key){
 /* ══════════════════════════════════════════════════
    REPORTE DE CASO — con marco legal colombiano
 ══════════════════════════════════════════════════ */
-let _repFile = null;
+let _repFiles = [];
 let _repText = null;
 
 function onRepDrag(e,active){
@@ -2790,64 +2791,88 @@ function onRepDrag(e,active){
 function onRepDrop(e){
   e.preventDefault();
   document.getElementById('rep-drop').classList.remove('drag');
-  const f=e.dataTransfer?.files?.[0];
-  if(f) handleRepFile(f);
+  const fs=e.dataTransfer?.files;
+  if(fs && fs.length) handleRepFiles(fs);
 }
 
-async function handleRepFile(file){
-  if(!file) return;
-  const ext=file.name.split('.').pop().toLowerCase();
-  if(!['pdf','docx','doc'].includes(ext)){
-    alert('Formato no soportado. Usa PDF o DOCX.'); return;
+function handleRepFiles(files){
+  if(!files || !files.length) return;
+  const accepted=['pdf','docx','doc'];
+  const rejected=[];
+  for(const f of files){
+    const ext=f.name.split('.').pop().toLowerCase();
+    if(!accepted.includes(ext)){rejected.push(f.name);continue;}
+    if(!_repFiles.some(x=>x.name===f.name && x.size===f.size)) _repFiles.push(f);
   }
-  _repFile=file;
-  _repText=null;
-  const drop=document.getElementById('rep-drop');
-  drop.innerHTML=`
-    <i class="ti ti-file-check" style="color:var(--blue)"></i>
-    <p class="drop-title">${escHtml(file.name)}</p>
-    <p class="drop-sub">${fmtBytes(file.size)} · Listo para generar reporte</p>
-    <button class="btn-sec" style="margin-top:12px" onclick="event.stopPropagation();resetRepFile()"><i class="ti ti-x"></i> Quitar archivo</button>
-    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+  if(rejected.length) alert('Formato no soportado:\n'+rejected.join('\n'));
+  renderRepFilesList();
+  document.getElementById('rep-gen-btn').disabled = _repFiles.length===0;
+}
+
+function renderRepFilesList(){
+  const cont=document.getElementById('rep-files-list');
+  if(!cont) return;
+  if(_repFiles.length===0){cont.innerHTML='';return;}
+  cont.innerHTML = `
+    <div style="background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:var(--rads);padding:10px 12px;font-size:12.5px">
+      <p style="margin:0 0 8px;color:var(--info-tx);font-weight:700;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-files"></i> ${_repFiles.length} archivo${_repFiles.length>1?'s':''} cargado${_repFiles.length>1?'s':''}
+      </p>
+      ${_repFiles.map((f,i)=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(0,0,0,.06)">
+          <i class="ti ti-file-${f.name.toLowerCase().endsWith('.pdf')?'type-pdf':'type-doc'}" style="font-size:16px;color:var(--blue)"></i>
+          <span style="flex:1;color:var(--tx);font-weight:600;word-break:break-all">${escHtml(f.name)}</span>
+          <span style="color:var(--mut);font-size:11px">${fmtBytes(f.size)}</span>
+          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="removeRepFile(${i})" title="Quitar"><i class="ti ti-x"></i></button>
+        </div>
+      `).join('')}
+      <button class="btn-sec" style="margin-top:8px;width:100%;font-size:12px" onclick="resetRepFile()"><i class="ti ti-trash"></i> Quitar todos</button>
+    </div>
   `;
-  document.getElementById('rep-gen-btn').disabled=false;
+}
+
+function removeRepFile(i){
+  _repFiles.splice(i,1);
+  renderRepFilesList();
+  document.getElementById('rep-gen-btn').disabled = _repFiles.length===0;
 }
 
 function resetRepFile(){
-  _repFile=null; _repText=null;
+  _repFiles=[]; _repText=null;
   document.getElementById('rep-gen-btn').disabled=true;
   document.getElementById('rep-status').innerHTML='';
   document.getElementById('rep-result').innerHTML='';
+  renderRepFilesList();
   const drop=document.getElementById('rep-drop');
   drop.innerHTML=`
-    <i class="ti ti-file-upload"></i>
-    <p class="drop-title">Arrastra o selecciona el archivo</p>
-    <p class="drop-sub">Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+    <i class="ti ti-files"></i>
+    <p class="drop-title">Arrastra o selecciona archivos</p>
+    <p class="drop-sub">Puedes subir varios documentos · Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
     <div class="fmt-tags">
       <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
       <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
     </div>
-    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple onchange="handleRepFiles(this.files)" style="display:none">
   `;
 }
 
 function buildReportPrompt(tipo, anon, recom){
   const tipoTxt = {
-    breve: 'BREVE EJECUTIVO — Estilo: claro, conciso, 1 página, lenguaje médico profesional pero accesible.',
-    detallado: 'DETALLADO CLÍNICO-LABORAL — Estilo: completo, técnico, incluye todos los hallazgos médicos y laborales relevantes.',
-    empleador: 'PARA EMPLEADOR — Estilo: enfocado en aptitud laboral, restricciones y plan de reintegro. SIN detalles clínicos sensibles, SIN diagnósticos específicos.',
+    breve: 'BREVE EJECUTIVO — Estilo: claro, conciso, redacción profesional pero accesible.',
+    detallado: 'DETALLADO CLÍNICO-LABORAL — Estilo: completo, técnico, incluye todos los hallazgos médicos y laborales relevantes encontrados en los documentos.',
+    empleador: 'PARA EMPLEADOR — Estilo: enfocado en aptitud laboral, restricciones y plan de reintegro. SIN diagnósticos clínicos detallados (solo mencionar "patología osteomuscular", "patología cardiovascular", etc.).',
     arl: 'PARA ARL / INTERCONSULTA — Estilo: formato técnico para envío a Mesa Laboral o ARL, con datos clínicos esenciales y solicitudes claras.'
   }[tipo]||'';
   const anonTxt = {
-    parcial: 'ANONIMIZACIÓN PARCIAL: mantén el nombre completo y la cédula. Datos sensibles (HIV, salud mental, adicciones, embarazo, orientación sexual) deben enmascararse como "diagnóstico de carácter reservado".',
+    parcial: 'ANONIMIZACIÓN PARCIAL: mantén el nombre completo y la cédula. Datos sensibles (VIH, salud mental, adicciones, embarazo, orientación sexual) deben enmascararse como "diagnóstico de carácter reservado".',
     iniciales: 'ANONIMIZACIÓN POR INICIALES: usa solo iniciales del nombre (ej. "J.G.M."). Reemplaza los últimos 4 dígitos de la cédula por "XXXX". Datos sensibles deben enmascararse.',
     total: 'ANONIMIZACIÓN TOTAL: NO incluyas nombre, cédula, fecha de nacimiento ni ningún dato identificable. Usa "el/la trabajador(a)" o "el paciente". Datos sensibles deben enmascararse o omitirse.'
   }[anon]||'';
   const recomTxt = recom==='si'
-    ? 'INCLUIR una sección final breve con "CONDUCTAS Y RECOMENDACIONES SUGERIDAS" (de 3 a 6 puntos accionables).'
-    : 'NO incluyas recomendaciones. Limítate a sintetizar el contenido del documento.';
+    ? 'En el bloque "Plan de Manejo y Seguimiento" INCLUYE conductas y recomendaciones concretas y accionables.'
+    : 'En el bloque "Plan de Manejo y Seguimiento" limítate a describir lo que el documento indica, SIN sugerir nuevas conductas.';
 
-  return `Eres un médico especialista en salud ocupacional. Genera un REPORTE DE CASO siguiendo el marco legal colombiano de confidencialidad médica:
+  return `Eres un médico de salud ocupacional. Genera un REPORTE DE CASO consolidando la información de UNO O VARIOS documentos cargados (puede haber múltiples archivos del mismo paciente: historias clínicas, conceptos, incapacidades, exámenes, etc.). Integra todos los hallazgos en un único reporte coherente.
 
 MARCO LEGAL APLICABLE (debe cumplirse en todo momento):
 • Ley 23 de 1981 (art. 34 y 38) — La historia clínica es un documento privado y reservado. El secreto profesional médico es inviolable.
@@ -2855,51 +2880,57 @@ MARCO LEGAL APLICABLE (debe cumplirse en todo momento):
 • Ley 1581 de 2012 — Los datos de salud son datos sensibles. Requieren protección reforzada y consentimiento expreso para su tratamiento.
 
 TIPO DE REPORTE SOLICITADO: ${tipoTxt}
-
 NIVEL DE ANONIMIZACIÓN: ${anonTxt}
-
 ${recomTxt}
 
-ESTRUCTURA OBLIGATORIA DEL REPORTE (usa estas secciones exactas con encabezados en mayúsculas):
+ESTRUCTURA OBLIGATORIA DEL REPORTE — RESPETA EXACTAMENTE estos encabezados, separadores y viñetas (no cambies el orden, no agregues secciones extra):
 
-1. ENCABEZADO
-   - Tipo de documento analizado
-   - Fecha de elaboración del reporte
-   - Destinatario sugerido
+• Nombre:
+• Identificación:
+• Edad:
+• EPS:
+• Cargo:
+• Fecha de consulta:
 
-2. DATOS DEL CASO
-   (Aplica el nivel de anonimización solicitado)
+________________________________________
+Antecedentes y Evolución Medica
 
-3. SÍNTESIS CLÍNICA
-   - Diagnóstico principal (con cuidado si es sensible)
-   - Tiempo de evolución / días de incapacidad acumulados
-   - Estado actual del proceso
+(Síntesis cronológica y narrativa de los antecedentes patológicos, quirúrgicos, laborales relevantes y la evolución del caso a partir de TODOS los documentos cargados. Si hay varias atenciones, intégralas en orden cronológico.)
 
-4. ASPECTOS LABORALES RELEVANTES
-   - Aptitud laboral
-   - Restricciones vigentes
-   - Estado del proceso de Mesa/Comité (si aplica)
+________________________________________
+Estado Clínico Actual
+Examen Físico:
+Estado General:
+Condición Metabólica:
+Situación Administrativa:
 
-5. LÍNEA DEL TIEMPO RESUMIDA
-   (Solo los hitos más importantes en orden cronológico)
+________________________________________
+Consolidado de Incapacidades
 
-6. CONCLUSIÓN
-   (2-3 líneas con el estado y la próxima acción esperada)
+(Lista cronológica de incapacidades encontradas: fecha de inicio, fecha de fin, días, diagnóstico CIE-10 si aparece, entidad que la emite. Cierra con el TOTAL de días acumulados y la fecha de vencimiento de la última incapacidad.)
 
-${recom==='si'?'7. CONDUCTAS Y RECOMENDACIONES SUGERIDAS\n   (3-6 puntos accionables, redactados de forma profesional)\n':''}
+________________________________________
+Plan de Manejo y Seguimiento
+Nueva Incapacidad:
+Pendientes:
+Mesa Laboral ARL:
+Comité Medicina Laboral Magnex:
 
-AVISO DE CONFIDENCIALIDAD (incluir al final, textual):
+________________________________________
+AVISO DE CONFIDENCIALIDAD:
 "Este documento contiene información médica de carácter reservado conforme a la Ley 23 de 1981, la Resolución 1995 de 1999 y la Ley 1581 de 2012. Su uso está restringido al destinatario autorizado. Cualquier reproducción, distribución o divulgación no autorizada está prohibida."
 
-Reglas:
-- NO inventes información. Solo usa datos del documento adjunto.
-- Si un dato es incierto, dilo explícitamente.
-- Sé profesional, claro y respetuoso.
-- Cumple estrictamente el nivel de anonimización solicitado.`;
+REGLAS ESTRICTAS:
+- NO inventes información. Solo usa datos presentes en los documentos.
+- Si un campo no aparece en los documentos, escribe "No referido en los documentos" después del campo. NO dejes el campo vacío y NO inventes.
+- Si recibes múltiples documentos, INTÉGRALOS en un único reporte (no hagas un reporte por archivo).
+- Respeta el nivel de anonimización solicitado.
+- Mantén el formato exacto (viñetas con •, líneas de "________________________________________" como separadores, dos puntos al final de cada campo).
+- Redacta en español, profesional y respetuoso.`;
 }
 
 async function generarReporte(){
-  if(!_repFile){alert('Sube un archivo primero');return;}
+  if(!_repFiles || _repFiles.length===0){alert('Sube al menos un archivo primero');return;}
   const provider=localStorage.getItem('arl_provider')||'groq';
   const apiKey = provider==='groq'
     ? localStorage.getItem('arl_groq_key')||''
@@ -2920,39 +2951,50 @@ async function generarReporte(){
   btn.disabled=true;
   btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Generando reporte…';
 
-  document.getElementById('rep-status').innerHTML=
-    `<div style="background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
-      <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:16px"></i>
-      <span>Extrayendo texto del documento y generando el reporte… esto puede tardar 10-20 segundos.</span>
-    </div>`;
+  const setStatus=(msg)=>{
+    document.getElementById('rep-status').innerHTML=
+      `<div style="background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
+        <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:16px"></i>
+        <span>${msg}</span>
+      </div>`;
+  };
+  setStatus(`Extrayendo texto de ${_repFiles.length} documento${_repFiles.length>1?'s':''}…`);
   document.getElementById('rep-result').innerHTML='';
 
   try{
-    // Extraer texto
-    let txt;
-    const ext=_repFile.name.split('.').pop().toLowerCase();
-    if(ext==='pdf'){
-      const ab=await _repFile.arrayBuffer();
-      txt=await extractPDFText(ab);
-    } else {
-      const ab=await _repFile.arrayBuffer();
-      if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
-      const r=await mammoth.extractRawText({arrayBuffer:ab});
-      txt=r.value;
+    const partes=[];
+    for(let i=0;i<_repFiles.length;i++){
+      const f=_repFiles[i];
+      setStatus(`Extrayendo texto del archivo ${i+1} de ${_repFiles.length}: ${escHtml(f.name)}`);
+      const ext=f.name.split('.').pop().toLowerCase();
+      let txt='';
+      if(ext==='pdf'){
+        const ab=await f.arrayBuffer();
+        txt=await extractPDFText(ab);
+      } else {
+        const ab=await f.arrayBuffer();
+        if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
+        const r=await mammoth.extractRawText({arrayBuffer:ab});
+        txt=r.value||'';
+      }
+      partes.push(`══════════ DOCUMENTO ${i+1} de ${_repFiles.length}: ${f.name} ══════════\n\n${txt}`);
     }
-    _repText=txt;
+    const txtUnido = partes.join('\n\n');
+    _repText = txtUnido;
 
-    // Llamar IA
+    setStatus(`Generando reporte consolidado a partir de ${_repFiles.length} documento${_repFiles.length>1?'s':''}… esto puede tardar 15-30 segundos.`);
+
+    const fileLabel = _repFiles.length===1 ? _repFiles[0].name : `${_repFiles.length} documentos consolidados`;
     let reporte;
     if(provider==='groq'){
       const model=localStorage.getItem('arl_groq_model')||'llama-3.3-70b-versatile';
-      reporte=await analyzeGroq(txt, _repFile.name, apiKey, model, prompt);
+      reporte=await analyzeGroq(txtUnido, fileLabel, apiKey, model, prompt);
     } else if(provider==='gemini'){
       const model=localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite';
-      reporte=await analyzeGeminiText(txt+'\n\n'+prompt, _repFile.name, apiKey, model);
+      reporte=await analyzeGeminiText(txtUnido+'\n\n'+prompt, fileLabel, apiKey, model);
     } else {
       const model=localStorage.getItem('arl_model')||'claude-sonnet-4-5';
-      reporte=await analyzeText(txt+'\n\n'+prompt, _repFile.name, apiKey, model);
+      reporte=await analyzeText(txtUnido+'\n\n'+prompt, fileLabel, apiKey, model);
     }
 
     showReporte(reporte);
@@ -3001,7 +3043,9 @@ function descargarReporte(){
   const el=document.getElementById('rep-result-body');
   if(!el) return;
   const fecha=new Date().toISOString().slice(0,10);
-  const nombre=_repFile?.name?.replace(/\.[^.]+$/,'')||'caso';
+  const nombre = (_repFiles && _repFiles.length===1)
+    ? _repFiles[0].name.replace(/\.[^.]+$/,'')
+    : (_repFiles && _repFiles.length>1 ? `consolidado_${_repFiles.length}docs` : 'caso');
   const blob=new Blob([el.innerText],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
