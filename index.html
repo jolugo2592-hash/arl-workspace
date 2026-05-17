@@ -228,7 +228,31 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .add-row textarea:focus{outline:none;border-color:var(--blue);background:#fff;
   box-shadow:0 0 0 3px rgba(0,48,135,.08)}
 
-/* Timeline actas */
+/* ── LÍNEA DEL TIEMPO ─────────────────────── */
+.tl-wrap{margin:4px 0 8px}
+.tl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tl-title{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px}
+.tl-empty{font-size:13px;color:var(--mu);font-style:italic;padding:10px 0 6px}
+.tl-item{position:relative;padding-left:30px;margin-bottom:0}
+.tl-item:last-child .tl-line{display:none}
+.tl-line{position:absolute;left:11px;top:24px;bottom:-4px;width:2px;background:var(--bdr);border-radius:2px}
+.tl-dot{position:absolute;left:4px;top:8px;width:16px;height:16px;border-radius:50%;
+  border:2.5px solid #fff;box-shadow:0 0 0 2px currentColor;display:flex;align-items:center;justify-content:center;font-size:8px}
+.tl-box{background:var(--li);border-radius:11px;padding:9px 13px;margin-bottom:8px;border:1px solid var(--bdr)}
+.tl-box-hdr{display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
+.tl-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.03em}
+.tl-fecha{font-size:11px;color:var(--mu);display:flex;align-items:center;gap:3px}
+.tl-texto{font-size:13px;white-space:pre-wrap;line-height:1.55;color:var(--tx)}
+.tl-del{font-size:11px;padding:2px 9px;color:var(--mu);border:1px solid var(--bdr);
+  border-radius:var(--rads);cursor:pointer;background:none;margin-top:6px;font-family:inherit;transition:all .15s}
+.tl-del:hover{background:var(--err-bg);color:var(--err-tx);border-color:var(--err-bdr)}
+.tl-add{display:flex;gap:6px;flex-direction:column;margin-top:10px}
+.tl-add-row{display:flex;gap:6px;align-items:flex-end}
+.tl-tipo-sel{font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:var(--rads);
+  font-family:inherit;background:var(--li);color:var(--tx);cursor:pointer;min-width:130px}
+.tl-tipo-sel:focus{outline:none;border-color:var(--blue)}
+
+/* Legacy acta-line (backwards compat) */
 .acta-line{position:relative;padding-left:22px;margin-bottom:11px}
 .acta-line::before{content:'';position:absolute;left:7px;top:0;bottom:-11px;width:2px;background:var(--bdr)}
 .acta-line:last-child::before{display:none}
@@ -893,6 +917,40 @@ const SK   = 'ws_medico_v4';
 const SALT = 'arl_bolivar_cluster_2024';
 const INC_ESTADOS = ['activo','en revisión','resuelto','suspendido'];
 const INC_ESTCLR  = {activo:'b-info','en revisión':'b-warn',resuelto:'b-ok',suspendido:'b-gray'};
+const TL_TIPOS={
+  sesion:  {label:'Sesión',       icon:'ti-users',            color:'#7c3aed',bg:'#ede9fe'},
+  medico:  {label:'Médico',       icon:'ti-stethoscope',      color:'#059669',bg:'#d1fae5'},
+  decision:{label:'Decisión',     icon:'ti-gavel',            color:'#0ea5e9',bg:'#e0f2fe'},
+  alerta:  {label:'Alerta',       icon:'ti-alert-triangle',   color:'#d97706',bg:'#fef3c7'},
+  laboral: {label:'Laboral',      icon:'ti-briefcase',        color:'#003087',bg:'#dce8f8'},
+  novedad: {label:'Novedad',      icon:'ti-note',             color:'#64748b',bg:'#f1f5f9'},
+};
+function tlRender(eventos, fnDel){
+  if(!eventos||!eventos.length)
+    return `<p class="tl-empty"><i class="ti ti-timeline" style="font-size:14px;margin-right:4px"></i>Sin eventos registrados. Agrega el primero abajo.</p>`;
+  const sorted=[...eventos].map((e,i)=>({...e,_i:i}))
+    .sort((a,b)=>{
+      const pa=a.fecha||'',pb=b.fecha||'';
+      const da=pa.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      const db=pb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      return db.localeCompare(da);
+    });
+  return sorted.map(ev=>{
+    const tp=TL_TIPOS[ev.tipo]||TL_TIPOS.novedad;
+    return `<div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot" style="color:${tp.color};background:${tp.bg}"><i class="ti ${tp.icon}" style="font-size:7px;color:${tp.color}"></i></div>
+      <div class="tl-box">
+        <div class="tl-box-hdr">
+          <span class="tl-badge" style="background:${tp.bg};color:${tp.color}">${tp.label}</span>
+          <span class="tl-fecha"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(ev.fecha||'')}</span>
+        </div>
+        <p class="tl-texto">${escHtml(ev.texto||'')}</p>
+        <button class="tl-del" onclick="(${fnDel})(${ev._i})"><i class="ti ti-trash" style="font-size:11px"></i> Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 const TLBL   = {periodico:'Periódico',ingreso:'Ingreso',postinc:'Post-incapacidad',egreso:'Egreso'};
 const TBADGE = {periodico:'b-per',ingreso:'b-ing',postinc:'b-pos',egreso:'b-egr'};
 const CLBL   = {pendiente:'Pendiente',apto:'Apto',apto_rr:'Apto c/ restricciones',no_apto:'No apto',pend_esp:'Pend. especialista'};
@@ -1340,16 +1398,19 @@ ${cs.open?`<div class="card-body">
   <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
   ${renderTareasInc(c, cs)}
   <div class="divh"></div>
-  <p class="slbl"><i class="ti ti-notes"></i> Novedades y seguimiento</p>
-  ${cs.novedades.length===0?`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px">Sin novedades registradas.</p>`:''}
-  ${cs.novedades.map((n,i)=>`<div class="log" style="border-left-color:${c.accentColor}">
-    <p class="log-d"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(n.fecha)}</p>
-    <p class="log-t">${escHtml(n.texto)}</p>
-    <button class="log-del" onclick="delIncNov('${c.id}',${i})"><i class="ti ti-trash" style="font-size:12px"></i> Eliminar</button>
-  </div>`).join('')}
-  <div class="add-row">
-    <textarea id="inc-nv-${c.id}" placeholder="Registra una novedad, resultado, acción tomada…"></textarea>
-    <button class="btn-sm" onclick="addIncNov('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+  <div class="tl-hdr">
+    <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
+    <span style="font-size:11px;color:var(--mu)">${cs.novedades.length} evento${cs.novedades.length!==1?'s':''}</span>
+  </div>
+  <div class="tl-wrap">${tlRender(cs.novedades,`(i)=>delIncNov('${c.id}',i)`)}</div>
+  <div class="tl-add">
+    <div class="tl-add-row">
+      <select class="tl-tipo-sel" id="inc-tipo-${c.id}">
+        ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}"><i class="ti ${v.icon}"></i> ${v.label}</option>`).join('')}
+      </select>
+      <button class="btn-sm" onclick="addIncNov('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+    </div>
+    <textarea id="inc-nv-${c.id}" placeholder="Describe el evento: sesión, resultado médico, decisión, alerta de vencimiento…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
   </div>
 </div>`:''}`;
     wrap.appendChild(div);
@@ -1411,20 +1472,19 @@ function renderCasoCustomBody(c){
   <div class="divh"></div>
   ${renderTareasCustom(c)}
   <div class="divh"></div>
-  <p class="slbl"><i class="ti ti-news"></i> Actas y novedades</p>
-  ${!c.actas||c.actas.length===0?`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px">Sin actas registradas.</p>`:''}
-  ${(c.actas||[]).map((a,i)=>`
-  <div class="acta-line">
-    <div class="acta-dot"></div>
-    <div class="acta-box">
-      <p class="log-d"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(a.fecha)}</p>
-      <p class="log-t">${escHtml(a.texto)}</p>
-      <button class="log-del" onclick="delActaCustom('${escHtml(c.id)}',${i})"><i class="ti ti-trash" style="font-size:12px"></i> Eliminar</button>
+  <div class="tl-hdr">
+    <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
+    <span style="font-size:11px;color:var(--mu)">${(c.actas||[]).length} evento${(c.actas||[]).length!==1?'s':''}</span>
+  </div>
+  <div class="tl-wrap" id="tl-${escHtml(c.id)}">${tlRender(c.actas||[], `(i)=>delActaCustom('${escHtml(c.id)}',i)`)}</div>
+  <div class="tl-add">
+    <div class="tl-add-row">
+      <select class="tl-tipo-sel" id="acta-tipo-${escHtml(c.id)}">
+        ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+      </select>
+      <button class="btn-sm" onclick="addActaCustom('${escHtml(c.id)}')"><i class="ti ti-plus"></i> Agregar</button>
     </div>
-  </div>`).join('')}
-  <div class="add-row">
-    <textarea id="acta-${escHtml(c.id)}" placeholder="Registra una novedad, acuerdo de sesión, decisión tomada…"></textarea>
-    <button class="btn-sm" onclick="addActaCustom('${escHtml(c.id)}')"><i class="ti ti-plus"></i> Agregar acta</button>
+    <textarea id="acta-${escHtml(c.id)}" placeholder="Describe el evento: sesión, resultado médico, decisión, acuerdo, alerta…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
   </div>
   <div class="divh"></div>
   <div style="display:flex;justify-content:flex-end">
@@ -1439,8 +1499,9 @@ function setIncEstado(cid,v){ DB.inc.cases[cid].estado=v; dbSave(); renderInc();
 function addIncNov(cid){
   const el=document.getElementById('inc-nv-'+cid);
   const txt=(el?.value||'').trim(); if(!txt)return;
-  DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:txt});
-  dbSave(); renderInc();
+  const tipo=document.getElementById('inc-tipo-'+cid)?.value||'novedad';
+  DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:txt,tipo});
+  el.value=''; dbSave(); renderInc();
 }
 function delIncNov(cid,i){ DB.inc.cases[cid].novedades.splice(i,1); dbSave(); renderInc(); }
 
@@ -1688,8 +1749,9 @@ function addActaCustom(id){
   const txt=(el?.value||'').trim(); if(!txt)return;
   const c=DB.inc.custom.find(c=>c.id===id); if(!c)return;
   if(!c.actas) c.actas=[];
-  c.actas.unshift({fecha:nowStr(),texto:txt});
-  dbSave(); renderInc();
+  const tipo=document.getElementById('acta-tipo-'+id)?.value||'sesion';
+  c.actas.unshift({fecha:nowStr(),texto:txt,tipo});
+  el.value=''; dbSave(); renderInc();
 }
 function delActaCustom(cid,i){
   const c=DB.inc.custom.find(c=>c.id===cid);
@@ -1978,27 +2040,40 @@ FECHAS CLAVE:
 - Fecha del documento:
 - Inicio incapacidad / examen:
 - Fin incapacidad / vencimiento:
-- Próximas citas:
+- Próxima cita / sesión:
+- Fecha límite o vencimiento del proceso:
 DIAGNÓSTICO Y HALLAZGOS:
 - Diagnóstico principal (CIE-10 si aparece):
 - Diagnóstico secundario:
 - Hallazgos clínicos relevantes:
-- Paraclínicos alterados:
+- Paraclínicos solicitados / resultados:
 CONCEPTO MÉDICO:
 - Aptitud (apto / no apto / apto con restricciones / pendiente):
-- Restricciones específicas:
+- Restricciones específicas (detallar cada una):
 PLAN Y SEGUIMIENTO:
-- Plan de manejo:
-- Remisiones indicadas:
+- Plan de manejo inmediato:
+- Remisiones indicadas (especialidad + urgencia):
 - Pendientes médicos:
-SEGUIMIENTO LABORAL:
+SEGUIMIENTO LABORAL (MESA LABORAL / COMITÉ):
+- Tipo de proceso (Mesa Laboral / Comité Medicina Laboral / Otro):
+- Número de sesión (si aplica):
+- Acuerdos o decisiones tomadas en esta sesión:
+- Estado del proceso (activo / suspendido / cerrado / calificado):
 - ¿Requiere CML (Comité Medicina Laboral)?:
 - ¿Requiere Mesa Laboral ARL?:
 - Días de incapacidad en este documento:
 - Total días acumulados (si se menciona):
-- Observaciones importantes:
+- Porcentaje de PCL (si se menciona):
+- IPS / institución tratante:
+- Asesor ARL / profesional responsable:
+ALERTAS Y ACCIONES URGENTES:
+- Vencimientos próximos (fechas exactas):
+- Acciones inmediatas requeridas:
+- Riesgos o alertas identificados:
+RESUMEN EJECUTIVO PARA SEGUIMIENTO:
+(2-3 líneas con el estado actual del caso, lo más importante para el seguimiento)
 
-Si un campo no aparece escribe "No especificado". Sé preciso y usa los datos exactos del documento.`;
+Si un campo no aparece en el documento escribe "No especificado". Sé preciso, usa datos exactos del documento y NO inventes información.`;
 
 /* Convierte ArrayBuffer a base64 en chunks para evitar stack overflow en archivos grandes */
 function toBase64(ab){
