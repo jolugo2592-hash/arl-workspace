@@ -2,8 +2,8 @@
 <html lang="es"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Workspace Médico · ARL Bolívar</title>
-<meta name="description" content="Herramienta de seguimiento médico-laboral para ARL Bolívar — Mesa Laboral, Exámenes Ocupacionales y Análisis de documentos con IA.">
+<title>Seguimiento Casos Laborales · Médico Cluster José Gómez</title>
+<meta name="description" content="Herramienta de seguimiento médico-laboral — Mesa Laboral, Exámenes Ocupacionales, Análisis de documentos con IA y Reportes de caso.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🏥&lt;/text&gt;&lt;/svg&gt;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -369,6 +369,44 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 .f-pdf{background:#fff0ef;color:#c0392b;border:1px solid #ffcac8}
 .f-docx{background:#eff4ff;color:#1d4ed8;border:1px solid #c3d5ff}
 .f-pptx{background:#fff5ef;color:#d35400;border:1px solid #ffd4b3}
+
+/* ── REPORTE DE CASO ─────────────────────── */
+.legal-banner{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  border:1px solid #93c5fd;border-radius:var(--rad);padding:14px 18px;margin-bottom:18px}
+.legal-icon{font-size:28px;color:#1e40af;flex-shrink:0;margin-top:2px}
+.legal-content{flex:1}
+.legal-title{font-size:13px;font-weight:800;color:#1e3a8a;margin-bottom:4px;letter-spacing:.02em}
+.legal-text{font-size:12px;color:#1e40af;line-height:1.55}
+.rep-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:850px){.rep-grid{grid-template-columns:1fr}}
+.rep-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  padding:16px 18px;box-shadow:var(--sh)}
+.rep-card-lbl{font-size:11px;font-weight:800;color:var(--mu);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.rep-card-lbl i{font-size:14px;color:var(--blue)}
+.rep-opts{display:flex;flex-direction:column;gap:9px}
+.rep-opt-row{display:flex;flex-direction:column;gap:3px}
+.rep-opt-lbl{font-size:11px;font-weight:700;color:var(--tx2)}
+.rep-sel{font-size:12.5px;padding:7px 10px;border:1px solid var(--bdr);border-radius:var(--rads);
+  font-family:inherit;background:var(--li);color:var(--tx);cursor:pointer}
+.rep-sel:focus{outline:none;border-color:var(--blue)}
+.rep-file-info{background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);
+  border-radius:var(--rads);padding:8px 12px;font-size:12px;margin-top:10px;
+  display:flex;align-items:center;gap:8px}
+.rep-result-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  margin-top:14px;overflow:hidden;box-shadow:var(--sh)}
+.rep-result-hdr{background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rep-result-title{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rep-result-actions{display:flex;gap:6px}
+.rep-result-actions button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:5px 11px;border-radius:var(--rads);font-size:11.5px;cursor:pointer;
+  font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s}
+.rep-result-actions button:hover{background:rgba(255,255,255,.32)}
+.rep-result-body{padding:20px 22px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;color:var(--tx)}
+.rep-result-foot{background:#fef7e6;border-top:1px solid #fcd34d;padding:11px 18px;
+  font-size:11.5px;color:#7c4008;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.rep-result-foot i{font-size:15px;flex-shrink:0;margin-top:1px}
 .doc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
   margin-bottom:14px;overflow:hidden;box-shadow:var(--sh);transition:all .2s}
 .doc-card:hover{box-shadow:var(--sh-hover);transform:translateY(-1px)}
@@ -460,9 +498,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 <div id="lock" class="lock">
   <div class="lock-box">
     <div class="lock-brand">
-      <div class="lock-pip"><span>ARL<br>BOL</span></div>
-      <h2>ARL Bolívar</h2>
-      <p>Workspace Médico Cluster · Ecopetrol Rubiales</p>
+      <div class="lock-pip"><i class="ti ti-stethoscope" style="font-size:34px"></i></div>
+      <h2>Seguimiento Casos Laborales</h2>
+      <p>Médico Cluster · José Gómez</p>
     </div>
     <div id="lock-msg" class="lock-msg"></div>
     <div class="pin-dots">
@@ -499,8 +537,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo"><span>ARL<br>BOL</span></div>
-    <div class="topbar-name">Médico Cluster<small>Ecopetrol Rubiales</small></div>
+    <div class="topbar-logo"><i class="ti ti-stethoscope" style="font-size:22px"></i></div>
+    <div class="topbar-name">Seguimiento Casos Laborales<small>Médico Cluster · José Gómez</small></div>
   </div>
   <div class="nav-tabs">
     <div class="ntab on" id="tab-inc" onclick="goTab('inc')">
@@ -511,6 +549,9 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     </div>
     <div class="ntab" id="tab-doc" onclick="goTab('doc')">
       <i class="ti ti-file-analytics"></i> Análisis de Documentos
+    </div>
+    <div class="ntab" id="tab-rep" onclick="goTab('rep')">
+      <i class="ti ti-report-medical"></i> Reporte de Caso
     </div>
     <div class="ntab" id="tab-cfg" onclick="goTab('cfg')">
       <i class="ti ti-settings"></i> Configuración
@@ -537,7 +578,7 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
 <!-- ══════ PAGE 1 — MESA / COMITÉ LABORAL ══════ -->
 <div class="page on" id="page-inc">
   <p class="sec-title">Mesa / Comité Laboral</p>
-  <p class="sec-sub">Casos activos con tareas pendientes · Contrato Ecopetrol Rubiales</p>
+  <p class="sec-sub">Casos activos con tareas pendientes y línea del tiempo</p>
   <div class="stats" id="inc-stats"></div>
 
   <!-- Formulario nuevo caso personalizado -->
@@ -581,8 +622,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
           <input type="text" id="ci-repr-t" placeholder="Nombre o entidad"></div>
         <div class="ff"><span class="fl">Repr. empleador</span>
           <input type="text" id="ci-repr-e" placeholder="Nombre o entidad"></div>
-        <div class="ff"><span class="fl">Asesor ARL Bolívar</span>
-          <input type="text" id="ci-asesor" placeholder="Nombre del asesor"></div>
+        <div class="ff"><span class="fl">Asesor ARL</span>
+          <input type="text" id="ci-asesor" placeholder="Nombre del asesor ARL"></div>
       </div>
       <div class="g2">
         <div class="ff full"><span class="fl">Diagnóstico / motivo del caso</span>
@@ -678,6 +719,14 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
   <p class="sec-title">Análisis de documentos con IA</p>
   <p class="sec-sub">Sube incapacidades, resultados de exámenes o historias clínicas para extraer datos clave</p>
 
+  <div style="background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)">
+    <div style="font-size:11px;font-weight:800;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px"><i class="ti ti-category" style="color:var(--blue)"></i> Tipo de análisis</div>
+    <select id="doc-analysis-type" class="rep-sel" style="flex:1;min-width:260px">
+      <option value="caso" selected>Caso laboral (Mesa/Comité) — extracción completa con línea del tiempo</option>
+      <option value="examen">Examen ocupacional — extracción de diagnósticos, conductas y seguimiento</option>
+    </select>
+  </div>
+
   <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
     <i class="ti ti-cloud-upload"></i>
     <p class="drop-title">Arrastra un documento aquí o haz clic para seleccionar</p>
@@ -690,6 +739,76 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
     <input type="file" id="file-input" accept=".pdf,.docx,.doc,.pptx,.ppt" multiple="" onchange="handleFiles(this.files)" style="display:none">
   </div>
   <div id="doc-results"></div>
+</div>
+
+<!-- ══════ PAGE — REPORTE DE CASO ══════════ -->
+<div class="page" id="page-rep">
+  <p class="sec-title">Reporte de Caso</p>
+  <p class="sec-sub">Genera un informe breve respetando la confidencialidad médica y la protección de datos</p>
+
+  <div class="legal-banner">
+    <div class="legal-icon"><i class="ti ti-shield-check"></i></div>
+    <div class="legal-content">
+      <p class="legal-title">Marco legal aplicable</p>
+      <p class="legal-text">
+        <strong>Ley 23 de 1981</strong> (art. 34 y 38) — reserva de historia clínica y secreto profesional ·
+        <strong>Resolución 1995 de 1999</strong> — manejo confidencial de historia clínica ·
+        <strong>Ley 1581 de 2012</strong> — protección de datos personales sensibles de salud
+      </p>
+    </div>
+  </div>
+
+  <div class="rep-grid">
+    <div class="rep-card">
+      <p class="rep-card-lbl"><i class="ti ti-upload"></i> 1. Subir documento</p>
+      <div class="drop-zone" id="rep-drop" onclick="document.getElementById('rep-file').click()" ondragover="onRepDrag(event,true)" ondragleave="onRepDrag(event,false)" ondrop="onRepDrop(event)" style="margin-bottom:0">
+        <i class="ti ti-file-upload"></i>
+        <p class="drop-title">Arrastra o selecciona el archivo</p>
+        <p class="drop-sub">Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+        <div class="fmt-tags">
+          <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
+          <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
+        </div>
+        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+      </div>
+    </div>
+
+    <div class="rep-card">
+      <p class="rep-card-lbl"><i class="ti ti-adjustments"></i> 2. Opciones del reporte</p>
+      <div class="rep-opts">
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Tipo de reporte</span>
+          <select id="rep-tipo" class="rep-sel">
+            <option value="breve" selected>Breve ejecutivo (recomendado)</option>
+            <option value="detallado">Detallado clínico-laboral</option>
+            <option value="empleador">Para empleador (sin datos sensibles)</option>
+            <option value="arl">Para ARL / interconsulta</option>
+          </select>
+        </label>
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Nivel de anonimización</span>
+          <select id="rep-anon" class="rep-sel">
+            <option value="parcial" selected>Parcial — mantener nombre y cédula</option>
+            <option value="iniciales">Iniciales — solo iniciales del nombre</option>
+            <option value="total">Total — sin datos identificables</option>
+          </select>
+        </label>
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Incluir recomendaciones</span>
+          <select id="rep-recom" class="rep-sel">
+            <option value="si" selected>Sí — incluir conductas sugeridas</option>
+            <option value="no">No — solo síntesis del caso</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn-pri" style="width:100%;margin-top:10px" id="rep-gen-btn" onclick="generarReporte()" disabled>
+        <i class="ti ti-sparkles"></i> Generar reporte
+      </button>
+    </div>
+  </div>
+
+  <div id="rep-status"></div>
+  <div id="rep-result"></div>
 </div>
 
 <!-- ══════ PAGE 4 — CONFIGURACIÓN ══════════ -->
@@ -904,7 +1023,7 @@ const INC_CASES=[
    diasAcc:'359',venc:'10/06/2026',accentColor:'#185FA5',tipo:'mesa',
    tareas:[
      {id:'h1',txt:'Gestionar cita de control con Ortopedia — urgente, más de 6 semanas pendiente',prio:'alta'},
-     {id:'h2',txt:'Coordinar con Mesa Laboral ARL Bolívar para prestaciones económicas y asistenciales',prio:'alta'},
+     {id:'h2',txt:'Coordinar con Mesa Laboral ARL para prestaciones económicas y asistenciales',prio:'alta'},
      {id:'h3',txt:'Documentar el gap administrativo del 11 al 12/05/2026 en el expediente',prio:'media'},
      {id:'h4',txt:'Definir plan rehabilitador y concepto de reintegro tras valoración ortopédica',prio:'media'},
    ]},
@@ -1269,7 +1388,7 @@ function render(){ renderInc(); renderExa(); }
    NAVEGACIÓN
 ════════════════════════════════════════════ */
 function goTab(t){
-  ['inc','exa','doc','cfg'].forEach(id=>{
+  ['inc','exa','doc','rep','cfg'].forEach(id=>{
     document.getElementById('tab-'+id).classList.toggle('on',id===t);
     document.getElementById('page-'+id).classList.toggle('on',id===t);
   });
@@ -1313,18 +1432,51 @@ function diasPara(s){
 ════════════════════════════════════════════ */
 function renderIncStats(){
   const cs=DB.inc.cases;
-  let done=0,tot=0,urg=0,nov=0;
+  let done=0,tot=0,urg=0,nov=0,activos=0;
   INC_CASES.forEach(c=>{
     c.tareas.forEach(t=>{ tot++; if(cs[c.id]?.tareasDone[t.id])done++; else if(t.prio==='alta')urg++; });
     nov+=(cs[c.id]?.novedades?.length||0);
+    if(cs[c.id]?.estado==='activo') activos++;
   });
-  DB.inc.custom.forEach(c=>{ nov+=(c.actas?.length||0); });
+  DB.inc.custom.forEach(c=>{ nov+=(c.actas?.length||0); if((c.estado||'activo')==='activo') activos++; });
   const total=INC_CASES.length+DB.inc.custom.length;
+  const pct = tot ? Math.round(done/tot*100) : 0;
   document.getElementById('inc-stats').innerHTML=`
-    <div class="sbox"><div class="sn">${total}</div><div class="sl">Casos totales</div></div>
-    <div class="sbox"><div class="sn" style="color:var(--blue)">${done}/${tot}</div><div class="sl">Tareas completadas</div></div>
-    <div class="sbox"><div class="sn" style="color:#D85A30">${urg}</div><div class="sl">Urgentes abiertas</div></div>
-    <div class="sbox"><div class="sn" style="color:var(--info-tx)">${nov}</div><div class="sl">Novedades / actas</div></div>`;
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Casos totales</span>
+        <i class="ti ti-files" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn">${total}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px"><span style="color:#10b981;font-weight:700">●</span> ${activos} activos</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Progreso de tareas</span>
+        <i class="ti ti-checklist" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--blue)">${pct}%</div>
+      <div style="height:6px;background:var(--li);border-radius:3px;overflow:hidden;margin-top:6px">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--blue),#3b82f6);transition:width .4s"></div>
+      </div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${done} de ${tot} completadas</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Urgentes abiertas</span>
+        <i class="ti ti-alert-triangle" style="font-size:18px;color:#D85A30;opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:#D85A30">${urg}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${urg===0?'Sin urgencias 🎯':'Requieren atención inmediata'}</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Eventos en línea del tiempo</span>
+        <i class="ti ti-timeline" style="font-size:18px;color:var(--info-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--info-tx)">${nov}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">Registros de seguimiento</div>
+    </div>`;
 }
 
 function getIncFiltrados(){
@@ -1764,11 +1916,40 @@ function delActaCustom(cid,i){
 function renderExaStats(){
   const tots={periodico:0,ingreso:0,postinc:0,egreso:0};
   DB.exa.persons.forEach(p=>{if(tots[p.tipo]!==undefined)tots[p.tipo]++;});
+  const total=DB.exa.persons.length;
   document.getElementById('exa-stats').innerHTML=`
-    <div class="sbox"><div class="sn">${DB.exa.persons.length}</div><div class="sl">En seguimiento</div></div>
-    <div class="sbox"><div class="sn" style="color:var(--per-tx)">${tots.periodico}</div><div class="sl">Periódicos</div></div>
-    <div class="sbox"><div class="sn" style="color:var(--ing-tx)">${tots.ingreso}</div><div class="sl">Ingreso</div></div>
-    <div class="sbox"><div class="sn" style="color:var(--pos-tx)">${tots.postinc}</div><div class="sl">Post-incapacidad</div></div>`;
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">En seguimiento</span>
+        <i class="ti ti-users" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn">${total}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">Total de personas</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Periódicos</span>
+        <i class="ti ti-calendar-repeat" style="font-size:18px;color:var(--per-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--per-tx)">${tots.periodico}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.periodico/total*100):0}% del total</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Pre-ingreso</span>
+        <i class="ti ti-user-plus" style="font-size:18px;color:var(--ing-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--ing-tx)">${tots.ingreso}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.ingreso/total*100):0}% del total</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Post-incapacidad</span>
+        <i class="ti ti-heartbeat" style="font-size:18px;color:var(--pos-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--pos-tx)">${tots.postinc}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.postinc/total*100):0}% del total</div>
+    </div>`;
 }
 function setEF(f){
   EF_FILTRO=f;
@@ -1967,6 +2148,10 @@ async function processDoc(file, apiKey, provider='gemini'){
       ? (localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite')
       : (localStorage.getItem('arl_model')||'claude-sonnet-4-5');
 
+  // Seleccionar prompt según tipo de análisis elegido
+  const tipoAnalisis=document.getElementById('doc-analysis-type')?.value||'caso';
+  const promptToUse = tipoAnalisis==='examen' ? EXAM_PROMPT : ANALYSIS_PROMPT;
+
   try{
     let result='';
     if(ext==='pdf'){
@@ -1975,12 +2160,12 @@ async function processDoc(file, apiKey, provider='gemini'){
       if(isGroq){
         const txt=await extractPDFText(ab);
         _docLocalText[rid]=txt;
-        result=await analyzeGroq(txt, file.name, apiKey, model);
+        result=await analyzeGroq(txt, file.name, apiKey, model, promptToUse);
       } else {
         const b64=toBase64(ab);
         result = isGemini
-          ? await analyzeGeminiPDF(b64, apiKey, model)
-          : await analyzePDF(b64, apiKey, model);
+          ? await analyzeGeminiPDF(b64, apiKey, model, promptToUse)
+          : await analyzePDF(b64, apiKey, model, promptToUse);
       }
     } else if(['docx','doc'].includes(ext)){
       if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
@@ -1988,10 +2173,10 @@ async function processDoc(file, apiKey, provider='gemini'){
       const r=await mammoth.extractRawText({arrayBuffer:ab});
       _docLocalText[rid]=r.value;
       result = isGroq
-        ? await analyzeGroq(r.value, file.name, apiKey, model)
+        ? await analyzeGroq(r.value, file.name, apiKey, model, promptToUse)
         : isGemini
-          ? await analyzeGeminiText(r.value, file.name, apiKey, model)
-          : await analyzeText(r.value, file.name, apiKey, model);
+          ? await analyzeGeminiText(r.value, file.name, apiKey, model, promptToUse)
+          : await analyzeText(r.value, file.name, apiKey, model, promptToUse);
     } else {
       if(typeof JSZip==='undefined') throw new Error('JSZip no disponible');
       const zip=await JSZip.loadAsync(await file.arrayBuffer());
@@ -2006,10 +2191,10 @@ async function processDoc(file, apiKey, provider='gemini'){
       }
       _docLocalText[rid]=txt;
       result = isGroq
-        ? await analyzeGroq(txt||'(Sin texto extraído)', file.name, apiKey, model)
+        ? await analyzeGroq(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse)
         : isGemini
-          ? await analyzeGeminiText(txt||'(Sin texto extraído)', file.name, apiKey, model)
-          : await analyzeText(txt||'(Sin texto extraído)', file.name, apiKey, model);
+          ? await analyzeGeminiText(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse)
+          : await analyzeText(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse);
     }
 
     DOC_RESULTS[rid]=result;
@@ -2025,55 +2210,116 @@ async function processDoc(file, apiKey, provider='gemini'){
   }
 }
 
-const ANALYSIS_PROMPT=`Eres un asistente médico especializado en salud ocupacional y medicina laboral para ARL Bolívar (Colombia).
+const ANALYSIS_PROMPT=`Eres un asistente médico especializado en salud ocupacional y medicina laboral en Colombia.
 
-Analiza el documento y extrae TODA la información relevante con estas etiquetas exactas:
+Analiza el documento y extrae la información con estas etiquetas exactas (los datos marcados con ★ son CRÍTICOS para el seguimiento del caso):
 
-TIPO DE DOCUMENTO:
-DATOS DEL PACIENTE:
-- Nombre completo:
-- Cédula:
+═══════ DATOS DE IDENTIFICACIÓN ★ ═══════
+- Nombre completo: ★
+- Número de cédula: ★
+- Edad / fecha de nacimiento:
 - EPS / Aseguradora:
-- Cargo:
-- Empresa / Contrato:
-FECHAS CLAVE:
-- Fecha del documento:
-- Inicio incapacidad / examen:
-- Fin incapacidad / vencimiento:
-- Próxima cita / sesión:
-- Fecha límite o vencimiento del proceso:
-DIAGNÓSTICO Y HALLAZGOS:
-- Diagnóstico principal (CIE-10 si aparece):
+- Cargo / puesto:
+- Empresa / Contrato al que pertenece: ★
+
+═══════ DIAGNÓSTICOS ★ ═══════
+- Diagnóstico principal (con código CIE-10 si aparece): ★
 - Diagnóstico secundario:
 - Hallazgos clínicos relevantes:
 - Paraclínicos solicitados / resultados:
-CONCEPTO MÉDICO:
+
+═══════ TIEMPO DE INCAPACIDAD ★ ═══════
+- Fecha de inicio del proceso / primera incapacidad: ★
+- Fecha de inicio de esta incapacidad:
+- Fecha de fin / vencimiento de la última incapacidad: ★
+- Días de incapacidad en este documento:
+- Días totales acumulados de incapacidad: ★
+- Próxima cita / próximo control:
+
+═══════ CONCEPTO MÉDICO ═══════
 - Aptitud (apto / no apto / apto con restricciones / pendiente):
 - Restricciones específicas (detallar cada una):
-PLAN Y SEGUIMIENTO:
 - Plan de manejo inmediato:
 - Remisiones indicadas (especialidad + urgencia):
 - Pendientes médicos:
-SEGUIMIENTO LABORAL (MESA LABORAL / COMITÉ):
+
+═══════ LÍNEA DEL TIEMPO DEL PROCESO ★ ═══════
+Lista cronológica de TODOS los hitos/eventos que aparezcan en el documento, formato:
+- [FECHA] · [TIPO: sesión/médico/decisión/alerta/laboral] · descripción breve
+(ejemplo: 15/03/2025 · médico · primera consulta dolor lumbar)
+(ejemplo: 22/04/2025 · sesión · 1ª Mesa Laboral - acuerdo de reintegro gradual)
+Incluye todos los eventos que puedas identificar en orden cronológico.
+
+═══════ SEGUIMIENTO LABORAL (MESA / COMITÉ) ═══════
 - Tipo de proceso (Mesa Laboral / Comité Medicina Laboral / Otro):
 - Número de sesión (si aplica):
 - Acuerdos o decisiones tomadas en esta sesión:
 - Estado del proceso (activo / suspendido / cerrado / calificado):
-- ¿Requiere CML (Comité Medicina Laboral)?:
-- ¿Requiere Mesa Laboral ARL?:
-- Días de incapacidad en este documento:
-- Total días acumulados (si se menciona):
 - Porcentaje de PCL (si se menciona):
 - IPS / institución tratante:
 - Asesor ARL / profesional responsable:
-ALERTAS Y ACCIONES URGENTES:
+
+═══════ ALERTAS Y ACCIONES URGENTES ═══════
 - Vencimientos próximos (fechas exactas):
 - Acciones inmediatas requeridas:
 - Riesgos o alertas identificados:
-RESUMEN EJECUTIVO PARA SEGUIMIENTO:
+
+═══════ RESUMEN EJECUTIVO ═══════
 (2-3 líneas con el estado actual del caso, lo más importante para el seguimiento)
 
-Si un campo no aparece en el documento escribe "No especificado". Sé preciso, usa datos exactos del documento y NO inventes información.`;
+Reglas:
+- Si un campo no aparece en el documento, escribe "No especificado".
+- Sé preciso y usa datos EXACTOS del documento.
+- NO inventes información ni la deduzcas.
+- Las fechas en formato DD/MM/AAAA.`;
+
+const EXAM_PROMPT=`Eres un asistente médico especializado en exámenes médicos ocupacionales en Colombia.
+
+Analiza este documento de examen ocupacional (periódico, pre-ingreso, post-incapacidad o egreso) y extrae:
+
+═══════ DATOS DE IDENTIFICACIÓN ★ ═══════
+- Nombre completo: ★
+- Número de cédula: ★
+- Edad:
+- Cargo / puesto:
+- Empresa / Contrato al que pertenece: ★
+- EPS:
+
+═══════ TIPO DE EXAMEN ★ ═══════
+- Tipo de examen (periódico / pre-ingreso / post-incapacidad / egreso): ★
+- Fecha del examen: ★
+- IPS / institución que realizó el examen:
+- Médico evaluador:
+
+═══════ DIAGNÓSTICOS ★ ═══════
+- Diagnóstico principal (con CIE-10): ★
+- Diagnósticos secundarios:
+- Hallazgos clínicos relevantes:
+- Paraclínicos realizados y resultados:
+
+═══════ CONDUCTAS Y RECOMENDACIONES ★ ═══════
+- Concepto de aptitud (apto / no apto / apto con restricciones / pendiente): ★
+- Restricciones específicas (detallar cada una): ★
+- Conducta médica indicada (manejo, tratamiento, intervenciones): ★
+- Remisiones a especialista (cuál y urgencia):
+- Recomendaciones para el puesto de trabajo:
+- Recomendaciones de promoción y prevención:
+
+═══════ TIEMPO DE SEGUIMIENTO ★ ═══════
+- Frecuencia de seguimiento recomendada: ★
+- Fecha próximo examen / control: ★
+- Días estimados de seguimiento:
+- ¿Requiere reubicación laboral?:
+- ¿Requiere readaptación o adecuación del puesto?:
+
+═══════ RESUMEN EJECUTIVO ═══════
+(2-3 líneas con el resultado del examen y plan de seguimiento)
+
+Reglas:
+- Si un campo no aparece en el documento, escribe "No especificado".
+- Sé preciso y usa datos EXACTOS del documento.
+- NO inventes información.
+- Las fechas en formato DD/MM/AAAA.`;
 
 /* Convierte ArrayBuffer a base64 en chunks para evitar stack overflow en archivos grandes */
 function toBase64(ab){
@@ -2085,7 +2331,8 @@ function toBase64(ab){
   return btoa(bin);
 }
 
-async function analyzePDF(b64,apiKey,model){
+async function analyzePDF(b64,apiKey,model,customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
   const resp=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{
@@ -2095,10 +2342,10 @@ async function analyzePDF(b64,apiKey,model){
       'anthropic-beta':'pdfs-2024-09-25',
       'anthropic-dangerous-request-builder':'true'
     },
-    body:JSON.stringify({model,max_tokens:2000,
+    body:JSON.stringify({model,max_tokens:2500,
       messages:[{role:'user',content:[
         {type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},
-        {type:'text',text:ANALYSIS_PROMPT}
+        {type:'text',text:prompt}
       ]}]})
   });
   if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
@@ -2106,7 +2353,8 @@ async function analyzePDF(b64,apiKey,model){
   return d.content?.[0]?.text||'Sin respuesta';
 }
 
-async function analyzeText(txt,filename,apiKey,model){
+async function analyzeText(txt,filename,apiKey,model,customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
   const resp=await fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
     headers:{
@@ -2115,8 +2363,8 @@ async function analyzeText(txt,filename,apiKey,model){
       'anthropic-version':'2023-06-01',
       'anthropic-dangerous-request-builder':'true'
     },
-    body:JSON.stringify({model,max_tokens:2000,
-      messages:[{role:'user',content:`${ANALYSIS_PROMPT}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`}]})
+    body:JSON.stringify({model,max_tokens:2500,
+      messages:[{role:'user',content:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`}]})
   });
   if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
   const d=await resp.json();
@@ -2128,7 +2376,8 @@ async function analyzeText(txt,filename,apiKey,model){
 ══════════════════════════════════════════════════ */
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
-async function analyzeGeminiPDF(b64, apiKey, model){
+async function analyzeGeminiPDF(b64, apiKey, model, customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const resp=await fetch(url,{
     method:'POST',
@@ -2136,9 +2385,9 @@ async function analyzeGeminiPDF(b64, apiKey, model){
     body:JSON.stringify({
       contents:[{parts:[
         {inline_data:{mime_type:'application/pdf', data:b64}},
-        {text: ANALYSIS_PROMPT}
+        {text: prompt}
       ]}],
-      generationConfig:{maxOutputTokens:2000}
+      generationConfig:{maxOutputTokens:2500}
     })
   });
   if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
@@ -2146,16 +2395,17 @@ async function analyzeGeminiPDF(b64, apiKey, model){
   return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta';
 }
 
-async function analyzeGeminiText(txt, filename, apiKey, model){
+async function analyzeGeminiText(txt, filename, apiKey, model, customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const resp=await fetch(url,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       contents:[{parts:[{
-        text:`${ANALYSIS_PROMPT}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`
+        text:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`
       }]}],
-      generationConfig:{maxOutputTokens:2000}
+      generationConfig:{maxOutputTokens:2500}
     })
   });
   if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
@@ -2486,7 +2736,8 @@ async function extractPDFText(arrayBuffer){
   return text.trim()||'(No se pudo extraer texto del PDF)';
 }
 
-async function analyzeGroq(txt, filename, apiKey, model){
+async function analyzeGroq(txt, filename, apiKey, model, customPrompt){
+  const prompt = customPrompt || ANALYSIS_PROMPT;
   const resp=await fetch(GROQ_BASE,{
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
@@ -2494,9 +2745,9 @@ async function analyzeGroq(txt, filename, apiKey, model){
       model: model,
       messages:[{
         role:'user',
-        content:`${ANALYSIS_PROMPT}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,12000)}\n---`
+        content:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,12000)}\n---`
       }],
-      max_tokens:2000,
+      max_tokens:2500,
       temperature:0.2
     })
   });
@@ -2524,6 +2775,257 @@ async function testGroqKey(key){
   }catch(e){
     showApiSt(`❌ Error de red: <code>${escHtml(e.message)}</code>`,'no');
   }
+}
+
+/* ══════════════════════════════════════════════════
+   REPORTE DE CASO — con marco legal colombiano
+══════════════════════════════════════════════════ */
+let _repFile = null;
+let _repText = null;
+
+function onRepDrag(e,active){
+  e.preventDefault();
+  document.getElementById('rep-drop').classList.toggle('drag',active);
+}
+function onRepDrop(e){
+  e.preventDefault();
+  document.getElementById('rep-drop').classList.remove('drag');
+  const f=e.dataTransfer?.files?.[0];
+  if(f) handleRepFile(f);
+}
+
+async function handleRepFile(file){
+  if(!file) return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['pdf','docx','doc'].includes(ext)){
+    alert('Formato no soportado. Usa PDF o DOCX.'); return;
+  }
+  _repFile=file;
+  _repText=null;
+  const drop=document.getElementById('rep-drop');
+  drop.innerHTML=`
+    <i class="ti ti-file-check" style="color:var(--blue)"></i>
+    <p class="drop-title">${escHtml(file.name)}</p>
+    <p class="drop-sub">${fmtBytes(file.size)} · Listo para generar reporte</p>
+    <button class="btn-sec" style="margin-top:12px" onclick="event.stopPropagation();resetRepFile()"><i class="ti ti-x"></i> Quitar archivo</button>
+    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+  `;
+  document.getElementById('rep-gen-btn').disabled=false;
+}
+
+function resetRepFile(){
+  _repFile=null; _repText=null;
+  document.getElementById('rep-gen-btn').disabled=true;
+  document.getElementById('rep-status').innerHTML='';
+  document.getElementById('rep-result').innerHTML='';
+  const drop=document.getElementById('rep-drop');
+  drop.innerHTML=`
+    <i class="ti ti-file-upload"></i>
+    <p class="drop-title">Arrastra o selecciona el archivo</p>
+    <p class="drop-sub">Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+    <div class="fmt-tags">
+      <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
+      <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
+    </div>
+    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" onchange="handleRepFile(this.files[0])" style="display:none">
+  `;
+}
+
+function buildReportPrompt(tipo, anon, recom){
+  const tipoTxt = {
+    breve: 'BREVE EJECUTIVO — Estilo: claro, conciso, 1 página, lenguaje médico profesional pero accesible.',
+    detallado: 'DETALLADO CLÍNICO-LABORAL — Estilo: completo, técnico, incluye todos los hallazgos médicos y laborales relevantes.',
+    empleador: 'PARA EMPLEADOR — Estilo: enfocado en aptitud laboral, restricciones y plan de reintegro. SIN detalles clínicos sensibles, SIN diagnósticos específicos.',
+    arl: 'PARA ARL / INTERCONSULTA — Estilo: formato técnico para envío a Mesa Laboral o ARL, con datos clínicos esenciales y solicitudes claras.'
+  }[tipo]||'';
+  const anonTxt = {
+    parcial: 'ANONIMIZACIÓN PARCIAL: mantén el nombre completo y la cédula. Datos sensibles (HIV, salud mental, adicciones, embarazo, orientación sexual) deben enmascararse como "diagnóstico de carácter reservado".',
+    iniciales: 'ANONIMIZACIÓN POR INICIALES: usa solo iniciales del nombre (ej. "J.G.M."). Reemplaza los últimos 4 dígitos de la cédula por "XXXX". Datos sensibles deben enmascararse.',
+    total: 'ANONIMIZACIÓN TOTAL: NO incluyas nombre, cédula, fecha de nacimiento ni ningún dato identificable. Usa "el/la trabajador(a)" o "el paciente". Datos sensibles deben enmascararse o omitirse.'
+  }[anon]||'';
+  const recomTxt = recom==='si'
+    ? 'INCLUIR una sección final breve con "CONDUCTAS Y RECOMENDACIONES SUGERIDAS" (de 3 a 6 puntos accionables).'
+    : 'NO incluyas recomendaciones. Limítate a sintetizar el contenido del documento.';
+
+  return `Eres un médico especialista en salud ocupacional. Genera un REPORTE DE CASO siguiendo el marco legal colombiano de confidencialidad médica:
+
+MARCO LEGAL APLICABLE (debe cumplirse en todo momento):
+• Ley 23 de 1981 (art. 34 y 38) — La historia clínica es un documento privado y reservado. El secreto profesional médico es inviolable.
+• Resolución 1995 de 1999 del Ministerio de Salud — La historia clínica solo puede ser conocida por el equipo de salud tratante, las autoridades competentes y el usuario.
+• Ley 1581 de 2012 — Los datos de salud son datos sensibles. Requieren protección reforzada y consentimiento expreso para su tratamiento.
+
+TIPO DE REPORTE SOLICITADO: ${tipoTxt}
+
+NIVEL DE ANONIMIZACIÓN: ${anonTxt}
+
+${recomTxt}
+
+ESTRUCTURA OBLIGATORIA DEL REPORTE (usa estas secciones exactas con encabezados en mayúsculas):
+
+1. ENCABEZADO
+   - Tipo de documento analizado
+   - Fecha de elaboración del reporte
+   - Destinatario sugerido
+
+2. DATOS DEL CASO
+   (Aplica el nivel de anonimización solicitado)
+
+3. SÍNTESIS CLÍNICA
+   - Diagnóstico principal (con cuidado si es sensible)
+   - Tiempo de evolución / días de incapacidad acumulados
+   - Estado actual del proceso
+
+4. ASPECTOS LABORALES RELEVANTES
+   - Aptitud laboral
+   - Restricciones vigentes
+   - Estado del proceso de Mesa/Comité (si aplica)
+
+5. LÍNEA DEL TIEMPO RESUMIDA
+   (Solo los hitos más importantes en orden cronológico)
+
+6. CONCLUSIÓN
+   (2-3 líneas con el estado y la próxima acción esperada)
+
+${recom==='si'?'7. CONDUCTAS Y RECOMENDACIONES SUGERIDAS\n   (3-6 puntos accionables, redactados de forma profesional)\n':''}
+
+AVISO DE CONFIDENCIALIDAD (incluir al final, textual):
+"Este documento contiene información médica de carácter reservado conforme a la Ley 23 de 1981, la Resolución 1995 de 1999 y la Ley 1581 de 2012. Su uso está restringido al destinatario autorizado. Cualquier reproducción, distribución o divulgación no autorizada está prohibida."
+
+Reglas:
+- NO inventes información. Solo usa datos del documento adjunto.
+- Si un dato es incierto, dilo explícitamente.
+- Sé profesional, claro y respetuoso.
+- Cumple estrictamente el nivel de anonimización solicitado.`;
+}
+
+async function generarReporte(){
+  if(!_repFile){alert('Sube un archivo primero');return;}
+  const provider=localStorage.getItem('arl_provider')||'groq';
+  const apiKey = provider==='groq'
+    ? localStorage.getItem('arl_groq_key')||''
+    : provider==='gemini'
+      ? localStorage.getItem('arl_gemini_key')||''
+      : localStorage.getItem('arl_api_key')||'';
+  if(!apiKey){
+    alert('Configura tu API Key en Configuración primero.');
+    goTab('cfg'); return;
+  }
+
+  const tipo=document.getElementById('rep-tipo').value;
+  const anon=document.getElementById('rep-anon').value;
+  const recom=document.getElementById('rep-recom').value;
+  const prompt=buildReportPrompt(tipo,anon,recom);
+
+  const btn=document.getElementById('rep-gen-btn');
+  btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Generando reporte…';
+
+  document.getElementById('rep-status').innerHTML=
+    `<div style="background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
+      <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:16px"></i>
+      <span>Extrayendo texto del documento y generando el reporte… esto puede tardar 10-20 segundos.</span>
+    </div>`;
+  document.getElementById('rep-result').innerHTML='';
+
+  try{
+    // Extraer texto
+    let txt;
+    const ext=_repFile.name.split('.').pop().toLowerCase();
+    if(ext==='pdf'){
+      const ab=await _repFile.arrayBuffer();
+      txt=await extractPDFText(ab);
+    } else {
+      const ab=await _repFile.arrayBuffer();
+      if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
+      const r=await mammoth.extractRawText({arrayBuffer:ab});
+      txt=r.value;
+    }
+    _repText=txt;
+
+    // Llamar IA
+    let reporte;
+    if(provider==='groq'){
+      const model=localStorage.getItem('arl_groq_model')||'llama-3.3-70b-versatile';
+      reporte=await analyzeGroq(txt, _repFile.name, apiKey, model, prompt);
+    } else if(provider==='gemini'){
+      const model=localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite';
+      reporte=await analyzeGeminiText(txt+'\n\n'+prompt, _repFile.name, apiKey, model);
+    } else {
+      const model=localStorage.getItem('arl_model')||'claude-sonnet-4-5';
+      reporte=await analyzeText(txt+'\n\n'+prompt, _repFile.name, apiKey, model);
+    }
+
+    showReporte(reporte);
+    document.getElementById('rep-status').innerHTML='';
+  }catch(e){
+    document.getElementById('rep-status').innerHTML=
+      `<div style="background:var(--err-bg);border:1px solid var(--err-bdr);color:var(--err-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px">
+        <i class="ti ti-alert-circle"></i> <strong>Error:</strong> ${escHtml(e.message)}
+      </div>`;
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-sparkles"></i> Generar reporte';
+  }
+}
+
+function showReporte(texto){
+  const fecha=new Date().toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('rep-result').innerHTML=`
+    <div class="rep-result-card">
+      <div class="rep-result-hdr">
+        <p class="rep-result-title"><i class="ti ti-file-text-shield"></i> Reporte generado · ${escHtml(fecha)}</p>
+        <div class="rep-result-actions">
+          <button onclick="copiarReporte()" title="Copiar"><i class="ti ti-copy"></i> Copiar</button>
+          <button onclick="descargarReporte()" title="Descargar"><i class="ti ti-download"></i> Descargar</button>
+          <button onclick="imprimirReporte()" title="Imprimir"><i class="ti ti-printer"></i> Imprimir</button>
+        </div>
+      </div>
+      <div class="rep-result-body" id="rep-result-body">${escHtml(texto)}</div>
+      <div class="rep-result-foot">
+        <i class="ti ti-shield-lock"></i>
+        <span><strong>Documento confidencial.</strong> Información protegida por la Ley 23 de 1981, la Resolución 1995 de 1999 y la Ley 1581 de 2012. Distribución restringida al destinatario autorizado.</span>
+      </div>
+    </div>
+  `;
+}
+
+function copiarReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    const t=document.getElementById('toast');
+    if(t){t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1500);}
+  });
+}
+function descargarReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  const fecha=new Date().toISOString().slice(0,10);
+  const nombre=_repFile?.name?.replace(/\.[^.]+$/,'')||'caso';
+  const blob=new Blob([el.innerText],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`Reporte_${nombre}_${fecha}.txt`;
+  a.click(); URL.revokeObjectURL(url);
+}
+function imprimirReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Reporte de Caso</title>
+    <style>body{font-family:Arial,sans-serif;max-width:780px;margin:30px auto;padding:0 25px;line-height:1.6;color:#222}
+    .hdr{border-bottom:2px solid #003087;padding-bottom:10px;margin-bottom:18px}
+    .hdr h1{font-size:18px;color:#003087;margin:0}
+    .meta{font-size:11px;color:#666;margin-top:4px}
+    .body{white-space:pre-wrap;font-size:13px}
+    .foot{border-top:1px solid #ddd;margin-top:25px;padding-top:12px;font-size:10.5px;color:#7c4008;background:#fef7e6;padding:10px;border-radius:4px}
+    </style></head><body>
+    <div class="hdr"><h1>Reporte de Caso</h1>
+    <div class="meta">Generado: ${new Date().toLocaleString('es-CO')} · Médico Cluster · José Gómez</div></div>
+    <div class="body">${escHtml(el.innerText)}</div>
+    <div class="foot"><strong>Documento confidencial.</strong> Información protegida por la Ley 23 de 1981, Resolución 1995 de 1999 y Ley 1581 de 2012. Distribución restringida.</div>
+    <script>window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
 }
 
 function showApiSt(msg,type){
