@@ -1375,15 +1375,146 @@ function ensureIncCases(){
   INC_CASES.forEach(c=>{
     if(!DB.inc.cases[c.id])
       DB.inc.cases[c.id]={open:c.id==='aragon',tareasDone:{},novedades:[],estado:'activo',
-        tareasExtra:[],tareasDeleted:[],tareasEdits:{}};
+        tareasExtra:[],tareasDeleted:[],tareasEdits:{},incaps:[]};
     const cs=DB.inc.cases[c.id];
     if(!cs.tareasExtra)  cs.tareasExtra=[];
     if(!cs.tareasDeleted)cs.tareasDeleted=[];
     if(!cs.tareasEdits)  cs.tareasEdits={};
+    if(!cs.incaps)       cs.incaps=[];
   });
-  DB.inc.custom.forEach(c=>{ if(!c.tareas)c.tareas=[]; });
+  DB.inc.custom.forEach(c=>{
+    if(!c.tareas)c.tareas=[];
+    if(!c.incaps)c.incaps=[];
+  });
 }
 function render(){ renderInc(); renderExa(); }
+
+/* ════════════════════════════════════════════
+   INCAPACIDADES — Cálculo del consolidado
+════════════════════════════════════════════ */
+function _parseDMY(s){
+  if(!s) return null;
+  let m=String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m){ const d=new Date(+m[1], +m[2]-1, +m[3]); return isNaN(d)?null:d; }
+  m=String(s).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){ const d=new Date(+m[3], +m[2]-1, +m[1]); return isNaN(d)?null:d; }
+  return null;
+}
+function _fmtDMY(d){
+  if(!d) return '—';
+  return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
+}
+function _daysBetween(d1, d2){
+  if(!d1||!d2) return null;
+  const a=new Date(d1.getFullYear(),d1.getMonth(),d1.getDate());
+  const b=new Date(d2.getFullYear(),d2.getMonth(),d2.getDate());
+  return Math.round((b-a)/(1000*60*60*24))+1; // inclusivo
+}
+function getIncapStats(incaps){
+  if(!incaps||!incaps.length) return {count:0,totalDias:0,ultVencDate:null,ultVencStr:'—'};
+  let total=0, ultFin=null;
+  incaps.forEach(it=>{
+    const d=Number(it.dias)||0;
+    total += d;
+    const f=_parseDMY(it.fin);
+    if(f && (!ultFin || f>ultFin)) ultFin=f;
+  });
+  return {count:incaps.length, totalDias:total, ultVencDate:ultFin, ultVencStr:_fmtDMY(ultFin)};
+}
+
+function addIncap(cid, isCustom){
+  const root = isCustom
+    ? DB.inc.custom.find(x=>x.id===cid)
+    : DB.inc.cases[cid];
+  if(!root) return;
+  if(!root.incaps) root.incaps=[];
+  const ini=document.getElementById(`incap-ini-${cid}`)?.value;
+  const fin=document.getElementById(`incap-fin-${cid}`)?.value;
+  const dxEl=document.getElementById(`incap-dx-${cid}`);
+  const dx=dxEl?dxEl.value.trim():'';
+  const diasManual=document.getElementById(`incap-dias-${cid}`)?.value;
+  if(!ini || !fin){ alert('Ingresa fecha de inicio y fin'); return; }
+  const di=_parseDMY(ini), df=_parseDMY(fin);
+  if(!di || !df){ alert('Formato de fecha inválido'); return; }
+  if(df<di){ alert('La fecha de fin no puede ser anterior a la de inicio'); return; }
+  let dias=Number(diasManual)||_daysBetween(di,df);
+  root.incaps.push({
+    id:'ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+    inicio:_fmtDMY(di), fin:_fmtDMY(df), dias, dx
+  });
+  dbSave();
+  renderInc();
+}
+function delIncap(cid, icId, isCustom){
+  const root = isCustom
+    ? DB.inc.custom.find(x=>x.id===cid)
+    : DB.inc.cases[cid];
+  if(!root||!root.incaps) return;
+  root.incaps = root.incaps.filter(x=>x.id!==icId);
+  dbSave();
+  renderInc();
+}
+
+function renderIncapList(cid, incaps, isCustom){
+  incaps = incaps || [];
+  const st = getIncapStats(incaps);
+  const rows = incaps.length === 0
+    ? `<p style="margin:6px 0 8px;font-size:12px;color:var(--mu);font-style:italic">Sin incapacidades registradas. Agrega la primera abajo.</p>`
+    : `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px">
+        <thead>
+          <tr style="background:var(--li);color:var(--mu);text-transform:uppercase;font-size:10px;letter-spacing:.04em">
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Inicio</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Fin</th>
+            <th style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr)">Días</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Dx</th>
+            <th style="padding:6px 4px;border-bottom:1px solid var(--bdr)"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${incaps.slice().sort((a,b)=>{
+            const da=_parseDMY(a.inicio),db=_parseDMY(b.inicio);
+            return (db?+db:0)-(da?+da:0);
+          }).map(it=>`
+            <tr>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)">${escHtml(it.inicio)}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)"><strong>${escHtml(it.fin)}</strong></td>
+              <td style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr);font-weight:700;color:var(--blue)">${it.dias}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--mu);font-size:11.5px">${escHtml(it.dx||'—')}</td>
+              <td style="padding:6px 4px;border-bottom:1px solid var(--bdr);text-align:right">
+                <button onclick="delIncap('${cid}','${it.id}',${isCustom?'true':'false'})" title="Quitar"
+                  style="background:none;border:0;color:var(--err-tx);cursor:pointer;padding:2px 4px"><i class="ti ti-trash"></i></button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+
+  return `
+    <div class="incaps-block" style="background:var(--li);border:1px solid var(--bdr);border-radius:var(--rads);padding:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <p style="margin:0;font-size:12px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-clipboard-list" style="font-size:14px;color:var(--blue)"></i> Consolidado de incapacidades
+        </p>
+        <div style="display:flex;gap:8px;font-size:11.5px;flex-wrap:wrap">
+          <span style="background:#dce8f8;color:#003087;padding:4px 10px;border-radius:12px;font-weight:700">
+            ${st.totalDias} día${st.totalDias===1?'':'s'} acumulado${st.totalDias===1?'':'s'}
+          </span>
+          <span style="background:#fef3c7;color:#7c4008;padding:4px 10px;border-radius:12px;font-weight:700">
+            Vence: ${escHtml(st.ultVencStr)}
+          </span>
+        </div>
+      </div>
+      ${rows}
+      <div style="display:grid;grid-template-columns:1fr 1fr 80px 2fr auto;gap:6px;margin-top:8px">
+        <input type="date" id="incap-ini-${cid}" title="Inicio" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="date" id="incap-fin-${cid}" title="Fin" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="number" id="incap-dias-${cid}" placeholder="Días" min="1" title="Días (auto si está vacío)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="text" id="incap-dx-${cid}" placeholder="Diagnóstico / CIE-10 (opcional)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <button class="btn-sm" onclick="addIncap('${cid}',${isCustom?'true':'false'})" style="white-space:nowrap"><i class="ti ti-plus"></i> Agregar</button>
+      </div>
+    </div>
+  `;
+}
 
 /* ════════════════════════════════════════════
    NAVEGACIÓN
@@ -1519,13 +1650,17 @@ function renderInc(){
     const cs=DB.inc.cases[c.id];
     const done=c.tareas.filter(t=>cs.tareasDone[t.id]).length;
     const pct=Math.round(done/c.tareas.length*100);
+    // Consolidado calculado a partir del registro de incapacidades del caso
+    const stIncap = getIncapStats(cs.incaps);
+    const vencMostrado = stIncap.count ? stIncap.ultVencStr : c.venc;
+    const diasMostrado = stIncap.count ? String(stIncap.totalDias) : c.diasAcc;
     const div=document.createElement('div'); div.className='card';
     div.innerHTML=`
 <div class="card-hdr" onclick="tglInc('${c.id}')">
   <div class="accent" style="background:${c.accentColor}"></div>
   <div class="card-info">
     <p class="card-name">${escHtml(c.nombre)}</p>
-    <p class="card-meta">${escHtml(c.cc)} · Vence: <strong>${escHtml(c.venc)}</strong></p>
+    <p class="card-meta">${escHtml(c.cc)} · Vence: <strong>${escHtml(vencMostrado)}</strong>${stIncap.count?` · <strong style="color:var(--blue)">${stIncap.totalDias} días</strong>`:''}</p>
   </div>
   <div class="card-right">
     <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
@@ -1537,11 +1672,12 @@ function renderInc(){
 ${cs.open?`<div class="card-body">
   <div class="g2" style="margin-bottom:12px">
     <div class="di"><p class="dil">Contrato</p><p class="div2">${escHtml(c.contrato)}</p></div>
-    <div class="di"><p class="dil">Vencimiento</p><p class="div2" style="color:${c.accentColor}">${escHtml(c.venc)}</p></div>
-    <div class="di"><p class="dil">Días acumulados</p><p class="div2">${escHtml(c.diasAcc)}</p></div>
+    <div class="di"><p class="dil">Vencimiento ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2" style="color:${c.accentColor}">${escHtml(vencMostrado)}</p></div>
+    <div class="di"><p class="dil">Días acumulados ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2">${escHtml(diasMostrado)}</p></div>
     <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(c.empresa)}</p></div>
     <div class="di full"><p class="dil">Diagnóstico</p><p class="div2" style="font-size:12px">${escHtml(c.diagnostico)}</p></div>
   </div>
+  ${renderIncapList(c.id, cs.incaps, false)}
   <div class="p-row">
     <p class="p-label">Tareas · ${done}/${c.tareas.length + (cs.tareasExtra||[]).length - (cs.tareasDeleted||[]).length} completadas</p>
     <select class="csel" onchange="setIncEstado('${c.id}',this.value)">
@@ -1575,13 +1711,14 @@ ${cs.open?`<div class="card-body">
     wrap.appendChild(sep);
     cust.forEach(c=>{
       const open=!!DB.inc.openCustom[c.id];
+      const stCustom = getIncapStats(c.incaps);
       const div=document.createElement('div'); div.className='card';
       div.style.borderLeft=`4px solid ${c.tipo==='mesa'?'#7c3aed':'var(--blue)'}`;
       div.innerHTML=`
 <div class="card-hdr" onclick="tglCasoCustom('${c.id}')">
   <div class="card-info">
     <p class="card-name">${escHtml(c.nombre)}</p>
-    <p class="card-meta">CC ${escHtml(c.cc)}${c.empresa?' · '+escHtml(c.empresa):''}${c.radicado?` · <span style="font-family:monospace;font-size:10px;background:var(--li);padding:1px 5px;border-radius:3px">${escHtml(c.radicado)}</span>`:''}</p>
+    <p class="card-meta">CC ${escHtml(c.cc)}${c.empresa?' · '+escHtml(c.empresa):''}${stCustom.count?` · Vence: <strong>${escHtml(stCustom.ultVencStr)}</strong> · <strong style="color:var(--blue)">${stCustom.totalDias} días</strong>`:''}${c.radicado?` · <span style="font-family:monospace;font-size:10px;background:var(--li);padding:1px 5px;border-radius:3px">${escHtml(c.radicado)}</span>`:''}</p>
   </div>
   <div class="card-right">
     <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
@@ -1616,6 +1753,7 @@ function renderCasoCustomBody(c){
     <div class="di"><p class="dil">Registrado</p><p class="div2">${escHtml(c.createdAt||'')}</p></div>
     ${c.diagnostico?`<div class="di full"><p class="dil">Motivo / diagnóstico</p><p class="div2" style="font-size:12px;white-space:pre-wrap">${escHtml(c.diagnostico)}</p></div>`:''}
   </div>
+  ${renderIncapList(c.id, c.incaps, true)}
   <div class="concepto-row">
     <p class="slbl" style="margin:0"><i class="ti ti-toggle-right"></i> Estado del caso</p>
     <select class="csel" onchange="chgEstadoCustom('${escHtml(c.id)}',this.value)">
@@ -3005,7 +3143,24 @@ Situación Administrativa:
 ________________________________________
 Consolidado de Incapacidades
 
-(Lista cronológica de incapacidades encontradas: fecha de inicio, fecha de fin, días, diagnóstico CIE-10 si aparece, entidad que la emite. Cierra con el TOTAL de días acumulados y la fecha de vencimiento de la última incapacidad.)
+INSTRUCCIONES OBLIGATORIAS PARA ESTA SECCIÓN — DEBES CALCULAR EXPLÍCITAMENTE:
+
+1) Tabla cronológica de TODAS las incapacidades encontradas en los documentos (de más antigua a más reciente), una por fila, con este formato exacto:
+   N° | Fecha inicio (dd/mm/yyyy) | Fecha fin (dd/mm/yyyy) | Días | Dx (CIE-10 si aparece) | Entidad que emite
+
+2) Si un documento da inicio + fin pero NO los días → calcúlalos (incluyendo ambos extremos: días = (fin - inicio) + 1).
+   Si da inicio + días pero NO el fin → calcula el fin = inicio + días - 1.
+   Si solo da fin + días → calcula el inicio = fin - días + 1.
+
+3) Cierra OBLIGATORIAMENTE con estas tres líneas, en este orden y con el formato exacto (mantén las negritas con asteriscos):
+
+**TOTAL DE DÍAS DE INCAPACIDAD ACUMULADOS: XXX días**
+**FECHA DE VENCIMIENTO DE LA ÚLTIMA INCAPACIDAD: dd/mm/yyyy**
+**ESTADO A LA FECHA DEL REPORTE: [vigente / vencida hace N días / pendiente prórroga]**
+
+4) Si NO encuentras ninguna incapacidad en los documentos, escribe textualmente: "No se encontraron incapacidades en los documentos analizados." y no calcules nada.
+
+5) NO inventes incapacidades, NO sumes días que no aparecen en los documentos, NO uses cifras aproximadas — solo números exactos derivados del texto.
 
 ________________________________________
 Plan de Manejo y Seguimiento
