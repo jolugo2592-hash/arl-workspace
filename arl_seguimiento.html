@@ -1,0 +1,3414 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguimiento Casos Laborales · Médico Cluster José Gómez</title>
+<meta name="description" content="Herramienta de seguimiento médico-laboral — Mesa Laboral, Exámenes Ocupacionales, Análisis de documentos con IA y Reportes de caso.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🏥&lt;/text&gt;&lt;/svg&gt;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── VARIABLES ─────────────────────────── */
+:root{
+  /* Marca */
+  --blue:#003087; --blue-d:#001e5e; --blue-m:#1a4ea8;
+  --blue-l:#dce8f8; --blue-ll:#f0f5fd;
+  --gold:#F7B500; --gold-l:#fef8e1;
+
+  /* Superficies */
+  --bg:#edf1f8; --card:#ffffff; --card2:#f7f9fd; --li:#f3f6fc;
+
+  /* Bordes */
+  --bdr:#dde4f0; --bdr2:#c8d3e8;
+
+  /* Texto */
+  --tx:#111827; --tx2:#2e3a5c; --mu:#6b7a9e;
+
+  /* Radios */
+  --rad:16px; --rads:10px; --radl:24px;
+
+  /* Sombras */
+  --sh:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,48,135,.05);
+  --sh-hover:0 8px 28px rgba(0,48,135,.1),0 2px 8px rgba(0,0,0,.05);
+
+  /* Estado */
+  --warn-bg:#fffbf0; --warn-tx:#7c4008; --warn-bdr:#fcd34d;
+  --info-bg:#eff7ff; --info-tx:#1e4fa8; --info-bdr:#93c5fd;
+  --ok-bg:#f0fdf5;   --ok-tx:#145a2e;   --ok-bdr:#86efac;
+  --err-bg:#fff1f2;  --err-tx:#9a1c2a;  --err-bdr:#fca5a5;
+  --per-bg:#eff7ff; --per-tx:#1e4fa8;
+  --ing-bg:#f0fdf5; --ing-tx:#145a2e;
+  --pos-bg:#fffbf0; --pos-tx:#7c4008;
+  --egr-bg:#f8fafc; --egr-tx:#47566b;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);
+  color:var(--tx);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:var(--mu)}
+
+/* ── LOCK SCREEN ──────────────────────── */
+.lock{position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(145deg,#000e30 0%,#001b5e 45%,#003087 80%,#001040 100%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lock::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(247,181,0,.12) 0%,transparent 70%)}
+.lock.hidden{display:none}
+.lock-box{
+  background:rgba(255,255,255,.07);backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.13);border-radius:26px;
+  padding:44px 38px;width:330px;text-align:center;
+  box-shadow:0 24px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.1);
+  position:relative;z-index:1}
+.lock-brand{margin-bottom:30px}
+.lock-pip{width:62px;height:62px;border-radius:17px;
+  background:linear-gradient(135deg,var(--gold),#ffca28);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  box-shadow:0 6px 22px rgba(247,181,0,.45),inset 0 1px 0 rgba(255,255,255,.3)}
+.lock-pip span{color:var(--blue-d);font-size:12px;font-weight:800;line-height:1.2;text-align:center}
+.lock-brand h2{font-size:21px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.01em}
+.lock-brand p{font-size:12px;color:rgba(255,255,255,.42)}
+.lock-msg{min-height:22px;font-size:12px;color:#ffd26b;margin-bottom:16px;font-weight:500}
+.pin-dots{display:flex;justify-content:center;gap:16px;margin-bottom:26px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.22);
+  transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+.pin-dot.f{background:var(--gold);border-color:var(--gold);transform:scale(1.2);
+  box-shadow:0 0 12px rgba(247,181,0,.55)}
+.pin-dot.e{background:#f87171;border-color:#f87171;animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.pk{height:54px;border:1px solid rgba(255,255,255,.11);border-radius:13px;
+  background:rgba(255,255,255,.07);color:#fff;font-size:20px;font-weight:500;
+  cursor:pointer;transition:all .12s;user-select:none;font-family:inherit}
+.pk:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.2)}
+.pk:active{transform:scale(.88);background:rgba(255,255,255,.22)}
+.pk.z{grid-column:2}
+.pk.d{font-size:18px;background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.25)}
+.lock-hint{font-size:11px;color:rgba(255,255,255,.25);margin-top:2px}
+
+/* ── TOPBAR ──────────────────────────── */
+.topbar{
+  background:linear-gradient(135deg,#001e5e 0%,var(--blue) 100%);
+  padding:0 24px;display:flex;align-items:center;
+  position:sticky;top:0;z-index:100;height:58px;
+  box-shadow:0 2px 14px rgba(0,0,0,.2),0 1px 0 rgba(255,255,255,.05)}
+.topbar-brand{display:flex;align-items:center;gap:12px;
+  padding-right:20px;border-right:1px solid rgba(255,255,255,.11);
+  margin-right:14px;flex-shrink:0}
+.topbar-logo{width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,rgba(247,181,0,.22),rgba(247,181,0,.08));
+  border:1px solid rgba(247,181,0,.28);
+  display:flex;align-items:center;justify-content:center}
+.topbar-logo span{color:var(--gold);font-size:9px;font-weight:800;text-align:center;line-height:1.2}
+.topbar-name{color:#fff;font-size:13.5px;font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.topbar-name small{color:rgba(255,255,255,.42);font-size:10px;font-weight:400;display:block}
+.nav-tabs{display:flex;gap:0;overflow-x:auto;height:58px}
+.ntab{padding:0 17px;font-size:13px;font-weight:500;color:rgba(255,255,255,.52);
+  cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;
+  white-space:nowrap;display:flex;align-items:center;gap:7px;
+  user-select:none;flex-shrink:0;height:100%}
+.ntab:hover{color:rgba(255,255,255,.88);background:rgba(255,255,255,.07)}
+.ntab.on{color:#fff;border-bottom-color:var(--gold);background:rgba(247,181,0,.07);font-weight:700}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.t-btn{padding:6px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.72);font-size:12px;
+  font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:all .15s;white-space:nowrap;font-family:inherit}
+.t-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.24);transform:translateY(-1px)}
+.t-btn:active{transform:translateY(0)}
+.toast{font-size:11px;font-weight:700;background:linear-gradient(135deg,var(--gold),#ffca28);
+  color:#1a2035;padding:4px 12px;border-radius:20px;opacity:0;transition:opacity .3s;
+  white-space:nowrap;box-shadow:0 2px 8px rgba(247,181,0,.3)}
+.toast.on{opacity:1}
+
+/* ── LAYOUT ──────────────────────────── */
+.page{display:none;max-width:980px;margin:0 auto;padding:30px 22px 70px}
+.page.on{display:block;animation:pageIn .28s ease}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-size:19px;font-weight:800;margin-bottom:5px;color:var(--tx);letter-spacing:-.02em}
+.sec-sub{font-size:13px;color:var(--mu);margin-bottom:24px}
+
+/* ── STATS ───────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+.sbox{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rads);
+  padding:16px 18px;text-align:center;box-shadow:var(--sh);
+  transition:all .22s;cursor:default;position:relative;overflow:hidden}
+.sbox::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--blue),var(--blue-m));
+  opacity:0;transition:opacity .22s}
+.sbox:hover{transform:translateY(-3px);box-shadow:var(--sh-hover)}
+.sbox:hover::after{opacity:1}
+.sn{font-size:28px;font-weight:800;color:var(--blue);line-height:1;letter-spacing:-.02em}
+.sl{font-size:11px;color:var(--mu);margin-top:5px;font-weight:500;letter-spacing:.01em}
+
+/* ── CARDS ───────────────────────────── */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  margin-bottom:13px;overflow:hidden;box-shadow:var(--sh);transition:all .22s}
+.card:hover{box-shadow:var(--sh-hover);transform:translateY(-1px)}
+.card-hdr{display:flex;align-items:center;gap:12px;padding:15px 18px;
+  cursor:pointer;user-select:none;transition:background .15s}
+.card-hdr:hover{background:var(--li)}
+.accent{width:4px;border-radius:3px;flex-shrink:0;align-self:stretch;min-height:30px}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.card-meta{font-size:11.5px;color:var(--mu);margin-top:2px}
+.card-right{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.chv{font-size:16px;color:var(--mu);transition:transform .28s cubic-bezier(.34,1.56,.64,1)}
+.chv.open{transform:rotate(180deg)}
+.card-body{border-top:1px solid var(--bdr);padding:18px;animation:slideDown .22s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── BADGES ──────────────────────────── */
+.badge{font-size:11px;padding:3px 11px;border-radius:20px;font-weight:600;letter-spacing:.01em}
+.b-warn{background:var(--warn-bg);color:var(--warn-tx)}
+.b-info{background:var(--info-bg);color:var(--info-tx)}
+.b-ok{background:var(--ok-bg);color:var(--ok-tx)}
+.b-err{background:var(--err-bg);color:var(--err-tx)}
+.b-gray{background:var(--li);color:var(--mu)}
+.b-per{background:var(--per-bg);color:var(--per-tx)}
+.b-ing{background:var(--ing-bg);color:var(--ing-tx)}
+.b-pos{background:var(--pos-bg);color:var(--pos-tx)}
+.b-egr{background:var(--egr-bg);color:var(--egr-tx)}
+.b-mesa{background:#f0ebfe;color:#6d28d9}
+.chip{font-size:11px;background:var(--li);color:var(--mu);padding:2px 9px;border-radius:999px;font-weight:500}
+
+/* ── GRIDS & DATA ─────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-bottom:13px}
+.full{grid-column:1/-1}
+.di{background:var(--li);border-radius:10px;padding:10px 13px;
+  transition:background .15s;border:1px solid transparent}
+.di:hover{background:var(--blue-ll);border-color:var(--bdr)}
+.dil{font-size:10.5px;color:var(--mu);margin-bottom:3px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.05em}
+.div2{font-size:13px;font-weight:600;color:var(--tx2)}
+
+/* ── TASKS ───────────────────────────── */
+.prog-wrap{height:7px;background:var(--bdr);border-radius:99px;margin-bottom:16px;overflow:hidden}
+.prog-fill{height:7px;background:linear-gradient(90deg,var(--blue),var(--blue-m));
+  border-radius:99px;transition:width .45s cubic-bezier(.25,.46,.45,.94)}
+.task{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;
+  border-radius:11px;background:var(--li);margin-bottom:7px;
+  transition:all .18s;border:1px solid transparent}
+.task:hover{background:var(--blue-ll);border-color:var(--bdr)}
+.task.done{opacity:.44}
+.task input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex-shrink:0;
+  accent-color:var(--blue);cursor:pointer}
+.task-txt{font-size:13px;flex:1;line-height:1.5}
+.task-txt.done{text-decoration:line-through;color:var(--mu)}
+.prio{font-size:10px;padding:2px 8px;border-radius:999px;flex-shrink:0;font-weight:700}
+.p-alta{background:var(--err-bg);color:var(--err-tx)}
+.p-media{background:var(--warn-bg);color:var(--warn-tx)}
+
+/* ── LOG / TIMELINE ──────────────────── */
+.slbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;
+  letter-spacing:.06em;display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.log{border-left:3px solid var(--bdr2);padding:7px 12px;margin-bottom:8px;
+  border-radius:0 10px 10px 0;transition:border-color .18s}
+.log:hover{border-left-color:var(--blue)}
+.log-d{font-size:11px;color:var(--mu);margin-bottom:2px}
+.log-t{font-size:13px;white-space:pre-wrap;line-height:1.5}
+.log-del{font-size:11px;padding:2px 9px;color:var(--mu);border:1px solid var(--bdr);
+  border-radius:var(--rads);cursor:pointer;background:none;margin-top:5px;
+  font-family:inherit;transition:all .15s}
+.log-del:hover{background:var(--err-bg);color:var(--err-tx);border-color:var(--err-bdr)}
+.add-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
+.add-row textarea{flex:1;resize:vertical;min-height:56px;font-size:13px;padding:10px 12px;
+  border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;
+  background:var(--li);color:var(--tx);transition:all .2s;line-height:1.5}
+.add-row textarea:focus{outline:none;border-color:var(--blue);background:#fff;
+  box-shadow:0 0 0 3px rgba(0,48,135,.08)}
+
+/* ── LÍNEA DEL TIEMPO ─────────────────────── */
+.tl-wrap{margin:4px 0 8px}
+.tl-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tl-title{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px}
+.tl-empty{font-size:13px;color:var(--mu);font-style:italic;padding:10px 0 6px}
+.tl-item{position:relative;padding-left:30px;margin-bottom:0}
+.tl-item:last-child .tl-line{display:none}
+.tl-line{position:absolute;left:11px;top:24px;bottom:-4px;width:2px;background:var(--bdr);border-radius:2px}
+.tl-dot{position:absolute;left:4px;top:8px;width:16px;height:16px;border-radius:50%;
+  border:2.5px solid #fff;box-shadow:0 0 0 2px currentColor;display:flex;align-items:center;justify-content:center;font-size:8px}
+.tl-box{background:var(--li);border-radius:11px;padding:9px 13px;margin-bottom:8px;border:1px solid var(--bdr)}
+.tl-box-hdr{display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
+.tl-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.03em}
+.tl-fecha{font-size:11px;color:var(--mu);display:flex;align-items:center;gap:3px}
+.tl-texto{font-size:13px;white-space:pre-wrap;line-height:1.55;color:var(--tx)}
+.tl-del{font-size:11px;padding:2px 9px;color:var(--mu);border:1px solid var(--bdr);
+  border-radius:var(--rads);cursor:pointer;background:none;margin-top:6px;font-family:inherit;transition:all .15s}
+.tl-del:hover{background:var(--err-bg);color:var(--err-tx);border-color:var(--err-bdr)}
+.tl-add{display:flex;gap:6px;flex-direction:column;margin-top:10px}
+.tl-add-row{display:flex;gap:6px;align-items:flex-end}
+.tl-tipo-sel{font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:var(--rads);
+  font-family:inherit;background:var(--li);color:var(--tx);cursor:pointer;min-width:130px}
+.tl-tipo-sel:focus{outline:none;border-color:var(--blue)}
+
+/* Legacy acta-line (backwards compat) */
+.acta-line{position:relative;padding-left:22px;margin-bottom:11px}
+.acta-line::before{content:'';position:absolute;left:7px;top:0;bottom:-11px;width:2px;background:var(--bdr)}
+.acta-line:last-child::before{display:none}
+.acta-dot{position:absolute;left:0;top:6px;width:14px;height:14px;border-radius:50%;
+  background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 2px var(--blue)}
+.acta-box{background:var(--li);border-radius:11px;padding:10px 13px;margin-left:4px}
+
+/* ── FORMS ───────────────────────────── */
+.add-panel{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  padding:18px;margin-bottom:20px;box-shadow:var(--sh)}
+.add-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;
+  padding:2px 0}
+.add-toggle:hover{opacity:.82}
+.add-toggle-t{font-size:14px;font-weight:700;flex:1;color:var(--tx2)}
+.form-body{display:none;margin-top:18px}
+.form-body.open{display:block;animation:slideDown .22s ease}
+.ff{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:10.5px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ff input,.ff select,.ff textarea{font-size:13px;padding:10px 13px;border-radius:var(--rads);
+  border:1px solid var(--bdr);background:var(--li);color:var(--tx);font-family:inherit;transition:all .2s}
+.ff input:hover,.ff select:hover{border-color:var(--bdr2);background:#fff}
+.ff input:focus,.ff select:focus,.ff textarea:focus{outline:none;border-color:var(--blue);
+  background:#fff;box-shadow:0 0 0 3px rgba(0,48,135,.09)}
+.ff textarea{resize:vertical;min-height:60px;line-height:1.55}
+.btn-row{display:flex;justify-content:flex-end;gap:9px;margin-top:14px}
+
+.btn-pri{padding:10px 22px;font-size:13px;font-weight:700;
+  background:linear-gradient(135deg,var(--blue),var(--blue-m));
+  color:#fff;border:none;border-radius:var(--rads);cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:all .2s;
+  font-family:inherit;box-shadow:0 3px 10px rgba(0,48,135,.25),inset 0 1px 0 rgba(255,255,255,.1)}
+.btn-pri:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,48,135,.3);filter:brightness(1.07)}
+.btn-pri:active{transform:translateY(0) scale(.97)}
+
+.btn-sec{padding:9px 16px;font-size:12.5px;font-weight:500;
+  border:1px solid var(--bdr);border-radius:var(--rads);background:#fff;
+  cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--tx2);
+  transition:all .15s;font-family:inherit}
+.btn-sec:hover{background:var(--li);border-color:var(--bdr2);transform:translateY(-1px)}
+.btn-sec:active{transform:translateY(0)}
+
+.btn-sm{padding:7px 14px;font-size:12px;border:1px solid var(--bdr);border-radius:var(--rads);
+  background:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;
+  color:var(--tx2);transition:all .15s;font-family:inherit}
+.btn-sm:hover{background:var(--li);border-color:var(--bdr2)}
+
+.btn-del{padding:8px 15px;font-size:12px;font-weight:500;
+  border:1px solid var(--err-bdr);border-radius:var(--rads);background:none;
+  color:var(--err-tx);cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:all .15s;font-family:inherit}
+.btn-del:hover{background:var(--err-bg);transform:translateY(-1px)}
+
+/* Selector tipo */
+.tipo-row{display:flex;gap:10px;margin-bottom:15px}
+.tipo-btn{flex:1;padding:13px;border-radius:13px;border:2px solid var(--bdr);
+  background:#fff;cursor:pointer;text-align:center;transition:all .2s}
+.tipo-btn:hover{border-color:var(--bdr2);transform:translateY(-1px)}
+.tipo-btn.sel-com{border-color:var(--blue);background:var(--blue-ll);
+  box-shadow:0 3px 14px rgba(0,48,135,.12)}
+.tipo-btn.sel-mesa{border-color:#7c3aed;background:#f5f0fe;
+  box-shadow:0 3px 14px rgba(124,58,237,.12)}
+.tipo-btn i{font-size:21px;display:block;margin-bottom:5px}
+.tipo-btn span{font-size:12px;font-weight:700}
+
+/* ── FILTERS ──────────────────────────── */
+.filrow{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.fbtn{font-size:12px;padding:6px 16px;border-radius:999px;border:1px solid var(--bdr);
+  background:#fff;color:var(--mu);cursor:pointer;transition:all .15s;
+  font-weight:500;font-family:inherit}
+.fbtn:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-ll)}
+.fbtn.on{background:var(--blue);color:#fff;border-color:var(--blue);
+  box-shadow:0 2px 10px rgba(0,48,135,.22)}
+.srch{flex:1;min-width:160px;font-size:13px;padding:7px 13px;border-radius:var(--rads);
+  border:1px solid var(--bdr);font-family:inherit;background:#fff;
+  transition:all .2s;color:var(--tx)}
+.srch:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,48,135,.08)}
+
+/* ── MISC ────────────────────────────── */
+.ava{width:39px;height:39px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.csel{font-size:12px;padding:6px 10px;border-radius:var(--rads);border:1px solid var(--bdr);
+  cursor:pointer;font-family:inherit;background:#fff;transition:border-color .15s;color:var(--tx)}
+.csel:focus{outline:none;border-color:var(--blue)}
+.divh{height:1px;background:var(--bdr);margin:16px 0}
+.empty{text-align:center;padding:3.5rem 0;color:var(--mu);font-size:13px}
+.empty i{font-size:44px;display:block;margin-bottom:10px;opacity:.22}
+.concepto-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.p-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.p-label{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.altbox{background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:11px;
+  padding:12px 15px;margin-bottom:13px}
+.altlbl{font-size:11px;font-weight:700;color:var(--warn-tx);margin-bottom:4px;
+  display:flex;align-items:center;gap:5px}
+.planbox{background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:11px;
+  padding:12px 15px;margin-bottom:13px}
+.planlbl{font-size:11px;font-weight:700;color:var(--info-tx);margin-bottom:4px;
+  display:flex;align-items:center;gap:5px}
+
+/* ── DOCUMENTOS ──────────────────────── */
+.drop-zone{border:2px dashed var(--bdr2);border-radius:var(--rad);padding:44px 22px;
+  text-align:center;cursor:pointer;transition:all .28s;
+  background:linear-gradient(135deg,#fff,var(--li));
+  margin-bottom:22px;position:relative;overflow:hidden}
+.drop-zone::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,48,135,.04) 0%,transparent 70%)}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--blue);background:var(--blue-ll);
+  transform:scale(1.008);box-shadow:0 6px 28px rgba(0,48,135,.09)}
+.drop-zone i{font-size:44px;color:var(--bdr2);display:block;margin-bottom:14px;transition:all .25s}
+.drop-zone:hover i,.drop-zone.drag i{color:var(--blue);transform:translateY(-4px) scale(1.05)}
+.drop-title{font-size:15px;font-weight:700;margin-bottom:5px}
+.drop-sub{font-size:12.5px;color:var(--mu);margin-bottom:15px}
+.fmt-tags{display:flex;gap:8px;justify-content:center}
+.fmt-tag{font-size:11px;padding:3px 12px;border-radius:999px;font-weight:700}
+.f-pdf{background:#fff0ef;color:#c0392b;border:1px solid #ffcac8}
+.f-docx{background:#eff4ff;color:#1d4ed8;border:1px solid #c3d5ff}
+.f-pptx{background:#fff5ef;color:#d35400;border:1px solid #ffd4b3}
+
+/* ── REPORTE DE CASO ─────────────────────── */
+.legal-banner{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);
+  border:1px solid #93c5fd;border-radius:var(--rad);padding:14px 18px;margin-bottom:18px}
+.legal-icon{font-size:28px;color:#1e40af;flex-shrink:0;margin-top:2px}
+.legal-content{flex:1}
+.legal-title{font-size:13px;font-weight:800;color:#1e3a8a;margin-bottom:4px;letter-spacing:.02em}
+.legal-text{font-size:12px;color:#1e40af;line-height:1.55}
+.rep-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:850px){.rep-grid{grid-template-columns:1fr}}
+.rep-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  padding:16px 18px;box-shadow:var(--sh)}
+.rep-card-lbl{font-size:11px;font-weight:800;color:var(--mu);text-transform:uppercase;
+  letter-spacing:.06em;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.rep-card-lbl i{font-size:14px;color:var(--blue)}
+.rep-opts{display:flex;flex-direction:column;gap:9px}
+.rep-opt-row{display:flex;flex-direction:column;gap:3px}
+.rep-opt-lbl{font-size:11px;font-weight:700;color:var(--tx2)}
+.rep-sel{font-size:12.5px;padding:7px 10px;border:1px solid var(--bdr);border-radius:var(--rads);
+  font-family:inherit;background:var(--li);color:var(--tx);cursor:pointer}
+.rep-sel:focus{outline:none;border-color:var(--blue)}
+.rep-file-info{background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);
+  border-radius:var(--rads);padding:8px 12px;font-size:12px;margin-top:10px;
+  display:flex;align-items:center;gap:8px}
+.rep-result-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  margin-top:14px;overflow:hidden;box-shadow:var(--sh)}
+.rep-result-hdr{background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rep-result-title{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rep-result-actions{display:flex;gap:6px}
+.rep-result-actions button{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  color:#fff;padding:5px 11px;border-radius:var(--rads);font-size:11.5px;cursor:pointer;
+  font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s}
+.rep-result-actions button:hover{background:rgba(255,255,255,.32)}
+.rep-result-body{padding:20px 22px;font-size:13.5px;line-height:1.7;white-space:pre-wrap;color:var(--tx)}
+.rep-result-foot{background:#fef7e6;border-top:1px solid #fcd34d;padding:11px 18px;
+  font-size:11.5px;color:#7c4008;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.rep-result-foot i{font-size:15px;flex-shrink:0;margin-top:1px}
+.doc-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  margin-bottom:14px;overflow:hidden;box-shadow:var(--sh);transition:all .2s}
+.doc-card:hover{box-shadow:var(--sh-hover);transform:translateY(-1px)}
+.doc-hdr{display:flex;align-items:center;gap:13px;padding:14px 18px}
+.doc-icon{font-size:27px;flex-shrink:0}
+.doc-info{flex:1;min-width:0}
+.doc-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:11.5px;color:var(--mu);margin-top:1px}
+.doc-acts{display:flex;gap:7px;flex-shrink:0;align-items:center}
+.doc-body{border-top:1px solid var(--bdr);padding:18px}
+.extracted{background:var(--li);border:1px solid var(--bdr);border-radius:var(--rads);
+  padding:11px 14px;max-height:170px;overflow-y:auto;font-size:12px;line-height:1.65;
+  white-space:pre-wrap;font-family:'Courier New',monospace;margin-bottom:14px}
+.analysis-box{background:var(--li);border:1px solid var(--ok-bdr);border-radius:var(--rads);
+  padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.8;white-space:pre-wrap;
+  max-height:430px;overflow-y:auto}
+.route-box{background:var(--info-bg);border:1px solid var(--info-bdr);
+  border-radius:11px;padding:14px 16px;margin-bottom:13px}
+.route-title{font-size:12px;font-weight:700;color:var(--info-tx);margin-bottom:9px;
+  display:flex;align-items:center;gap:6px}
+.route-sel{font-size:12px;padding:7px 11px;border-radius:var(--rads);
+  border:1px solid var(--info-bdr);background:#fff;font-family:inherit;
+  width:100%;margin-bottom:9px}
+.spinner{display:inline-block;width:17px;height:17px;border:2.5px solid var(--bdr);
+  border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── CONFIG ──────────────────────────── */
+.cfg-section{background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);
+  padding:22px;margin-bottom:16px;box-shadow:var(--sh);transition:box-shadow .2s}
+.cfg-section:hover{box-shadow:var(--sh-hover)}
+.cfg-title{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;
+  letter-spacing:.08em;display:flex;align-items:center;gap:8px;
+  margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
+.cfg-row{display:flex;align-items:center;gap:14px;margin-bottom:13px;flex-wrap:wrap}
+.cfg-row label{font-size:12.5px;color:var(--tx2);min-width:140px;font-weight:600}
+.cfg-row input,.cfg-row select{flex:1;min-width:170px;font-size:13px;padding:10px 13px;
+  border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);transition:all .2s}
+.cfg-row input:focus,.cfg-row select:focus{outline:none;border-color:var(--blue);
+  background:#fff;box-shadow:0 0 0 3px rgba(0,48,135,.08)}
+.cfg-note{font-size:12px;color:var(--mu);padding:10px 13px;background:var(--li);
+  border-radius:10px;margin-top:8px;line-height:1.65;border-left:3px solid var(--bdr2)}
+.st-badge{font-size:12px;padding:5px 13px;border-radius:20px;font-weight:600;
+  display:inline-flex;align-items:center;gap:5px}
+.st-ok{background:var(--ok-bg);color:var(--ok-tx)}
+.st-no{background:var(--err-bg);color:var(--err-tx)}
+.st-info{background:var(--info-bg);color:var(--info-tx)}
+
+/* ── EDICIÓN DE TAREAS ───────────────── */
+.task-btn{width:26px;height:26px;border-radius:7px;border:1px solid transparent;
+  background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;transition:all .15s;color:var(--mu)}
+.task-btn:hover{background:var(--bdr);color:var(--tx2)}
+.task-btn.del:hover{background:var(--err-bg);color:var(--err-tx);border-color:var(--err-bdr)}
+.task-btn.ok:hover{background:var(--ok-bg);color:var(--ok-tx);border-color:var(--ok-bdr)}
+.task.editing{background:var(--blue-ll);border:1px solid var(--blue);
+  box-shadow:0 0 0 3px rgba(0,48,135,.07)}
+.task-ei{flex:1;font-size:13px;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--bdr);font-family:inherit;background:#fff;
+  color:var(--tx);transition:border-color .2s;min-width:0}
+.task-ei:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,48,135,.08)}
+.task-esel{font-size:12px;padding:6px 8px;border-radius:8px;border:1px solid var(--bdr);
+  font-family:inherit;background:#fff;flex-shrink:0;cursor:pointer}
+.task-add-row{display:flex;gap:8px;align-items:center;padding:10px 13px;
+  border-radius:11px;background:var(--ok-bg);border:1px dashed var(--ok-bdr);margin-top:8px}
+.task-add-row .task-ei{background:rgba(255,255,255,.7)}
+.task-section-lbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;
+  letter-spacing:.06em;display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px}
+
+/* ── RESPONSIVE ──────────────────────── */
+@media(max-width:640px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .g2,.g3{grid-template-columns:1fr}
+  .full{grid-column:1}
+  .ntab{padding:0 11px;font-size:12px}
+  .t-btn .lbl{display:none}
+  .tipo-row{flex-direction:column}
+  .page{padding:20px 14px 60px}
+  .topbar{padding:0 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     PANTALLA DE BLOQUEO
+══════════════════════════════════ -->
+<div id="lock" class="lock">
+  <div class="lock-box">
+    <div class="lock-brand">
+      <div class="lock-pip"><i class="ti ti-stethoscope" style="font-size:34px"></i></div>
+      <h2>Seguimiento Casos Laborales</h2>
+      <p>Médico Cluster · José Gómez</p>
+    </div>
+    <div id="lock-msg" class="lock-msg"></div>
+    <div class="pin-dots">
+      <span class="pin-dot" id="pd0"></span>
+      <span class="pin-dot" id="pd1"></span>
+      <span class="pin-dot" id="pd2"></span>
+      <span class="pin-dot" id="pd3"></span>
+    </div>
+    <div class="pin-pad">
+      <button class="pk" onclick="pk('1')">1</button>
+      <button class="pk" onclick="pk('2')">2</button>
+      <button class="pk" onclick="pk('3')">3</button>
+      <button class="pk" onclick="pk('4')">4</button>
+      <button class="pk" onclick="pk('5')">5</button>
+      <button class="pk" onclick="pk('6')">6</button>
+      <button class="pk" onclick="pk('7')">7</button>
+      <button class="pk" onclick="pk('8')">8</button>
+      <button class="pk" onclick="pk('9')">9</button>
+      <button class="pk z" onclick="pk('0')">0</button>
+      <button class="pk d" onclick="pd()"><i class="ti ti-backspace"></i></button>
+    </div>
+    <p class="lock-hint" id="lock-hint">PIN por defecto: 1234</p>
+    <p style="margin-top:10px">
+      <button onclick="resetPin()" style="background:none;border:none;color:rgba(255,255,255,.35);font-size:11px;cursor:pointer;text-decoration:underline">¿Olvidaste tu PIN? Restablecer a 1234</button>
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     APP PRINCIPAL
+══════════════════════════════════ -->
+<div id="app" class="hidden" style="display:none">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo"><i class="ti ti-stethoscope" style="font-size:22px"></i></div>
+    <div class="topbar-name">Seguimiento Casos Laborales<small>Médico Cluster · José Gómez</small></div>
+  </div>
+  <div class="nav-tabs">
+    <div class="ntab on" id="tab-inc" onclick="goTab('inc')">
+      <i class="ti ti-scale"></i> Mesa / Comité Laboral
+    </div>
+    <div class="ntab" id="tab-exa" onclick="goTab('exa')">
+      <i class="ti ti-clipboard-list"></i> Exámenes Ocupacionales
+    </div>
+    <div class="ntab" id="tab-doc" onclick="goTab('doc')">
+      <i class="ti ti-file-analytics"></i> Análisis de Documentos
+    </div>
+    <div class="ntab" id="tab-rep" onclick="goTab('rep')">
+      <i class="ti ti-report-medical"></i> Reporte de Caso
+    </div>
+    <div class="ntab" id="tab-cfg" onclick="goTab('cfg')">
+      <i class="ti ti-settings"></i> Configuración
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="toast" id="toast"><i class="ti ti-check"></i> Guardado</span>
+    <span class="toast" id="file-toast" style="background:rgba(255,255,255,.15);color:#fff"></span>
+    <!-- Indicador de estado de archivo -->
+    <span id="file-ind" title="Archivo no vinculado" style="width:9px;height:9px;border-radius:50%;background:#f09595;flex-shrink:0;display:inline-block;margin-right:2px"></span>
+    <!-- Botón vincular/desvincular -->
+    <button class="t-btn" id="file-link-btn" onclick="linkFile()" title="Vincular archivo para auto-guardado">
+      <i class="ti ti-link"></i><span class="lbl">Vincular archivo</span>
+    </button>
+    <button class="t-btn" onclick="exportCSV()" title="Exportar CSV">
+      <i class="ti ti-table-export"></i><span class="lbl">CSV</span>
+    </button>
+    <button class="t-btn" onclick="lockApp()" title="Bloquear">
+      <i class="ti ti-lock"></i><span class="lbl">Bloquear</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════ PAGE 1 — MESA / COMITÉ LABORAL ══════ -->
+<div class="page on" id="page-inc">
+  <p class="sec-title">Mesa / Comité Laboral</p>
+  <p class="sec-sub">Casos activos con tareas pendientes y línea del tiempo</p>
+  <div class="stats" id="inc-stats"></div>
+
+  <!-- Formulario nuevo caso personalizado -->
+  <div class="add-panel">
+    <div class="add-toggle" onclick="tglForm('inc-form-body','inc-form-chv')">
+      <i class="ti ti-file-plus" style="font-size:17px;color:var(--blue)"></i>
+      <p class="add-toggle-t">Registrar nuevo caso</p>
+      <i class="ti ti-chevron-down chv" id="inc-form-chv"></i>
+    </div>
+    <div class="form-body" id="inc-form-body">
+      <p style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Tipo de instancia *</p>
+      <div class="tipo-row">
+        <div class="tipo-btn sel-com" id="ts-com" onclick="selTipoInc('comite')">
+          <i class="ti ti-gavel" style="color:var(--blue)"></i>
+          <span style="color:var(--blue)">Comité Laboral</span>
+        </div>
+        <div class="tipo-btn" id="ts-mesa" onclick="selTipoInc('mesa')">
+          <i class="ti ti-users" style="color:#7c3aed"></i>
+          <span style="color:#7c3aed">Mesa Laboral</span>
+        </div>
+      </div>
+      <input type="hidden" id="ci-tipo" value="comite">
+      <div class="g3">
+        <div class="ff"><span class="fl">Nombre del trabajador *</span>
+          <input type="text" id="ci-nombre" placeholder="Nombre completo" autocomplete="off"></div>
+        <div class="ff"><span class="fl">Cédula *</span>
+          <input type="text" id="ci-cc" placeholder="Número de cédula" autocomplete="off"></div>
+        <div class="ff"><span class="fl">Radicado / Expediente</span>
+          <input type="text" id="ci-radicado" placeholder="Ej: CL-2024-0031"></div>
+      </div>
+      <div class="g3">
+        <div class="ff"><span class="fl">Empresa / empleador</span>
+          <input type="text" id="ci-empresa" placeholder="Razón social"></div>
+        <div class="ff"><span class="fl">Cargo</span>
+          <input type="text" id="ci-cargo" placeholder="Cargo del trabajador"></div>
+        <div class="ff"><span class="fl">Próxima sesión</span>
+          <input type="date" id="ci-sesion"></div>
+      </div>
+      <div class="g3">
+        <div class="ff"><span class="fl">Repr. trabajador</span>
+          <input type="text" id="ci-repr-t" placeholder="Nombre o entidad"></div>
+        <div class="ff"><span class="fl">Repr. empleador</span>
+          <input type="text" id="ci-repr-e" placeholder="Nombre o entidad"></div>
+        <div class="ff"><span class="fl">Asesor ARL</span>
+          <input type="text" id="ci-asesor" placeholder="Nombre del asesor ARL"></div>
+      </div>
+      <div class="g2">
+        <div class="ff full"><span class="fl">Diagnóstico / motivo del caso</span>
+          <textarea id="ci-diag" placeholder="Describe el diagnóstico, motivo o hechos que originaron el caso…"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-sec" onclick="tglForm('inc-form-body','inc-form-chv')">Cancelar</button>
+        <button class="btn-pri" onclick="addCasoCustom()"><i class="ti ti-plus"></i> Registrar caso</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filrow">
+    <button class="fbtn on" id="if-todos" onclick="setIF('todos')">Todos</button>
+    <button class="fbtn" id="if-comite" onclick="setIF('comite')"><i class="ti ti-gavel"></i> Comité</button>
+    <button class="fbtn" id="if-mesa" onclick="setIF('mesa')"><i class="ti ti-users"></i> Mesa</button>
+    <button class="fbtn" id="if-activo" onclick="setIF('activo')">Activos</button>
+    <input type="text" class="srch" id="inc-srch" placeholder="Buscar nombre, cédula o radicado…" oninput="renderInc()">
+  </div>
+  <div id="inc-list"></div>
+</div>
+
+<!-- ══════ PAGE 2 — EXÁMENES ══════════════ -->
+<div class="page" id="page-exa">
+  <p class="sec-title">Seguimiento — Alteraciones en exámenes ocupacionales</p>
+  <p class="sec-sub">Ingreso · Periódico · Post-incapacidad · Egreso</p>
+  <div class="stats" id="exa-stats"></div>
+
+  <div class="add-panel">
+    <div class="add-toggle" onclick="tglForm('exa-form-body','exa-form-chv')">
+      <i class="ti ti-user-plus" style="font-size:17px;color:var(--blue)"></i>
+      <p class="add-toggle-t">Agregar persona al seguimiento</p>
+      <i class="ti ti-chevron-down chv" id="exa-form-chv"></i>
+    </div>
+    <div class="form-body" id="exa-form-body">
+      <div class="g2">
+        <div class="ff"><span class="fl">Nombre completo *</span>
+          <input type="text" id="ef-nombre" placeholder="Ej: María González Ruiz" autocomplete="off"></div>
+        <div class="ff"><span class="fl">Cédula *</span>
+          <input type="text" id="ef-cc" placeholder="Ej: 12345678" autocomplete="off"></div>
+      </div>
+      <div class="g2">
+        <div class="ff"><span class="fl">Contrato / empresa</span>
+          <input type="text" id="ef-contrato" placeholder="Ej: Ecopetrol Rubiales"></div>
+        <div class="ff"><span class="fl">Cargo</span>
+          <input type="text" id="ef-cargo" placeholder="Ej: Operador de planta"></div>
+      </div>
+      <div class="g3">
+        <div class="ff"><span class="fl">Tipo de examen</span>
+          <select id="ef-tipo">
+            <option value="periodico">Periódico</option>
+            <option value="ingreso">Ingreso</option>
+            <option value="postinc">Post-incapacidad</option>
+            <option value="egreso">Egreso</option>
+          </select></div>
+        <div class="ff"><span class="fl">Fecha del examen</span>
+          <input type="text" id="ef-fecha" placeholder="DD/MM/AAAA"></div>
+        <div class="ff"><span class="fl">Concepto inicial</span>
+          <select id="ef-concepto">
+            <option value="pendiente">Pendiente</option>
+            <option value="apto">Apto</option>
+            <option value="apto_rr">Apto c/ restricciones</option>
+            <option value="no_apto">No apto</option>
+            <option value="pend_esp">Pend. especialista</option>
+          </select></div>
+      </div>
+      <div class="g2">
+        <div class="ff full"><span class="fl">Hallazgo / alteración</span>
+          <textarea id="ef-alt" placeholder="Describe el hallazgo clínico o paraclínico relevante…"></textarea></div>
+        <div class="ff full"><span class="fl">Plan / recomendación inicial</span>
+          <textarea id="ef-plan" placeholder="Ej: Remitir a especialista, repetir paraclínicos…"></textarea></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-sec" onclick="tglForm('exa-form-body','exa-form-chv')">Cancelar</button>
+        <button class="btn-pri" onclick="addExa()"><i class="ti ti-plus"></i> Agregar al seguimiento</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filrow">
+    <button class="fbtn on" id="ef-todos" onclick="setEF('todos')">Todos</button>
+    <button class="fbtn" id="ef-periodico" onclick="setEF('periodico')">Periódico</button>
+    <button class="fbtn" id="ef-ingreso" onclick="setEF('ingreso')">Ingreso</button>
+    <button class="fbtn" id="ef-postinc" onclick="setEF('postinc')">Post-incapacidad</button>
+    <button class="fbtn" id="ef-egreso" onclick="setEF('egreso')">Egreso</button>
+    <input type="text" class="srch" id="exa-srch" placeholder="Buscar nombre o cédula…" oninput="renderExa()">
+  </div>
+  <div id="exa-list"></div>
+</div>
+
+<!-- ══════ PAGE 3 — DOCUMENTOS IA ══════════ -->
+<div class="page" id="page-doc">
+  <p class="sec-title">Análisis de documentos con IA</p>
+  <p class="sec-sub">Sube incapacidades, resultados de exámenes o historias clínicas para extraer datos clave</p>
+
+  <div style="background:var(--card);border:1px solid var(--bdr);border-radius:var(--rad);padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:var(--sh)">
+    <div style="font-size:11px;font-weight:800;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px"><i class="ti ti-category" style="color:var(--blue)"></i> Tipo de análisis</div>
+    <select id="doc-analysis-type" class="rep-sel" style="flex:1;min-width:260px">
+      <option value="caso" selected="">Caso laboral (Mesa/Comité) — extracción completa con línea del tiempo</option>
+      <option value="examen">Examen ocupacional — extracción de diagnósticos, conductas y seguimiento</option>
+    </select>
+  </div>
+
+  <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
+    <i class="ti ti-cloud-upload"></i>
+    <p class="drop-title">Arrastra un documento aquí o haz clic para seleccionar</p>
+    <p class="drop-sub">Incapacidades · Exámenes · Historias clínicas · Conceptos médicos</p>
+    <div class="fmt-tags">
+      <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
+      <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> Word / DOCX</span>
+      <span class="fmt-tag f-pptx"><i class="ti ti-file-type-ppt"></i> PowerPoint / PPTX</span>
+    </div>
+    <input type="file" id="file-input" accept=".pdf,.docx,.doc,.pptx,.ppt" multiple="" onchange="handleFiles(this.files)" style="display:none">
+  </div>
+  <div id="doc-results"></div>
+</div>
+
+<!-- ══════ PAGE — REPORTE DE CASO ══════════ -->
+<div class="page" id="page-rep">
+  <p class="sec-title">Reporte de Caso</p>
+  <p class="sec-sub">Genera un informe breve respetando la confidencialidad médica y la protección de datos</p>
+
+  <div class="legal-banner">
+    <div class="legal-icon"><i class="ti ti-shield-check"></i></div>
+    <div class="legal-content">
+      <p class="legal-title">Marco legal aplicable</p>
+      <p class="legal-text">
+        <strong>Ley 23 de 1981</strong> (art. 34 y 38) — reserva de historia clínica y secreto profesional ·
+        <strong>Resolución 1995 de 1999</strong> — manejo confidencial de historia clínica ·
+        <strong>Ley 1581 de 2012</strong> — protección de datos personales sensibles de salud
+      </p>
+    </div>
+  </div>
+
+  <div class="rep-grid">
+    <div class="rep-card">
+      <p class="rep-card-lbl"><i class="ti ti-upload"></i> 1. Subir documentos (uno o varios)</p>
+      <div class="drop-zone" id="rep-drop" onclick="document.getElementById('rep-file').click()" ondragover="onRepDrag(event,true)" ondragleave="onRepDrag(event,false)" ondrop="onRepDrop(event)" style="margin-bottom:0">
+        <i class="ti ti-files"></i>
+        <p class="drop-title">Arrastra o selecciona archivos</p>
+        <p class="drop-sub">Puedes subir varios documentos · Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+        <div class="fmt-tags">
+          <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
+          <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
+        </div>
+        <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple="" onchange="handleRepFiles(this.files)" style="display:none">
+      </div>
+      <div id="rep-files-list" style="margin-top:10px"></div>
+    </div>
+
+    <div class="rep-card">
+      <p class="rep-card-lbl"><i class="ti ti-adjustments"></i> 2. Opciones del reporte</p>
+      <div class="rep-opts">
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Tipo de reporte</span>
+          <select id="rep-tipo" class="rep-sel">
+            <option value="breve" selected="">Breve ejecutivo (recomendado)</option>
+            <option value="detallado">Detallado clínico-laboral</option>
+            <option value="empleador">Para empleador (sin datos sensibles)</option>
+            <option value="arl">Para ARL / interconsulta</option>
+          </select>
+        </label>
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Nivel de anonimización</span>
+          <select id="rep-anon" class="rep-sel">
+            <option value="parcial" selected="">Parcial — mantener nombre y cédula</option>
+            <option value="iniciales">Iniciales — solo iniciales del nombre</option>
+            <option value="total">Total — sin datos identificables</option>
+          </select>
+        </label>
+        <label class="rep-opt-row">
+          <span class="rep-opt-lbl">Incluir recomendaciones</span>
+          <select id="rep-recom" class="rep-sel">
+            <option value="si" selected="">Sí — incluir conductas sugeridas</option>
+            <option value="no">No — solo síntesis del caso</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn-pri" style="width:100%;margin-top:10px" id="rep-gen-btn" onclick="generarReporte()" disabled="">
+        <i class="ti ti-sparkles"></i> Generar reporte
+      </button>
+    </div>
+  </div>
+
+  <div id="rep-status"></div>
+  <div id="rep-result"></div>
+</div>
+
+<!-- ══════ PAGE 4 — CONFIGURACIÓN ══════════ -->
+<div class="page" id="page-cfg">
+  <p class="sec-title">Configuración</p>
+  <p class="sec-sub">Seguridad, inteligencia artificial y gestión de datos</p>
+
+  <!-- IA -->
+  <div class="cfg-section">
+    <div class="cfg-title"><i class="ti ti-robot"></i> Inteligencia Artificial — Análisis de documentos</div>
+
+    <!-- Selector de proveedor -->
+    <div class="cfg-row">
+      <label>Proveedor de IA</label>
+      <select id="cfg-provider" onchange="onProviderChange()">
+        <option value="groq">Groq — LLaMA (✅ GRATIS · sin restricciones)</option>
+        <option value="gemini">Google Gemini (GRATIS · cuota limitada)</option>
+        <option value="claude">Anthropic Claude (de pago)</option>
+      </select>
+    </div>
+
+    <!-- Panel Groq -->
+    <div id="panel-groq" style="display:none">
+      <div class="cfg-row">
+        <label>API Key de Groq</label>
+        <input type="password" id="cfg-groq-key" placeholder="gsk_…" autocomplete="off">
+      </div>
+      <div class="cfg-row">
+        <label>Modelo</label>
+        <select id="cfg-groq-model">
+          <option value="llama-3.3-70b-versatile" selected="">Llama 3.3 70B (recomendado)</option>
+          <option value="llama-3.1-8b-instant">Llama 3.1 8B (más rápido)</option>
+          <option value="gemma2-9b-it">Gemma 2 9B</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+        </select>
+      </div>
+      <div class="cfg-note" style="background:var(--ok-bg);border-color:var(--ok-bdr);color:var(--ok-tx)">
+        ✅ <strong>100% gratis</strong> — Sin tarjeta de crédito. Sin restricciones por país.<br>
+        Obtén tu clave en <a href="https://console.groq.com" target="_blank" style="color:var(--blue)"><strong>console.groq.com</strong></a> → API Keys → Create API Key
+      </div>
+    </div>
+
+    <!-- Panel Gemini -->
+    <div id="panel-gemini" style="display:none">
+      <div class="cfg-row">
+        <label>API Key de Google</label>
+        <input type="password" id="cfg-gemini-key" placeholder="AIza…" autocomplete="off">
+      </div>
+      <div class="cfg-row">
+        <label>Modelo Gemini</label>
+        <div style="display:flex;gap:6px;align-items:center;flex:1">
+          <select id="cfg-gemini-model" style="flex:1">
+            <option value="gemini-2.0-flash-lite" selected="">Gemini 2.0 Flash Lite (recomendado)</option>
+            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+            <option value="gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash Preview</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+          </select>
+          <button class="btn-sec" style="white-space:nowrap;padding:6px 10px;font-size:12px" onclick="detectGeminiModels()" title="Detectar modelos disponibles para tu API Key"><i class="ti ti-radar"></i> Auto-detectar</button>
+        </div>
+      </div>
+      <div class="cfg-note" style="background:var(--ok-bg);border-color:var(--ok-bdr);color:var(--ok-tx)">
+        ✅ <strong>100% gratis</strong> — 1,500 análisis por día sin costo.<br>
+        Obtén tu clave en <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)"><strong>aistudio.google.com/app/apikey</strong></a>
+      </div>
+    </div>
+
+    <!-- Panel Claude -->
+    <div id="panel-claude" style="display:none">
+      <div class="cfg-row">
+        <label>API Key de Anthropic</label>
+        <input type="password" id="cfg-api-key" placeholder="sk-ant-api03-…" autocomplete="off">
+      </div>
+      <div class="cfg-row">
+        <label>Modelo Claude</label>
+        <select id="cfg-model">
+          <option value="claude-opus-4-5">Claude Opus 4.5 (máxima calidad)</option>
+          <option value="claude-sonnet-4-5" selected="">Claude Sonnet 4.5 (recomendado)</option>
+          <option value="claude-haiku-4-5">Claude Haiku 4.5 (más rápido)</option>
+        </select>
+      </div>
+      <p class="cfg-note">⚠️ Servicio de pago. Obtén tu clave en <strong>console.anthropic.com</strong>.</p>
+    </div>
+
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn-sec" onclick="testApiKey()"><i class="ti ti-plug-connected"></i> Probar conexión</button>
+      <button class="btn-pri" onclick="saveApiKey()"><i class="ti ti-device-floppy"></i> Guardar</button>
+    </div>
+    <div id="api-status" style="margin-top:8px"></div>
+  </div>
+
+  <!-- PIN -->
+  <div class="cfg-section">
+    <div class="cfg-title"><i class="ti ti-shield-lock"></i> Seguridad — PIN de acceso</div>
+    <div class="cfg-row">
+      <label>PIN actual</label>
+      <input type="password" id="pin-old" placeholder="PIN actual (4 dígitos)" maxlength="4" autocomplete="off">
+    </div>
+    <div class="cfg-row">
+      <label>Nuevo PIN</label>
+      <input type="password" id="pin-new" placeholder="Nuevo PIN (4 dígitos)" maxlength="4" autocomplete="off">
+    </div>
+    <div class="cfg-row">
+      <label>Confirmar nuevo PIN</label>
+      <input type="password" id="pin-new2" placeholder="Repetir nuevo PIN" maxlength="4" autocomplete="off">
+    </div>
+    <div class="btn-row">
+      <button class="btn-pri" onclick="changePin()"><i class="ti ti-key"></i> Cambiar PIN</button>
+    </div>
+    <div id="pin-status" style="margin-top:8px"></div>
+    <div class="divh"></div>
+    <div class="cfg-row">
+      <label>Bloqueo automático</label>
+      <select id="cfg-lock-t" onchange="saveLockT()">
+        <option value="5">5 minutos</option>
+        <option value="10">10 minutos</option>
+        <option value="15" selected="">15 minutos</option>
+        <option value="30">30 minutos</option>
+        <option value="60">1 hora</option>
+        <option value="0">Nunca</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Archivo vinculado -->
+  <div class="cfg-section">
+    <div class="cfg-title"><i class="ti ti-file-check"></i> Guardar dentro del archivo HTML</div>
+    <div class="cfg-note" style="margin-bottom:12px">
+      <strong>¿Cómo funciona?</strong> Al vincular el archivo, cada vez que registres o modifiques algo,
+      los datos se escriben automáticamente <em>dentro del propio archivo HTML</em>.
+      Así, copiar el archivo = copiar todos tus datos. Funciona en Chrome y Edge.
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+      <div id="file-st-cfg"><span class="st-badge st-no">❌ No vinculado — datos solo en navegador</span></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-pri" onclick="linkFile()"><i class="ti ti-link"></i> Vincular este archivo</button>
+      <button class="btn-sec" onclick="saveToFile(true)"><i class="ti ti-device-floppy"></i> Guardar ahora</button>
+      <button class="btn-sec" onclick="unlinkFile()"><i class="ti ti-unlink"></i> Desvincular</button>
+    </div>
+    <div class="cfg-note" style="margin-top:10px">
+      <i class="ti ti-info-circle"></i>
+      La primera vez que hagas clic en <strong>Vincular</strong>, el navegador te pedirá seleccionar el archivo
+      <code>arl_seguimiento.html</code> y confirmar el permiso de escritura. Solo se pide una vez por sesión.
+    </div>
+  </div>
+
+  <!-- Datos -->
+  <div class="cfg-section">
+    <div class="cfg-title"><i class="ti ti-database"></i> Gestión de datos</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn-sec" onclick="exportData()"><i class="ti ti-download"></i> Exportar JSON</button>
+      <button class="btn-sec" onclick="exportCSV()"><i class="ti ti-table-export"></i> Exportar CSV</button>
+      <button class="btn-sec" onclick="document.getElementById('import-input').click()">
+        <i class="ti ti-upload"></i> Importar JSON</button>
+      <input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(this)">
+    </div>
+    <div class="divh"></div>
+    <p style="font-size:12px;color:var(--err-tx);font-weight:500;margin-bottom:8px">
+      <i class="ti ti-alert-triangle"></i> Zona de peligro</p>
+    <button class="btn-del" onclick="clearAll()"><i class="ti ti-trash"></i> Borrar todos los datos</button>
+  </div>
+
+</div><!-- /page-cfg -->
+</div><!-- /app -->
+
+<!-- Librerías de extracción -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- Datos embebidos — no editar manualmente -->
+<script id="data-store" type="application/json">{"inc":{"cases":{"aragon":{"open":true,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"puentes":{"open":true,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"vera":{"open":true,"tareasDone":{},"novedades":[{"fecha":"17/05/2026 10:04 a. m.","texto":"[Análisis IA] **DATOS DE IDENTIFICACIÓN**\n\n* Nombre completo: VERA FORERO PABLO EMILIO\n* Número de cédula: 7.331.805\n* Edad: 61 años\n* Cargo / puesto: No especificado\n* Empresa / Contrato al que pertenece: No especificado\n* EPS: NUEVA EPS\n\n**TIPO DE EXAMEN**\n\n* Tipo de examen: No especificado (pero se menciona \"ACUDE VALORACION PRE QX\", lo que sugiere que es un examen pre-ingreso)\n* Fecha del examen: 16/05/2026\n* IPS / institución que realizó el examen: MULTISALUD S.A.S\n* Médico evaluador: LLORENTE ROJO WILFREDO, especialista en Medicina Interna\n\n**DIAGNÓSTICOS**\n\n* Diagnóstico principal (con CIE-10): N40X …"},{"fecha":"16/05/2026 11:13 p. m.","texto":"nueva incapacidad 25 de mayo del 2026","tipo":"medico"},{"fecha":"16/05/2026 11:10 p. m.","texto":"[Análisis IA] A continuación, se presentan los datos extraídos del documento con las etiquetas solicitadas:\n\n═══════ DATOS DE IDENTIFICACIÓN ★ ═══════\n- Nombre completo: VERA FORERO PABLO EMILIO\n- Número de cédula: 7,331,805\n- Edad / fecha de nacimiento: 61 años / 05-10-1964\n- EPS / Aseguradora: NUEVA EPS\n- Cargo / puesto: No especificado\n- Empresa / Contrato al que pertenece: No especificado\n\n═══════ DIAGNÓSTICOS ★ ═══════\n- Diagnóstico principal (con código CIE-10 si aparece): N40X - Hiperplasia de la próstata, M545 - Lumbago no especificado\n- Diagnóstico secundario: No especificado\n- Hallazgos clínicos r…"}],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}},"herrera":{"open":true,"tareasDone":{},"novedades":[],"estado":"activo","tareasExtra":[],"tareasDeleted":[],"tareasEdits":{}}},"custom":[],"openCustom":{}},"exa":{"persons":[],"open":{}},"docs":[]}</script>
+
+<script>
+'use strict';
+/* Captura del HTML fuente original antes de cualquier renderizado */
+const ORIGINAL_SOURCE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+/* ════════════════════════════════════════════
+   DATOS PRE-CARGADOS — Médico Cluster
+════════════════════════════════════════════ */
+const INC_CASES=[
+  {id:'aragon',nombre:'Luis Carlos Aragón Flores',cc:'CC 17.423.854',
+   empresa:'Ecopetrol Rubiales',contrato:'Contrato 3048740',
+   diagnostico:'Enfermedad gastrointestinal (origen común)',
+   diasAcc:'120+',venc:'22/06/2026',accentColor:'#D85A30',tipo:'comite',
+   tareas:[
+     {id:'a1',txt:'Revisar y emitir concepto sobre la nueva incapacidad recibida el 14/05/2026',prio:'alta'},
+     {id:'a2',txt:'Programar examen post-incapacidad si no hay alta de la EPS al 22/06/2026',prio:'media'},
+     {id:'a3',txt:'Mantener seguimiento — 90 días previos con misma patología gastrointestinal',prio:'media'},
+   ]},
+  {id:'puentes',nombre:'Óscar Hernán Puentes González',cc:'CC 1.124.824.312',
+   empresa:'Ecopetrol Rubiales',contrato:'Operador Planta B · Campo Rubiales',
+   diagnostico:'Cirugía meniscal rodilla derecha (203 días acumulados)',
+   diasAcc:'203',venc:'26/05/2026',accentColor:'#BA7517',tipo:'mesa',
+   tareas:[
+     {id:'p1',txt:'Verificar asistencia a cita de Ortopedia el 27/05/2026 y solicitar resultado',prio:'alta'},
+     {id:'p2',txt:'Gestionar espacio en Comité de Medicina Laboral (CML) — pendiente hace semanas',prio:'alta'},
+     {id:'p3',txt:'Definir reintegro o prórroga según resultado ortopédico del 27/05',prio:'media'},
+   ]},
+  {id:'vera',nombre:'Pablo Emilio Vera Forero',cc:'CC 7.331.805',
+   empresa:'Contrato por obra',contrato:'FINALIZADO 31/01/2026',
+   diagnostico:'Post-incapacidad sin restricciones (05/05). Nueva incapacidad pendiente concepto',
+   diasAcc:'N/D',venc:'Por determinar',accentColor:'#A32D2D',tipo:'comite',
+   tareas:[
+     {id:'v1',txt:'Emitir concepto médico sobre la nueva incapacidad recibida el 07/05/2026',prio:'alta'},
+     {id:'v2',txt:'Articular con gerencia de proyecto (Juan Rueda) — situación contractual',prio:'alta'},
+     {id:'v3',txt:'Determinar ruta legal/médica dado que el contrato por obra ya venció el 31/01/2026',prio:'media'},
+   ]},
+  {id:'herrera',nombre:'July Katherine Herrera Acevedo',cc:'CC 1.077.968.308',
+   empresa:'Ecopetrol Rubiales',contrato:'Operadora Instalaciones Superficie',
+   diagnostico:'Síndrome Túnel Carpiano bilateral G560 (359 días acumulados)',
+   diasAcc:'359',venc:'10/06/2026',accentColor:'#185FA5',tipo:'mesa',
+   tareas:[
+     {id:'h1',txt:'Gestionar cita de control con Ortopedia — urgente, más de 6 semanas pendiente',prio:'alta'},
+     {id:'h2',txt:'Coordinar con Mesa Laboral ARL para prestaciones económicas y asistenciales',prio:'alta'},
+     {id:'h3',txt:'Documentar el gap administrativo del 11 al 12/05/2026 en el expediente',prio:'media'},
+     {id:'h4',txt:'Definir plan rehabilitador y concepto de reintegro tras valoración ortopédica',prio:'media'},
+   ]},
+];
+
+/* ════════════════════════════════════════════
+   CONSTANTES
+════════════════════════════════════════════ */
+const SK   = 'ws_medico_v4';
+const SALT = 'arl_bolivar_cluster_2024';
+const INC_ESTADOS = ['activo','en revisión','resuelto','suspendido'];
+const INC_ESTCLR  = {activo:'b-info','en revisión':'b-warn',resuelto:'b-ok',suspendido:'b-gray'};
+const TL_TIPOS={
+  sesion:  {label:'Sesión',       icon:'ti-users',            color:'#7c3aed',bg:'#ede9fe'},
+  medico:  {label:'Médico',       icon:'ti-stethoscope',      color:'#059669',bg:'#d1fae5'},
+  decision:{label:'Decisión',     icon:'ti-gavel',            color:'#0ea5e9',bg:'#e0f2fe'},
+  alerta:  {label:'Alerta',       icon:'ti-alert-triangle',   color:'#d97706',bg:'#fef3c7'},
+  laboral: {label:'Laboral',      icon:'ti-briefcase',        color:'#003087',bg:'#dce8f8'},
+  novedad: {label:'Novedad',      icon:'ti-note',             color:'#64748b',bg:'#f1f5f9'},
+};
+function tlRender(eventos, fnDel){
+  if(!eventos||!eventos.length)
+    return `<p class="tl-empty"><i class="ti ti-timeline" style="font-size:14px;margin-right:4px"></i>Sin eventos registrados. Agrega el primero abajo.</p>`;
+  const sorted=[...eventos].map((e,i)=>({...e,_i:i}))
+    .sort((a,b)=>{
+      const pa=a.fecha||'',pb=b.fecha||'';
+      const da=pa.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      const db=pb.replace(/(\d{2})\/(\d{2})\/(\d{4})/,'$3$2$1');
+      return db.localeCompare(da);
+    });
+  return sorted.map(ev=>{
+    const tp=TL_TIPOS[ev.tipo]||TL_TIPOS.novedad;
+    return `<div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot" style="color:${tp.color};background:${tp.bg}"><i class="ti ${tp.icon}" style="font-size:7px;color:${tp.color}"></i></div>
+      <div class="tl-box">
+        <div class="tl-box-hdr">
+          <span class="tl-badge" style="background:${tp.bg};color:${tp.color}">${tp.label}</span>
+          <span class="tl-fecha"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(ev.fecha||'')}</span>
+        </div>
+        <p class="tl-texto">${escHtml(ev.texto||'')}</p>
+        <button class="tl-del" onclick="(${fnDel})(${ev._i})"><i class="ti ti-trash" style="font-size:11px"></i> Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+const TLBL   = {periodico:'Periódico',ingreso:'Ingreso',postinc:'Post-incapacidad',egreso:'Egreso'};
+const TBADGE = {periodico:'b-per',ingreso:'b-ing',postinc:'b-pos',egreso:'b-egr'};
+const CLBL   = {pendiente:'Pendiente',apto:'Apto',apto_rr:'Apto c/ restricciones',no_apto:'No apto',pend_esp:'Pend. especialista'};
+const AVCLR  = ['background:#e6f1fb;color:#0c447c','background:#e1f5ee;color:#085041',
+  'background:#faeeda;color:#633806','background:#eeedfe;color:#3c3489','background:#faece7;color:#712b13'];
+
+/* ════════════════════════════════════════════
+   ESTADO
+════════════════════════════════════════════ */
+let DB = {
+  inc:{cases:{},custom:[],openCustom:{}},
+  exa:{persons:[],open:{}},
+  docs:[]
+};
+let IF_FILTRO = 'todos';
+let EF_FILTRO = 'todos';
+let _taskEdit = null; // {cid, tid, isCustom}
+let DOC_RESULTS = {};     // almacena resultados de análisis por id
+let _docLocalText = {};   // texto extraído localmente antes de enviar a la API
+let lockTimer = null;
+let pinBuf = '';
+
+/* ════════════════════════════════════════════
+   SEGURIDAD — PIN
+════════════════════════════════════════════ */
+const SALT_KEY = 'arl_pin_hash_v2';
+async function hashPin(p){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(p+SALT));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function initSecurity(){
+  if(!localStorage.getItem(SALT_KEY)){
+    localStorage.setItem(SALT_KEY, await hashPin('1234'));
+    document.getElementById('lock-hint').textContent = 'PIN por defecto: 1234';
+  } else {
+    document.getElementById('lock-hint').textContent = 'Ingresa tu PIN para continuar';
+  }
+  const lt = localStorage.getItem('arl_lock_t')||'15';
+  const sel = document.getElementById('cfg-lock-t');
+  if(sel) sel.value = lt;
+}
+function pk(d){
+  if(pinBuf.length>=4) return;
+  pinBuf+=d; updDots();
+  if(pinBuf.length===4) setTimeout(verifyPin,160);
+}
+function pd(){ pinBuf=pinBuf.slice(0,-1); updDots(); }
+function updDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.toggle('f',i<pinBuf.length);
+    d.classList.remove('e');
+  }
+}
+async function verifyPin(){
+  const h=await hashPin(pinBuf);
+  if(h===localStorage.getItem(SALT_KEY)){
+    pinBuf=''; updDots();
+    document.getElementById('lock').classList.add('hidden');
+    document.getElementById('app').style.display='';
+    resetLockT(); dbLoad();
+  } else {
+    for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.add('e');
+    document.getElementById('lock-msg').textContent='❌ PIN incorrecto. Intenta de nuevo.';
+    setTimeout(()=>{ pinBuf=''; updDots(); document.getElementById('lock-msg').textContent=''; },1400);
+  }
+}
+async function resetPin(){
+  if(!confirm('¿Restablecer el PIN a 1234?\nEsto eliminará el PIN actual.')) return;
+  localStorage.setItem(SALT_KEY, await hashPin('1234'));
+  document.getElementById('lock-hint').textContent = 'PIN restablecido a: 1234';
+  document.getElementById('lock-msg').textContent = '✅ PIN restablecido. Ingresa 1234.';
+  pinBuf=''; updDots();
+}
+function lockApp(){
+  clearLockT(); pinBuf=''; updDots();
+  document.getElementById('lock').classList.remove('hidden');
+  document.getElementById('app').style.display='none';
+  document.getElementById('lock-msg').textContent='';
+}
+function resetLockT(){
+  clearLockT();
+  const m=parseInt(localStorage.getItem('arl_lock_t')||'15');
+  if(m>0) lockTimer=setTimeout(lockApp,m*60000);
+}
+function clearLockT(){ if(lockTimer){clearTimeout(lockTimer);lockTimer=null;} }
+['click','keydown','mousemove','touchstart'].forEach(ev=>
+  document.addEventListener(ev,()=>{ if(document.getElementById('app').style.display!=='none') resetLockT(); },{passive:true}));
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lock').classList.contains('hidden')){
+    if(e.key>='0'&&e.key<='9') pk(e.key);
+    else if(e.key==='Backspace') pd();
+  }
+});
+
+/* ════════════════════════════════════════════
+   STORAGE
+════════════════════════════════════════════ */
+function dbLoad(){
+  try{
+    // 1. Primero intentar datos embebidos en el archivo
+    const embEl = document.getElementById('data-store');
+    const embTxt = embEl ? embEl.textContent.trim() : 'null';
+    if(embTxt && embTxt !== 'null'){
+      const d = JSON.parse(embTxt);
+      DB = d;
+      // Sincronizar también en localStorage
+      localStorage.setItem(SK, embTxt);
+    } else {
+      // 2. Fallback a localStorage
+      const r = localStorage.getItem(SK);
+      if(r){ DB = JSON.parse(r); }
+    }
+  }catch(e){ console.warn('dbLoad error:', e); }
+  if(!DB.inc) DB.inc={cases:{},custom:[],openCustom:{}};
+  if(!DB.inc.custom) DB.inc.custom=[];
+  if(!DB.inc.openCustom) DB.inc.openCustom={};
+  if(!DB.exa) DB.exa={persons:[],open:{}};
+  if(!DB.docs) DB.docs=[];
+  ensureIncCases();
+  // Restaurar configuración de IA
+  const provider=localStorage.getItem('arl_provider')||'groq';
+  const prov=document.getElementById('cfg-provider');
+  if(prov){ prov.value=provider; onProviderChange(); }
+  const grk=document.getElementById('cfg-groq-key');
+  if(grk) grk.value=localStorage.getItem('arl_groq_key')||'';
+  const grm=document.getElementById('cfg-groq-model');
+  if(grm && localStorage.getItem('arl_groq_model')) grm.value=localStorage.getItem('arl_groq_model');
+  const gk=document.getElementById('cfg-gemini-key');
+  if(gk) gk.value=localStorage.getItem('arl_gemini_key')||'';
+  const gm=document.getElementById('cfg-gemini-model');
+  if(gm) gm.value=localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite';
+  const ki=document.getElementById('cfg-api-key');
+  if(ki) ki.value=localStorage.getItem('arl_api_key')||'';
+  const ms=document.getElementById('cfg-model');
+  if(ms) ms.value=localStorage.getItem('arl_model')||'claude-sonnet-4-5';
+  render();
+  // Intentar restaurar handle de archivo
+  initFileHandle();
+}
+function dbSave(){
+  try{
+    localStorage.setItem(SK, JSON.stringify(DB));
+    showToast();
+    // Auto-guardar en archivo si está vinculado
+    if(fileHandle) saveToFile(false);
+  }catch(e){}
+}
+/* ════════════════════════════════════════════
+   ARCHIVO — GUARDAR DENTRO DEL HTML
+════════════════════════════════════════════ */
+let fileHandle = null;
+
+// IndexedDB para persistir el handle entre sesiones
+function getIDB(){
+  return new Promise((res,rej)=>{
+    const req = indexedDB.open('arl_ws_fh',1);
+    req.onupgradeneeded = ()=> req.result.createObjectStore('fh');
+    req.onsuccess = ()=> res(req.result);
+    req.onerror  = ()=> rej(req.error);
+  });
+}
+async function storeHandle(h){
+  try{
+    const db = await getIDB();
+    await new Promise((res,rej)=>{
+      const tx = db.transaction('fh','readwrite');
+      tx.objectStore('fh').put(h,'main');
+      tx.oncomplete = res; tx.onerror = rej;
+    });
+  }catch(e){}
+}
+async function retrieveHandle(){
+  try{
+    const db = await getIDB();
+    return await new Promise((res,rej)=>{
+      const tx = db.transaction('fh','readonly');
+      const req = tx.objectStore('fh').get('main');
+      req.onsuccess = ()=> res(req.result);
+      req.onerror  = ()=> rej(req.error);
+    });
+  }catch(e){ return null; }
+}
+async function clearHandle(){
+  try{
+    const db = await getIDB();
+    await new Promise((res,rej)=>{
+      const tx = db.transaction('fh','readwrite');
+      tx.objectStore('fh').delete('main');
+      tx.oncomplete = res; tx.onerror = rej;
+    });
+  }catch(e){}
+}
+
+async function initFileHandle(){
+  try{
+    const h = await retrieveHandle();
+    if(!h){ updateFileSt(false); return; }
+    // Verificar permiso
+    const perm = await h.queryPermission({mode:'readwrite'});
+    if(perm === 'granted'){
+      fileHandle = h; updateFileSt(true);
+    } else {
+      // Pedir permiso sin gesture (puede fallar, se reintenta al hacer clic)
+      fileHandle = h; updateFileSt(false,'pending');
+    }
+  }catch(e){ fileHandle = null; updateFileSt(false); }
+}
+
+async function linkFile(){
+  if(!('showOpenFilePicker' in window)){
+    alert('Tu navegador no soporta esta función.\nUsa Chrome o Edge versión reciente.');
+    return;
+  }
+  try{
+    const [h] = await window.showOpenFilePicker({
+      types:[{description:'Archivo HTML',accept:{'text/html':['.html','.htm']}}],
+      multiple: false
+    });
+    // Verificar que sea escribible
+    const perm = await h.requestPermission({mode:'readwrite'});
+    if(perm !== 'granted'){ alert('Se necesita permiso de escritura para guardar.'); return; }
+    fileHandle = h;
+    await storeHandle(h);
+    updateFileSt(true);
+    // Guardar inmediatamente
+    await saveToFile(true);
+  }catch(e){
+    if(e.name !== 'AbortError') alert('Error al vincular: '+e.message);
+  }
+}
+
+async function unlinkFile(){
+  fileHandle = null;
+  await clearHandle();
+  updateFileSt(false);
+}
+
+async function saveToFile(notify=true){
+  if(!fileHandle) return;
+  try{
+    // Verificar/pedir permiso
+    let perm = await fileHandle.queryPermission({mode:'readwrite'});
+    if(perm !== 'granted'){
+      perm = await fileHandle.requestPermission({mode:'readwrite'});
+      if(perm !== 'granted'){ updateFileSt(false,'pending'); return; }
+    }
+    // Construir HTML con datos embebidos
+    const dataJson = JSON.stringify(DB);
+    const newHtml = ORIGINAL_SOURCE.replace(
+      /<script id="data-store" type="application\/json">[\s\S]*?<\/script>/,
+      `<script id="data-store" type="application/json">${dataJson}<\/script>`
+    );
+    const writable = await fileHandle.createWritable();
+    await writable.write(newHtml);
+    await writable.close();
+    updateFileSt(true);
+    if(notify) showFileToast('✅ Guardado en archivo');
+  }catch(e){
+    console.error('saveToFile error:',e);
+    if(notify) showFileToast('❌ Error al guardar: '+e.message);
+    if(e.name==='NotAllowedError'){ fileHandle=null; updateFileSt(false); }
+  }
+}
+
+function updateFileSt(linked, extra){
+  const btn  = document.getElementById('file-link-btn');
+  const ind  = document.getElementById('file-ind');
+  const stEl = document.getElementById('file-st-cfg');
+  if(!btn) return;
+  if(linked){
+    btn.innerHTML = '<i class="ti ti-unlink"></i><span class="lbl">Desvincular</span>';
+    btn.onclick = unlinkFile;
+    btn.style.background='rgba(151,196,89,.18)'; btn.style.borderColor='rgba(151,196,89,.4)';
+    if(ind){ ind.style.background='#97c459'; ind.title='Archivo vinculado · Auto-guardado activo'; }
+    if(stEl) stEl.innerHTML='<span class="st-badge st-ok">✅ Vinculado — auto-guardado activo</span>';
+  } else {
+    btn.innerHTML = '<i class="ti ti-link"></i><span class="lbl">Vincular archivo</span>';
+    btn.onclick = linkFile;
+    btn.style.background=''; btn.style.borderColor='';
+    if(ind){ ind.style.background= extra==='pending' ? '#F7B500' : '#f09595';
+      ind.title = extra==='pending' ? 'Pendiente permiso' : 'Archivo no vinculado'; }
+    if(stEl) stEl.innerHTML = extra==='pending'
+      ? '<span class="st-badge st-info">⏳ Permiso pendiente — haz clic en Vincular</span>'
+      : '<span class="st-badge st-no">❌ No vinculado — datos solo en navegador</span>';
+  }
+}
+
+function showFileToast(msg){
+  const t = document.getElementById('file-toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(()=> t.classList.remove('on'), 2500);
+}
+
+function showToast(){
+  const t=document.getElementById('toast');
+  t.classList.add('on'); setTimeout(()=>t.classList.remove('on'),2000);
+}
+function ensureIncCases(){
+  INC_CASES.forEach(c=>{
+    if(!DB.inc.cases[c.id])
+      DB.inc.cases[c.id]={open:c.id==='aragon',tareasDone:{},novedades:[],estado:'activo',
+        tareasExtra:[],tareasDeleted:[],tareasEdits:{},incaps:[]};
+    const cs=DB.inc.cases[c.id];
+    if(!cs.tareasExtra)  cs.tareasExtra=[];
+    if(!cs.tareasDeleted)cs.tareasDeleted=[];
+    if(!cs.tareasEdits)  cs.tareasEdits={};
+    if(!cs.incaps)       cs.incaps=[];
+  });
+  DB.inc.custom.forEach(c=>{
+    if(!c.tareas)c.tareas=[];
+    if(!c.incaps)c.incaps=[];
+  });
+}
+function render(){ renderInc(); renderExa(); }
+
+/* ════════════════════════════════════════════
+   INCAPACIDADES — Cálculo del consolidado
+════════════════════════════════════════════ */
+function _parseDMY(s){
+  if(!s) return null;
+  let m=String(s).trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m){ const d=new Date(+m[1], +m[2]-1, +m[3]); return isNaN(d)?null:d; }
+  m=String(s).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){ const d=new Date(+m[3], +m[2]-1, +m[1]); return isNaN(d)?null:d; }
+  return null;
+}
+function _fmtDMY(d){
+  if(!d) return '—';
+  return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
+}
+function _daysBetween(d1, d2){
+  if(!d1||!d2) return null;
+  const a=new Date(d1.getFullYear(),d1.getMonth(),d1.getDate());
+  const b=new Date(d2.getFullYear(),d2.getMonth(),d2.getDate());
+  return Math.round((b-a)/(1000*60*60*24))+1; // inclusivo
+}
+function getIncapStats(incaps){
+  if(!incaps||!incaps.length) return {count:0,totalDias:0,ultVencDate:null,ultVencStr:'—'};
+  let total=0, ultFin=null;
+  incaps.forEach(it=>{
+    const d=Number(it.dias)||0;
+    total += d;
+    const f=_parseDMY(it.fin);
+    if(f && (!ultFin || f>ultFin)) ultFin=f;
+  });
+  return {count:incaps.length, totalDias:total, ultVencDate:ultFin, ultVencStr:_fmtDMY(ultFin)};
+}
+
+function addIncap(cid, isCustom){
+  const root = isCustom
+    ? DB.inc.custom.find(x=>x.id===cid)
+    : DB.inc.cases[cid];
+  if(!root) return;
+  if(!root.incaps) root.incaps=[];
+  const ini=document.getElementById(`incap-ini-${cid}`)?.value;
+  const fin=document.getElementById(`incap-fin-${cid}`)?.value;
+  const dxEl=document.getElementById(`incap-dx-${cid}`);
+  const dx=dxEl?dxEl.value.trim():'';
+  const diasManual=document.getElementById(`incap-dias-${cid}`)?.value;
+  if(!ini || !fin){ alert('Ingresa fecha de inicio y fin'); return; }
+  const di=_parseDMY(ini), df=_parseDMY(fin);
+  if(!di || !df){ alert('Formato de fecha inválido'); return; }
+  if(df<di){ alert('La fecha de fin no puede ser anterior a la de inicio'); return; }
+  let dias=Number(diasManual)||_daysBetween(di,df);
+  root.incaps.push({
+    id:'ic_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+    inicio:_fmtDMY(di), fin:_fmtDMY(df), dias, dx
+  });
+  dbSave();
+  renderInc();
+}
+function delIncap(cid, icId, isCustom){
+  const root = isCustom
+    ? DB.inc.custom.find(x=>x.id===cid)
+    : DB.inc.cases[cid];
+  if(!root||!root.incaps) return;
+  root.incaps = root.incaps.filter(x=>x.id!==icId);
+  dbSave();
+  renderInc();
+}
+
+function renderIncapList(cid, incaps, isCustom){
+  incaps = incaps || [];
+  const st = getIncapStats(incaps);
+  const rows = incaps.length === 0
+    ? `<p style="margin:6px 0 8px;font-size:12px;color:var(--mu);font-style:italic">Sin incapacidades registradas. Agrega la primera abajo.</p>`
+    : `<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px">
+        <thead>
+          <tr style="background:var(--li);color:var(--mu);text-transform:uppercase;font-size:10px;letter-spacing:.04em">
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Inicio</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Fin</th>
+            <th style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr)">Días</th>
+            <th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bdr)">Dx</th>
+            <th style="padding:6px 4px;border-bottom:1px solid var(--bdr)"></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${incaps.slice().sort((a,b)=>{
+            const da=_parseDMY(a.inicio),db=_parseDMY(b.inicio);
+            return (db?+db:0)-(da?+da:0);
+          }).map(it=>`
+            <tr>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)">${escHtml(it.inicio)}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--tx)"><strong>${escHtml(it.fin)}</strong></td>
+              <td style="padding:6px 8px;text-align:right;border-bottom:1px solid var(--bdr);font-weight:700;color:var(--blue)">${it.dias}</td>
+              <td style="padding:6px 8px;border-bottom:1px solid var(--bdr);color:var(--mu);font-size:11.5px">${escHtml(it.dx||'—')}</td>
+              <td style="padding:6px 4px;border-bottom:1px solid var(--bdr);text-align:right">
+                <button onclick="delIncap('${cid}','${it.id}',${isCustom?'true':'false'})" title="Quitar"
+                  style="background:none;border:0;color:var(--err-tx);cursor:pointer;padding:2px 4px"><i class="ti ti-trash"></i></button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+
+  return `
+    <div class="incaps-block" style="background:var(--li);border:1px solid var(--bdr);border-radius:var(--rads);padding:12px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <p style="margin:0;font-size:12px;font-weight:700;color:var(--tx);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px">
+          <i class="ti ti-clipboard-list" style="font-size:14px;color:var(--blue)"></i> Consolidado de incapacidades
+        </p>
+        <div style="display:flex;gap:8px;font-size:11.5px;flex-wrap:wrap">
+          <span style="background:#dce8f8;color:#003087;padding:4px 10px;border-radius:12px;font-weight:700">
+            ${st.totalDias} día${st.totalDias===1?'':'s'} acumulado${st.totalDias===1?'':'s'}
+          </span>
+          <span style="background:#fef3c7;color:#7c4008;padding:4px 10px;border-radius:12px;font-weight:700">
+            Vence: ${escHtml(st.ultVencStr)}
+          </span>
+        </div>
+      </div>
+      ${rows}
+      <div style="display:grid;grid-template-columns:1fr 1fr 80px 2fr auto;gap:6px;margin-top:8px">
+        <input type="date" id="incap-ini-${cid}" title="Inicio" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="date" id="incap-fin-${cid}" title="Fin" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="number" id="incap-dias-${cid}" placeholder="Días" min="1" title="Días (auto si está vacío)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <input type="text" id="incap-dx-${cid}" placeholder="Diagnóstico / CIE-10 (opcional)" style="font-size:12px;padding:6px 8px;border:1px solid var(--bdr);border-radius:6px;background:var(--card);color:var(--tx)">
+        <button class="btn-sm" onclick="addIncap('${cid}',${isCustom?'true':'false'})" style="white-space:nowrap"><i class="ti ti-plus"></i> Agregar</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ════════════════════════════════════════════
+   NAVEGACIÓN
+════════════════════════════════════════════ */
+function goTab(t){
+  ['inc','exa','doc','rep','cfg'].forEach(id=>{
+    document.getElementById('tab-'+id).classList.toggle('on',id===t);
+    document.getElementById('page-'+id).classList.toggle('on',id===t);
+  });
+}
+
+/* ════════════════════════════════════════════
+   UI HELPERS
+════════════════════════════════════════════ */
+function tglForm(bodyId,chvId){
+  const b=document.getElementById(bodyId),c=document.getElementById(chvId);
+  if(!b)return; b.classList.toggle('open'); if(c)c.classList.toggle('open');
+}
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function ini(n){ return String(n).split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
+function avclr(i){ return AVCLR[i%AVCLR.length]; }
+function nowStr(){
+  const n=new Date();
+  return n.toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+
+    n.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+}
+function nowDate(){
+  return new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+function fmtBytes(b){ return b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB'; }
+function parseFecha(s){
+  if(!s)return null;
+  const d=new Date(s+'T12:00:00');
+  return isNaN(d)?null:d;
+}
+function diasPara(s){
+  const d=parseFecha(s);if(!d)return null;
+  const h=new Date();h.setHours(0,0,0,0);d.setHours(0,0,0,0);
+  return Math.round((d-h)/(1000*60*60*24));
+}
+
+/* ════════════════════════════════════════════
+   MESA / COMITÉ LABORAL — PRE-CARGADOS
+════════════════════════════════════════════ */
+function renderIncStats(){
+  const cs=DB.inc.cases;
+  let done=0,tot=0,urg=0,nov=0,activos=0;
+  INC_CASES.forEach(c=>{
+    c.tareas.forEach(t=>{ tot++; if(cs[c.id]?.tareasDone[t.id])done++; else if(t.prio==='alta')urg++; });
+    nov+=(cs[c.id]?.novedades?.length||0);
+    if(cs[c.id]?.estado==='activo') activos++;
+  });
+  DB.inc.custom.forEach(c=>{ nov+=(c.actas?.length||0); if((c.estado||'activo')==='activo') activos++; });
+  const total=INC_CASES.length+DB.inc.custom.length;
+  const pct = tot ? Math.round(done/tot*100) : 0;
+  document.getElementById('inc-stats').innerHTML=`
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Casos totales</span>
+        <i class="ti ti-files" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn">${total}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px"><span style="color:#10b981;font-weight:700">●</span> ${activos} activos</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Progreso de tareas</span>
+        <i class="ti ti-checklist" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--blue)">${pct}%</div>
+      <div style="height:6px;background:var(--li);border-radius:3px;overflow:hidden;margin-top:6px">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--blue),#3b82f6);transition:width .4s"></div>
+      </div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${done} de ${tot} completadas</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Urgentes abiertas</span>
+        <i class="ti ti-alert-triangle" style="font-size:18px;color:#D85A30;opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:#D85A30">${urg}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${urg===0?'Sin urgencias 🎯':'Requieren atención inmediata'}</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Eventos en línea del tiempo</span>
+        <i class="ti ti-timeline" style="font-size:18px;color:var(--info-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--info-tx)">${nov}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">Registros de seguimiento</div>
+    </div>`;
+}
+
+function getIncFiltrados(){
+  const q=((document.getElementById('inc-srch')||{value:''}).value).toLowerCase();
+  // Pre-cargados
+  let pre=INC_CASES.filter(c=>{
+    const mf=IF_FILTRO==='todos'?true:IF_FILTRO==='comite'?c.tipo==='comite':
+             IF_FILTRO==='mesa'?c.tipo==='mesa':
+             IF_FILTRO==='activo'?DB.inc.cases[c.id]?.estado==='activo':true;
+    const mq=!q||c.nombre.toLowerCase().includes(q)||c.cc.toLowerCase().includes(q);
+    return mf&&mq;
+  });
+  // Custom
+  let cust=DB.inc.custom.filter(c=>{
+    const mf=IF_FILTRO==='todos'?true:IF_FILTRO==='comite'?c.tipo==='comite':
+             IF_FILTRO==='mesa'?c.tipo==='mesa':
+             IF_FILTRO==='activo'?c.estado==='activo':true;
+    const mq=!q||c.nombre.toLowerCase().includes(q)||(c.cc||'').includes(q)||
+              (c.radicado||'').toLowerCase().includes(q);
+    return mf&&mq;
+  });
+  return {pre,cust};
+}
+
+function renderInc(){
+  renderIncStats();
+  const wrap=document.getElementById('inc-list');
+  const {pre,cust}=getIncFiltrados();
+  if(!pre.length&&!cust.length){
+    wrap.innerHTML=`<div class="empty"><i class="ti ti-scale"></i>${
+      INC_CASES.length+DB.inc.custom.length===0
+        ?'No hay casos registrados.'
+        :'Sin resultados para este filtro.'}</div>`;
+    return;
+  }
+  wrap.innerHTML='';
+  // Renderizar pre-cargados
+  pre.forEach(c=>{
+    const cs=DB.inc.cases[c.id];
+    const done=c.tareas.filter(t=>cs.tareasDone[t.id]).length;
+    const pct=Math.round(done/c.tareas.length*100);
+    // Consolidado calculado a partir del registro de incapacidades del caso
+    const stIncap = getIncapStats(cs.incaps);
+    const vencMostrado = stIncap.count ? stIncap.ultVencStr : c.venc;
+    const diasMostrado = stIncap.count ? String(stIncap.totalDias) : c.diasAcc;
+    const div=document.createElement('div'); div.className='card';
+    div.innerHTML=`
+<div class="card-hdr" onclick="tglInc('${c.id}')">
+  <div class="accent" style="background:${c.accentColor}"></div>
+  <div class="card-info">
+    <p class="card-name">${escHtml(c.nombre)}</p>
+    <p class="card-meta">${escHtml(c.cc)} · Vence: <strong>${escHtml(vencMostrado)}</strong>${stIncap.count?` · <strong style="color:var(--blue)">${stIncap.totalDias} días</strong>`:''}</p>
+  </div>
+  <div class="card-right">
+    <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
+    <span class="badge ${INC_ESTCLR[cs.estado]||'b-gray'}">${escHtml(cs.estado)}</span>
+    <span class="chip">${done}/${c.tareas.length}</span>
+    <i class="ti ti-chevron-down chv ${cs.open?'open':''}"></i>
+  </div>
+</div>
+${cs.open?`<div class="card-body">
+  <div class="g2" style="margin-bottom:12px">
+    <div class="di"><p class="dil">Contrato</p><p class="div2">${escHtml(c.contrato)}</p></div>
+    <div class="di"><p class="dil">Vencimiento ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2" style="color:${c.accentColor}">${escHtml(vencMostrado)}</p></div>
+    <div class="di"><p class="dil">Días acumulados ${stIncap.count?'<span style="font-size:9px;color:var(--blue);font-weight:700">·CALC</span>':''}</p><p class="div2">${escHtml(diasMostrado)}</p></div>
+    <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(c.empresa)}</p></div>
+    <div class="di full"><p class="dil">Diagnóstico</p><p class="div2" style="font-size:12px">${escHtml(c.diagnostico)}</p></div>
+  </div>
+  ${renderIncapList(c.id, cs.incaps, false)}
+  <div class="p-row">
+    <p class="p-label">Tareas · ${done}/${c.tareas.length + (cs.tareasExtra||[]).length - (cs.tareasDeleted||[]).length} completadas</p>
+    <select class="csel" onchange="setIncEstado('${c.id}',this.value)">
+      ${INC_ESTADOS.map(e=>`<option value="${e}"${cs.estado===e?' selected':''}>${escHtml(e)}</option>`).join('')}
+    </select>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
+  ${renderTareasInc(c, cs)}
+  <div class="divh"></div>
+  <div class="tl-hdr">
+    <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
+    <span style="font-size:11px;color:var(--mu)">${cs.novedades.length} evento${cs.novedades.length!==1?'s':''}</span>
+  </div>
+  <div class="tl-wrap">${tlRender(cs.novedades,`(i)=>delIncNov('${c.id}',i)`)}</div>
+  <div class="tl-add">
+    <div class="tl-add-row">
+      <select class="tl-tipo-sel" id="inc-tipo-${c.id}">
+        ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}"><i class="ti ${v.icon}"></i> ${v.label}</option>`).join('')}
+      </select>
+      <button class="btn-sm" onclick="addIncNov('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+    </div>
+    <textarea id="inc-nv-${c.id}" placeholder="Describe el evento: sesión, resultado médico, decisión, alerta de vencimiento…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
+  </div>
+</div>`:''}`;
+    wrap.appendChild(div);
+  });
+  // Renderizar custom
+  if(cust.length){
+    const sep=document.createElement('div');
+    sep.innerHTML=`<p style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 10px;display:flex;align-items:center;gap:6px"><i class="ti ti-plus-circle" style="font-size:14px"></i> Casos adicionales registrados</p>`;
+    wrap.appendChild(sep);
+    cust.forEach(c=>{
+      const open=!!DB.inc.openCustom[c.id];
+      const stCustom = getIncapStats(c.incaps);
+      const div=document.createElement('div'); div.className='card';
+      div.style.borderLeft=`4px solid ${c.tipo==='mesa'?'#7c3aed':'var(--blue)'}`;
+      div.innerHTML=`
+<div class="card-hdr" onclick="tglCasoCustom('${c.id}')">
+  <div class="card-info">
+    <p class="card-name">${escHtml(c.nombre)}</p>
+    <p class="card-meta">CC ${escHtml(c.cc)}${c.empresa?' · '+escHtml(c.empresa):''}${stCustom.count?` · Vence: <strong>${escHtml(stCustom.ultVencStr)}</strong> · <strong style="color:var(--blue)">${stCustom.totalDias} días</strong>`:''}${c.radicado?` · <span style="font-family:monospace;font-size:10px;background:var(--li);padding:1px 5px;border-radius:3px">${escHtml(c.radicado)}</span>`:''}</p>
+  </div>
+  <div class="card-right">
+    <span class="badge ${c.tipo==='mesa'?'b-mesa':'b-per'}">${c.tipo==='mesa'?'Mesa Laboral':'Comité Laboral'}</span>
+    <span class="badge ${INC_ESTCLR[c.estado]||'b-gray'}">${escHtml(c.estado||'activo')}</span>
+    ${c.actas&&c.actas.length?`<span class="chip"><i class="ti ti-notes" style="font-size:10px"></i> ${c.actas.length}</span>`:''}
+    <i class="ti ti-chevron-down chv ${open?'open':''}"></i>
+  </div>
+</div>
+${open?renderCasoCustomBody(c):''}`;
+      wrap.appendChild(div);
+    });
+  }
+}
+
+function renderCasoCustomBody(c){
+  const dias=diasPara(c.sesion);
+  let sesionBadge='';
+  if(c.sesion){
+    if(dias===null) sesionBadge='';
+    else if(dias<0) sesionBadge=`<div style="background:var(--err-bg);border:1px solid var(--err-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--err-tx)"><i class="ti ti-calendar-x"></i> Sesión vencida: ${c.sesion} (hace ${Math.abs(dias)} días)</div>`;
+    else if(dias<=5) sesionBadge=`<div style="background:var(--warn-bg);border:1px solid var(--warn-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--warn-tx)"><i class="ti ti-calendar-clock"></i> Próxima sesión: ${c.sesion} — ${dias===0?'¡Hoy!':dias===1?'Mañana':'En '+dias+' días'}</div>`;
+    else sesionBadge=`<div style="background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:var(--rads);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--info-tx)"><i class="ti ti-calendar-check"></i> Próxima sesión: ${c.sesion} — En ${dias} días</div>`;
+  }
+  return `<div class="card-body">
+  ${sesionBadge}
+  <div class="g3" style="margin-bottom:10px">
+    <div class="di"><p class="dil">Empresa</p><p class="div2">${escHtml(c.empresa||'—')}</p></div>
+    <div class="di"><p class="dil">Cargo</p><p class="div2">${escHtml(c.cargo||'—')}</p></div>
+    <div class="di"><p class="dil">Asesor ARL</p><p class="div2">${escHtml(c.asesor||'—')}</p></div>
+    <div class="di"><p class="dil">Repr. trabajador</p><p class="div2">${escHtml(c.reprT||'—')}</p></div>
+    <div class="di"><p class="dil">Repr. empleador</p><p class="div2">${escHtml(c.reprE||'—')}</p></div>
+    <div class="di"><p class="dil">Registrado</p><p class="div2">${escHtml(c.createdAt||'')}</p></div>
+    ${c.diagnostico?`<div class="di full"><p class="dil">Motivo / diagnóstico</p><p class="div2" style="font-size:12px;white-space:pre-wrap">${escHtml(c.diagnostico)}</p></div>`:''}
+  </div>
+  ${renderIncapList(c.id, c.incaps, true)}
+  <div class="concepto-row">
+    <p class="slbl" style="margin:0"><i class="ti ti-toggle-right"></i> Estado del caso</p>
+    <select class="csel" onchange="chgEstadoCustom('${escHtml(c.id)}',this.value)">
+      ${INC_ESTADOS.map(e=>`<option value="${e}"${c.estado===e?' selected':''}>${escHtml(e)}</option>`).join('')}
+    </select>
+  </div>
+  <div class="divh"></div>
+  ${renderTareasCustom(c)}
+  <div class="divh"></div>
+  <div class="tl-hdr">
+    <p class="tl-title"><i class="ti ti-timeline" style="font-size:15px"></i> Línea del tiempo</p>
+    <span style="font-size:11px;color:var(--mu)">${(c.actas||[]).length} evento${(c.actas||[]).length!==1?'s':''}</span>
+  </div>
+  <div class="tl-wrap" id="tl-${escHtml(c.id)}">${tlRender(c.actas||[], `(i)=>delActaCustom('${escHtml(c.id)}',i)`)}</div>
+  <div class="tl-add">
+    <div class="tl-add-row">
+      <select class="tl-tipo-sel" id="acta-tipo-${escHtml(c.id)}">
+        ${Object.entries(TL_TIPOS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}
+      </select>
+      <button class="btn-sm" onclick="addActaCustom('${escHtml(c.id)}')"><i class="ti ti-plus"></i> Agregar</button>
+    </div>
+    <textarea id="acta-${escHtml(c.id)}" placeholder="Describe el evento: sesión, resultado médico, decisión, acuerdo, alerta…" style="min-height:56px;resize:vertical;width:100%;font-size:13px;padding:10px 12px;border-radius:var(--rads);border:1px solid var(--bdr);font-family:inherit;background:var(--li);color:var(--tx);line-height:1.5"></textarea>
+  </div>
+  <div class="divh"></div>
+  <div style="display:flex;justify-content:flex-end">
+    <button class="btn-del" onclick="delCasoCustom('${escHtml(c.id)}')"><i class="ti ti-trash"></i> Eliminar caso</button>
+  </div>
+</div>`;
+}
+
+function tglInc(id){ DB.inc.cases[id].open=!DB.inc.cases[id].open; dbSave(); renderInc(); }
+function tglTask(cid,tid,v){ DB.inc.cases[cid].tareasDone[tid]=v; dbSave(); renderInc(); }
+function setIncEstado(cid,v){ DB.inc.cases[cid].estado=v; dbSave(); renderInc(); }
+function addIncNov(cid){
+  const el=document.getElementById('inc-nv-'+cid);
+  const txt=(el?.value||'').trim(); if(!txt)return;
+  const tipo=document.getElementById('inc-tipo-'+cid)?.value||'novedad';
+  DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:txt,tipo});
+  el.value=''; dbSave(); renderInc();
+}
+function delIncNov(cid,i){ DB.inc.cases[cid].novedades.splice(i,1); dbSave(); renderInc(); }
+
+/* ════════════════════════════════════════════
+   TAREAS — HELPERS DE RENDER
+════════════════════════════════════════════ */
+function renderTareasInc(c, cs){
+  const deleted = new Set(cs.tareasDeleted||[]);
+  const edits   = cs.tareasEdits||{};
+  // Combinar originales (con edits) + extras, filtrando eliminadas
+  const tasks = [
+    ...c.tareas
+      .filter(t=>!deleted.has(t.id))
+      .map(t=>({...(edits[t.id]?{...t,...edits[t.id]}:t), _src:'pre'})),
+    ...(cs.tareasExtra||[]).map(t=>({...t,_src:'extra'}))
+  ];
+  const total = tasks.length;
+  const done  = tasks.filter(t=>cs.tareasDone[t.id]).length;
+  let html = `<div class="task-section-lbl">
+    <span><i class="ti ti-checklist" style="margin-right:5px"></i>Tareas del caso <span style="color:var(--blue);font-weight:800">${done}/${total}</span></span>
+  </div>`;
+  if(!tasks.length){
+    html+=`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px;padding:8px 12px;background:var(--li);border-radius:10px">Sin tareas. Agrega una abajo.</p>`;
+  }
+  tasks.forEach(t=>{
+    const isDone = !!cs.tareasDone[t.id];
+    const isEd   = _taskEdit && _taskEdit.cid===c.id && _taskEdit.tid===t.id;
+    if(isEd){
+      html+=`<div class="task editing">
+        <input type="checkbox" ${isDone?'checked':''} onchange="tglTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <input class="task-ei" id="te-txt-${t.id}" value="${escHtml(t.txt)}" placeholder="Descripción…">
+        <select class="task-esel" id="te-prio-${t.id}">
+          <option value="alta"${t.prio==='alta'?' selected':''}>🔴 Alta</option>
+          <option value="media"${t.prio==='media'?' selected':''}>🟡 Media</option>
+          <option value="baja"${(t.prio||'baja')==='baja'?' selected':''}>🟢 Baja</option>
+        </select>
+        <button class="task-btn ok" title="Guardar" onclick="saveIncTaskEdit('${c.id}','${t.id}','${t._src}')"><i class="ti ti-check"></i></button>
+        <button class="task-btn"    title="Cancelar" onclick="cancelTaskEdit()"><i class="ti ti-x"></i></button>
+      </div>`;
+    } else {
+      html+=`<div class="task ${isDone?'done':''}">
+        <input type="checkbox" ${isDone?'checked':''} onchange="tglTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <p class="task-txt ${isDone?'done':''}">${escHtml(t.txt)}</p>
+        <span class="prio p-${t.prio||'media'}">${t.prio||'media'}</span>
+        <button class="task-btn" title="Editar tarea" onclick="startTaskEdit('${c.id}','${t.id}',false)"><i class="ti ti-pencil"></i></button>
+        <button class="task-btn del" title="Eliminar tarea" onclick="delIncTask('${c.id}','${t.id}','${t._src}')"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }
+  });
+  html+=`<div class="task-add-row">
+    <input class="task-ei" id="nt-txt-${c.id}" placeholder="✚ Describe la nueva tarea…">
+    <select class="task-esel" id="nt-prio-${c.id}">
+      <option value="alta">🔴 Alta</option>
+      <option value="media" selected>🟡 Media</option>
+      <option value="baja">🟢 Baja</option>
+    </select>
+    <button class="btn-sm" onclick="addIncTask('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+  </div>`;
+  return html;
+}
+
+function renderTareasCustom(c){
+  const tareas = c.tareas||[];
+  const done   = tareas.filter(t=>t.done).length;
+  let html=`<div class="task-section-lbl">
+    <span><i class="ti ti-checklist" style="margin-right:5px"></i>Tareas del caso <span style="color:var(--blue);font-weight:800">${done}/${tareas.length}</span></span>
+  </div>`;
+  if(tareas.length){
+    const pct=Math.round(done/tareas.length*100);
+    html+=`<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>`;
+  } else {
+    html+=`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px;padding:8px 12px;background:var(--li);border-radius:10px">Sin tareas. Agrega una abajo.</p>`;
+  }
+  tareas.forEach(t=>{
+    const isEd = _taskEdit && _taskEdit.cid===c.id && _taskEdit.tid===t.id && _taskEdit.isCustom;
+    if(isEd){
+      html+=`<div class="task editing">
+        <input type="checkbox" ${t.done?'checked':''} onchange="tglCustomTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <input class="task-ei" id="te-txt-${t.id}" value="${escHtml(t.txt)}" placeholder="Descripción…">
+        <select class="task-esel" id="te-prio-${t.id}">
+          <option value="alta"${t.prio==='alta'?' selected':''}>🔴 Alta</option>
+          <option value="media"${t.prio==='media'?' selected':''}>🟡 Media</option>
+          <option value="baja"${(t.prio||'baja')==='baja'?' selected':''}>🟢 Baja</option>
+        </select>
+        <button class="task-btn ok" title="Guardar" onclick="saveCustomTaskEdit('${c.id}','${t.id}')"><i class="ti ti-check"></i></button>
+        <button class="task-btn"    title="Cancelar" onclick="cancelTaskEdit()"><i class="ti ti-x"></i></button>
+      </div>`;
+    } else {
+      html+=`<div class="task ${t.done?'done':''}">
+        <input type="checkbox" ${t.done?'checked':''} onchange="tglCustomTask('${c.id}','${t.id}',this.checked)" style="margin-top:2px">
+        <p class="task-txt ${t.done?'done':''}">${escHtml(t.txt)}</p>
+        <span class="prio p-${t.prio||'media'}">${t.prio||'media'}</span>
+        <button class="task-btn" title="Editar tarea" onclick="startTaskEdit('${c.id}','${t.id}',true)"><i class="ti ti-pencil"></i></button>
+        <button class="task-btn del" title="Eliminar tarea" onclick="delCustomTask('${c.id}','${t.id}')"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }
+  });
+  html+=`<div class="task-add-row">
+    <input class="task-ei" id="nct-txt-${c.id}" placeholder="✚ Describe la nueva tarea…">
+    <select class="task-esel" id="nct-prio-${c.id}">
+      <option value="alta">🔴 Alta</option>
+      <option value="media" selected>🟡 Media</option>
+      <option value="baja">🟢 Baja</option>
+    </select>
+    <button class="btn-sm" onclick="addCustomTask('${c.id}')"><i class="ti ti-plus"></i> Agregar</button>
+  </div>`;
+  return html;
+}
+
+/* ════════════════════════════════════════════
+   TAREAS — ACCIONES
+════════════════════════════════════════════ */
+function startTaskEdit(cid, tid, isCustom){
+  _taskEdit = {cid, tid, isCustom};
+  renderInc();
+}
+function cancelTaskEdit(){ _taskEdit=null; renderInc(); }
+
+/* --- Pre-cargados --- */
+function saveIncTaskEdit(cid, tid, src){
+  const txt  = (document.getElementById('te-txt-'+tid)?.value||'').trim();
+  const prio = document.getElementById('te-prio-'+tid)?.value||'media';
+  if(!txt){ alert('La descripción no puede estar vacía.'); return; }
+  const cs = DB.inc.cases[cid];
+  if(src==='extra'){
+    const t = cs.tareasExtra.find(t=>t.id===tid);
+    if(t){ t.txt=txt; t.prio=prio; }
+  } else {
+    if(!cs.tareasEdits) cs.tareasEdits={};
+    cs.tareasEdits[tid]={txt,prio};
+  }
+  _taskEdit=null; dbSave(); renderInc();
+}
+function delIncTask(cid, tid, src){
+  if(!confirm('¿Eliminar esta tarea?')) return;
+  const cs = DB.inc.cases[cid];
+  if(src==='extra'){
+    cs.tareasExtra = cs.tareasExtra.filter(t=>t.id!==tid);
+  } else {
+    if(!cs.tareasDeleted) cs.tareasDeleted=[];
+    cs.tareasDeleted.push(tid);
+    delete (cs.tareasEdits||{})[tid];
+    delete (cs.tareasDone||{})[tid];
+  }
+  if(_taskEdit?.tid===tid) _taskEdit=null;
+  dbSave(); renderInc();
+}
+function addIncTask(cid){
+  const txt  = (document.getElementById('nt-txt-'+cid)?.value||'').trim();
+  const prio = document.getElementById('nt-prio-'+cid)?.value||'media';
+  if(!txt){ alert('Escribe la descripción de la tarea.'); return; }
+  const cs = DB.inc.cases[cid];
+  if(!cs.tareasExtra) cs.tareasExtra=[];
+  cs.tareasExtra.push({id:'tx_'+Date.now(), txt, prio});
+  const el=document.getElementById('nt-txt-'+cid); if(el) el.value='';
+  dbSave(); renderInc();
+}
+
+/* --- Casos custom --- */
+function tglCustomTask(cid, tid, v){
+  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
+  const t = (c.tareas||[]).find(t=>t.id===tid); if(!t)return;
+  t.done=v; dbSave(); renderInc();
+}
+function saveCustomTaskEdit(cid, tid){
+  const txt  = (document.getElementById('te-txt-'+tid)?.value||'').trim();
+  const prio = document.getElementById('te-prio-'+tid)?.value||'media';
+  if(!txt){ alert('La descripción no puede estar vacía.'); return; }
+  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
+  const t = (c.tareas||[]).find(t=>t.id===tid); if(!t)return;
+  t.txt=txt; t.prio=prio;
+  _taskEdit=null; dbSave(); renderInc();
+}
+function delCustomTask(cid, tid){
+  if(!confirm('¿Eliminar esta tarea?')) return;
+  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
+  c.tareas = (c.tareas||[]).filter(t=>t.id!==tid);
+  if(_taskEdit?.tid===tid) _taskEdit=null;
+  dbSave(); renderInc();
+}
+function addCustomTask(cid){
+  const txt  = (document.getElementById('nct-txt-'+cid)?.value||'').trim();
+  const prio = document.getElementById('nct-prio-'+cid)?.value||'media';
+  if(!txt){ alert('Escribe la descripción de la tarea.'); return; }
+  const c = DB.inc.custom.find(c=>c.id===cid); if(!c)return;
+  if(!c.tareas) c.tareas=[];
+  c.tareas.push({id:'ct_'+Date.now(), txt, prio, done:false});
+  const el=document.getElementById('nct-txt-'+cid); if(el) el.value='';
+  dbSave(); renderInc();
+}
+
+function setIF(f){
+  IF_FILTRO=f;
+  document.querySelectorAll('#page-inc .fbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('if-'+f).classList.add('on');
+  renderInc();
+}
+
+/* ── Casos custom ── */
+let _tipoCustom='comite';
+function selTipoInc(t){
+  _tipoCustom=t;
+  document.getElementById('ci-tipo').value=t;
+  document.getElementById('ts-com').className='tipo-btn'+(t==='comite'?' sel-com':'');
+  document.getElementById('ts-mesa').className='tipo-btn'+(t==='mesa'?' sel-mesa':'');
+}
+function addCasoCustom(){
+  const nm=(document.getElementById('ci-nombre').value||'').trim();
+  const cc=(document.getElementById('ci-cc').value||'').trim();
+  if(!nm||!cc){ alert('El nombre y la cédula son obligatorios.'); return; }
+  DB.inc.custom.unshift({
+    id:'cas_'+Date.now(),
+    tipo:document.getElementById('ci-tipo').value,
+    nombre:nm,cc,
+    empresa:(document.getElementById('ci-empresa').value||'').trim(),
+    cargo:(document.getElementById('ci-cargo').value||'').trim(),
+    radicado:(document.getElementById('ci-radicado').value||'').trim(),
+    sesion:(document.getElementById('ci-sesion').value||''),
+    reprT:(document.getElementById('ci-repr-t').value||'').trim(),
+    reprE:(document.getElementById('ci-repr-e').value||'').trim(),
+    asesor:(document.getElementById('ci-asesor').value||'').trim(),
+    diagnostico:(document.getElementById('ci-diag').value||'').trim(),
+    estado:'activo',actas:[],createdAt:nowDate()
+  });
+  ['ci-nombre','ci-cc','ci-empresa','ci-cargo','ci-radicado','ci-sesion',
+   'ci-repr-t','ci-repr-e','ci-asesor','ci-diag'].forEach(id=>{
+    const el=document.getElementById(id); if(el)el.value='';
+  });
+  selTipoInc('comite');
+  tglForm('inc-form-body','inc-form-chv');
+  dbSave(); renderInc();
+}
+function delCasoCustom(id){
+  if(!confirm('¿Eliminar este caso?')) return;
+  DB.inc.custom=DB.inc.custom.filter(c=>c.id!==id);
+  delete DB.inc.openCustom[id];
+  dbSave(); renderInc();
+}
+function tglCasoCustom(id){ DB.inc.openCustom[id]=!DB.inc.openCustom[id]; dbSave(); renderInc(); }
+function chgEstadoCustom(id,v){
+  const c=DB.inc.custom.find(c=>c.id===id); if(c){c.estado=v;dbSave();renderInc();}
+}
+function addActaCustom(id){
+  const el=document.getElementById('acta-'+id);
+  const txt=(el?.value||'').trim(); if(!txt)return;
+  const c=DB.inc.custom.find(c=>c.id===id); if(!c)return;
+  if(!c.actas) c.actas=[];
+  const tipo=document.getElementById('acta-tipo-'+id)?.value||'sesion';
+  c.actas.unshift({fecha:nowStr(),texto:txt,tipo});
+  el.value=''; dbSave(); renderInc();
+}
+function delActaCustom(cid,i){
+  const c=DB.inc.custom.find(c=>c.id===cid);
+  if(c&&c.actas){c.actas.splice(i,1);dbSave();renderInc();}
+}
+
+/* ════════════════════════════════════════════
+   EXÁMENES OCUPACIONALES
+════════════════════════════════════════════ */
+function renderExaStats(){
+  const tots={periodico:0,ingreso:0,postinc:0,egreso:0};
+  DB.exa.persons.forEach(p=>{if(tots[p.tipo]!==undefined)tots[p.tipo]++;});
+  const total=DB.exa.persons.length;
+  document.getElementById('exa-stats').innerHTML=`
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">En seguimiento</span>
+        <i class="ti ti-users" style="font-size:18px;color:var(--blue);opacity:.55"></i>
+      </div>
+      <div class="sn">${total}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">Total de personas</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Periódicos</span>
+        <i class="ti ti-calendar-repeat" style="font-size:18px;color:var(--per-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--per-tx)">${tots.periodico}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.periodico/total*100):0}% del total</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Pre-ingreso</span>
+        <i class="ti ti-user-plus" style="font-size:18px;color:var(--ing-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--ing-tx)">${tots.ingreso}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.ingreso/total*100):0}% del total</div>
+    </div>
+    <div class="sbox">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="sl" style="margin:0">Post-incapacidad</span>
+        <i class="ti ti-heartbeat" style="font-size:18px;color:var(--pos-tx);opacity:.55"></i>
+      </div>
+      <div class="sn" style="color:var(--pos-tx)">${tots.postinc}</div>
+      <div style="font-size:11px;color:var(--mu);margin-top:4px">${total?Math.round(tots.postinc/total*100):0}% del total</div>
+    </div>`;
+}
+function setEF(f){
+  EF_FILTRO=f;
+  document.querySelectorAll('#page-exa .fbtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('ef-'+f).classList.add('on');
+  renderExa();
+}
+function addExa(){
+  const nm=(document.getElementById('ef-nombre').value||'').trim();
+  const cc=(document.getElementById('ef-cc').value||'').trim();
+  if(!nm||!cc){alert('El nombre y la cédula son obligatorios.');return;}
+  DB.exa.persons.unshift({
+    id:'x'+Date.now(),nombre:nm,cc,
+    contrato:(document.getElementById('ef-contrato').value||'').trim(),
+    cargo:(document.getElementById('ef-cargo').value||'').trim(),
+    tipo:document.getElementById('ef-tipo').value,
+    fecha:(document.getElementById('ef-fecha').value||'').trim(),
+    concepto:document.getElementById('ef-concepto').value,
+    alt:(document.getElementById('ef-alt').value||'').trim(),
+    plan:(document.getElementById('ef-plan').value||'').trim(),
+    novedades:[],ingreso:nowDate()
+  });
+  ['ef-nombre','ef-cc','ef-contrato','ef-cargo','ef-fecha','ef-alt','ef-plan'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  tglForm('exa-form-body','exa-form-chv');
+  dbSave(); renderExa();
+}
+function delExa(id){
+  if(!confirm('¿Retirar esta persona del seguimiento?'))return;
+  DB.exa.persons=DB.exa.persons.filter(p=>p.id!==id);
+  delete DB.exa.open[id];
+  dbSave(); renderExa();
+}
+function tglExa(id){ DB.exa.open[id]=!DB.exa.open[id]; dbSave(); renderExa(); }
+function setExaConcepto(id,v){
+  const p=DB.exa.persons.find(p=>p.id===id);if(p){p.concepto=v;dbSave();renderExa();}
+}
+function addExaNov(id){
+  const el=document.getElementById('exa-nv-'+id);
+  const txt=(el?.value||'').trim();if(!txt)return;
+  const p=DB.exa.persons.find(p=>p.id===id);if(!p)return;
+  p.novedades.unshift({fecha:nowStr(),texto:txt});
+  dbSave();renderExa();
+}
+function delExaNov(pid,i){
+  const p=DB.exa.persons.find(p=>p.id===pid);
+  if(p){p.novedades.splice(i,1);dbSave();renderExa();}
+}
+function editExaField(id,field){
+  const p=DB.exa.persons.find(p=>p.id===id);if(!p)return;
+  const labels={alt:'Hallazgo / alteración',plan:'Plan / recomendación'};
+  const v=prompt('Editar — '+labels[field]+':',p[field]||'');
+  if(v!==null){p[field]=v.trim();dbSave();renderExa();}
+}
+function renderExa(){
+  renderExaStats();
+  const q=((document.getElementById('exa-srch')||{value:''}).value).toLowerCase();
+  const flt=DB.exa.persons.filter(p=>{
+    const mt=EF_FILTRO==='todos'||p.tipo===EF_FILTRO;
+    const mq=!q||p.nombre.toLowerCase().includes(q)||p.cc.includes(q);
+    return mt&&mq;
+  });
+  const list=document.getElementById('exa-list');
+  if(!flt.length){
+    list.innerHTML=`<div class="empty"><i class="ti ti-clipboard-text"></i>${
+      DB.exa.persons.length===0?'Aún no hay personas registradas.<br>Usa el formulario de arriba para agregar.':'Sin resultados.'}</div>`;
+    return;
+  }
+  list.innerHTML='';
+  flt.forEach((p,idx)=>{
+    const open=!!DB.exa.open[p.id];
+    const div=document.createElement('div');div.className='card';
+    div.innerHTML=`
+<div class="card-hdr" onclick="tglExa('${p.id}')">
+  <div class="ava" style="${avclr(idx)}">${ini(p.nombre)}</div>
+  <div class="card-info">
+    <p class="card-name">${escHtml(p.nombre)}</p>
+    <p class="card-meta">CC ${escHtml(p.cc)}${p.cargo?' · '+escHtml(p.cargo):''}${p.fecha?' · '+escHtml(p.fecha):''}</p>
+  </div>
+  <div class="card-right">
+    <span class="badge ${TBADGE[p.tipo]}">${escHtml(TLBL[p.tipo])}</span>
+    ${p.novedades.length?`<span class="chip"><i class="ti ti-notes" style="font-size:10px"></i> ${p.novedades.length}</span>`:''}
+    <i class="ti ti-chevron-down chv ${open?'open':''}"></i>
+  </div>
+</div>
+${open?`<div class="card-body">
+  <div class="g2" style="margin-bottom:10px">
+    <div class="di"><p class="dil">Contrato</p><p class="div2">${escHtml(p.contrato||'—')}</p></div>
+    <div class="di"><p class="dil">Fecha examen</p><p class="div2">${escHtml(p.fecha||'—')}</p></div>
+    <div class="di"><p class="dil">Tipo</p><p class="div2">${escHtml(TLBL[p.tipo])}</p></div>
+    <div class="di"><p class="dil">Registrado</p><p class="div2">${escHtml(p.ingreso)}</p></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    ${p.alt?`<div class="altbox" style="flex:1"><p class="altlbl"><i class="ti ti-alert-triangle"></i> Hallazgo / alteración</p><p style="font-size:13px">${escHtml(p.alt)}</p></div>`
+      :`<div class="altbox" style="flex:1;cursor:pointer;opacity:.65" onclick="editExaField('${p.id}','alt')"><p class="altlbl"><i class="ti ti-plus"></i> Agregar hallazgo</p></div>`}
+    <button onclick="editExaField('${p.id}','alt')" style="padding:6px 8px;border:1px solid var(--bdr);border-radius:var(--rads);background:none;cursor:pointer;align-self:flex-start"><i class="ti ti-edit" style="font-size:14px;color:var(--mu)"></i></button>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    ${p.plan?`<div class="planbox" style="flex:1"><p class="planlbl"><i class="ti ti-clipboard-list"></i> Plan / recomendación</p><p style="font-size:13px">${escHtml(p.plan)}</p></div>`
+      :`<div class="planbox" style="flex:1;cursor:pointer;opacity:.65" onclick="editExaField('${p.id}','plan')"><p class="planlbl"><i class="ti ti-plus"></i> Agregar plan</p></div>`}
+    <button onclick="editExaField('${p.id}','plan')" style="padding:6px 8px;border:1px solid var(--bdr);border-radius:var(--rads);background:none;cursor:pointer;align-self:flex-start"><i class="ti ti-edit" style="font-size:14px;color:var(--mu)"></i></button>
+  </div>
+  <div class="concepto-row">
+    <p class="slbl" style="margin:0"><i class="ti ti-stethoscope"></i> Concepto médico actual</p>
+    <select class="csel" onchange="setExaConcepto('${p.id}',this.value)">
+      ${['pendiente','apto','apto_rr','no_apto','pend_esp'].map(v=>`<option value="${v}"${p.concepto===v?' selected':''}>${escHtml(CLBL[v])}</option>`).join('')}
+    </select>
+  </div>
+  <div class="divh"></div>
+  <p class="slbl"><i class="ti ti-notes"></i> Novedades y seguimiento</p>
+  ${p.novedades.length===0?`<p style="font-size:13px;color:var(--mu);font-style:italic;margin-bottom:8px">Sin novedades registradas.</p>`:''}
+  ${p.novedades.map((n,i)=>`<div class="log">
+    <p class="log-d"><i class="ti ti-clock" style="font-size:10px"></i> ${escHtml(n.fecha)}</p>
+    <p class="log-t">${escHtml(n.texto)}</p>
+    <button class="log-del" onclick="delExaNov('${p.id}',${i})"><i class="ti ti-trash" style="font-size:12px"></i> Eliminar</button>
+  </div>`).join('')}
+  <div class="add-row">
+    <textarea id="exa-nv-${p.id}" placeholder="Resultado de paraclínico, respuesta de especialista, acción tomada…"></textarea>
+    <button class="btn-sm" onclick="addExaNov('${p.id}')"><i class="ti ti-plus"></i> Agregar</button>
+  </div>
+  <div class="divh"></div>
+  <div style="display:flex;justify-content:flex-end">
+    <button class="btn-del" onclick="delExa('${p.id}')"><i class="ti ti-user-minus"></i> Retirar del seguimiento</button>
+  </div>
+</div>`:''}`;
+    list.appendChild(div);
+  });
+}
+
+/* ════════════════════════════════════════════
+   ANÁLISIS DE DOCUMENTOS
+════════════════════════════════════════════ */
+function onDrag(e,active){
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.toggle('drag',active);
+}
+function onDrop(e){
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  handleFiles(e.dataTransfer?.files);
+}
+function handleFiles(files){
+  if(!files||!files.length)return;
+  const provider = localStorage.getItem('arl_provider')||'groq';
+  const apiKey = provider==='groq'
+    ? localStorage.getItem('arl_groq_key')||''
+    : provider==='gemini'
+      ? localStorage.getItem('arl_gemini_key')||''
+      : localStorage.getItem('arl_api_key')||'';
+  if(!apiKey){
+    alert('Configura tu API Key en la pestaña Configuración para analizar documentos.');
+    goTab('cfg'); return;
+  }
+  for(const f of files){
+    const ext=f.name.split('.').pop().toLowerCase();
+    if(!['pdf','docx','doc','pptx','ppt'].includes(ext)){
+      alert(`Formato no soportado: ${f.name}`); continue;
+    }
+    processDoc(f, apiKey, provider);
+  }
+}
+
+function docIcon(ext){
+  if(ext==='pdf') return '<i class="ti ti-file-type-pdf doc-icon" style="color:#c0392b"></i>';
+  if(['docx','doc'].includes(ext)) return '<i class="ti ti-file-type-doc doc-icon" style="color:#1d4ed8"></i>';
+  return '<i class="ti ti-file-type-ppt doc-icon" style="color:#d35400"></i>';
+}
+
+async function processDoc(file, apiKey, provider='gemini'){
+  const rid='r_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+  const origExt=file.name.split('.').pop().toLowerCase();
+  const wrap=document.getElementById('doc-results');
+
+  // Crear tarjeta placeholder (usa nombre y extensión originales)
+  const card=document.createElement('div');
+  card.id=rid; card.className='doc-card';
+  card.innerHTML=`<div class="doc-hdr">
+    ${docIcon(origExt)}
+    <div class="doc-info">
+      <p class="doc-name">${escHtml(file.name)}</p>
+      <p class="doc-meta">${fmtBytes(file.size)}</p>
+    </div>
+    <div class="doc-acts">
+      <span id="st-${rid}"><span class="spinner"></span> Procesando…</span>
+    </div>
+  </div>
+  <div id="body-${rid}" class="doc-body" style="display:none"></div>`;
+  wrap.insertBefore(card,wrap.firstChild);
+
+  const stEl = document.getElementById('st-'+rid);
+  const setSt = (msg)=>{ if(stEl) stEl.innerHTML = `<span class="spinner"></span> ${msg}`; };
+
+  const isGemini = provider==='gemini';
+  const isGroq   = provider==='groq';
+  const model = isGroq
+    ? (localStorage.getItem('arl_groq_model')||'llama-3.3-70b-versatile')
+    : isGemini
+      ? (localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite')
+      : (localStorage.getItem('arl_model')||'claude-sonnet-4-5');
+
+  // Seleccionar prompt según tipo de análisis elegido
+  const tipoAnalisis=document.getElementById('doc-analysis-type')?.value||'caso';
+  const promptToUse = tipoAnalisis==='examen' ? EXAM_PROMPT : ANALYSIS_PROMPT;
+
+  try{
+    // Si es PDF, lo convertimos a DOCX antes de analizar (uso interno)
+    if(origExt==='pdf'){
+      setSt('Convirtiendo PDF a DOCX…');
+      file = await ensureDocxFromPdf(file, setSt);
+    }
+    const ext = file.name.split('.').pop().toLowerCase();
+    setSt('Analizando con IA…');
+
+    let result='';
+    if(ext==='pdf'){
+      // Fallback: si la conversión a DOCX falló y seguimos con PDF original
+      const ab=await file.arrayBuffer();
+      _docLocalText[rid]=null;
+      if(isGroq){
+        const txt=await extractPDFText(ab);
+        _docLocalText[rid]=txt;
+        result=await analyzeGroq(txt, file.name, apiKey, model, promptToUse);
+      } else {
+        const b64=toBase64(ab);
+        result = isGemini
+          ? await analyzeGeminiPDF(b64, apiKey, model, promptToUse)
+          : await analyzePDF(b64, apiKey, model, promptToUse);
+      }
+    } else if(['docx','doc'].includes(ext)){
+      if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
+      const ab=await file.arrayBuffer();
+      const r=await mammoth.extractRawText({arrayBuffer:ab});
+      _docLocalText[rid]=r.value;
+      result = isGroq
+        ? await analyzeGroq(r.value, file.name, apiKey, model, promptToUse)
+        : isGemini
+          ? await analyzeGeminiText(r.value, file.name, apiKey, model, promptToUse)
+          : await analyzeText(r.value, file.name, apiKey, model, promptToUse);
+    } else {
+      if(typeof JSZip==='undefined') throw new Error('JSZip no disponible');
+      const zip=await JSZip.loadAsync(await file.arrayBuffer());
+      const slides=Object.keys(zip.files).filter(f=>/ppt\/slides\/slide\d+\.xml$/.test(f)).sort();
+      let txt='';
+      for(const[idx,path] of slides.entries()){
+        const xml=await zip.files[path].async('string');
+        const doc=new DOMParser().parseFromString(xml,'application/xml');
+        const nodes=doc.querySelectorAll('a\\:t, t');
+        const st=Array.from(nodes).map(n=>n.textContent).join(' ').trim();
+        if(st) txt+=`[Diapositiva ${idx+1}]\n${st}\n\n`;
+      }
+      _docLocalText[rid]=txt;
+      result = isGroq
+        ? await analyzeGroq(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse)
+        : isGemini
+          ? await analyzeGeminiText(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse)
+          : await analyzeText(txt||'(Sin texto extraído)', file.name, apiKey, model, promptToUse);
+    }
+
+    DOC_RESULTS[rid]=result;
+    showDocResult(rid,result);
+  }catch(e){
+    const isNetErr=(e instanceof TypeError && (e.message==='Failed to fetch'||e.message.includes('fetch')));
+    if(isNetErr){
+      showManualFallback(rid, file.name, ext, _docLocalText[rid]||null);
+    } else {
+      document.getElementById('st-'+rid).innerHTML=
+        `<span style="color:var(--err-tx);font-size:12px"><i class="ti ti-alert-circle"></i> ${escHtml(e.message)}</span>`;
+    }
+  }
+}
+
+const ANALYSIS_PROMPT=`Eres un asistente médico especializado en salud ocupacional y medicina laboral en Colombia.
+
+Analiza el documento y extrae la información con estas etiquetas exactas (los datos marcados con ★ son CRÍTICOS para el seguimiento del caso):
+
+═══════ DATOS DE IDENTIFICACIÓN ★ ═══════
+- Nombre completo: ★
+- Número de cédula: ★
+- Edad / fecha de nacimiento:
+- EPS / Aseguradora:
+- Cargo / puesto:
+- Empresa / Contrato al que pertenece: ★
+
+═══════ DIAGNÓSTICOS ★ ═══════
+- Diagnóstico principal (con código CIE-10 si aparece): ★
+- Diagnóstico secundario:
+- Hallazgos clínicos relevantes:
+- Paraclínicos solicitados / resultados:
+
+═══════ TIEMPO DE INCAPACIDAD ★ ═══════
+- Fecha de inicio del proceso / primera incapacidad: ★
+- Fecha de inicio de esta incapacidad:
+- Fecha de fin / vencimiento de la última incapacidad: ★
+- Días de incapacidad en este documento:
+- Días totales acumulados de incapacidad: ★
+- Próxima cita / próximo control:
+
+═══════ CONCEPTO MÉDICO ═══════
+- Aptitud (apto / no apto / apto con restricciones / pendiente):
+- Restricciones específicas (detallar cada una):
+- Plan de manejo inmediato:
+- Remisiones indicadas (especialidad + urgencia):
+- Pendientes médicos:
+
+═══════ LÍNEA DEL TIEMPO DEL PROCESO ★ ═══════
+Lista cronológica de TODOS los hitos/eventos que aparezcan en el documento, formato:
+- [FECHA] · [TIPO: sesión/médico/decisión/alerta/laboral] · descripción breve
+(ejemplo: 15/03/2025 · médico · primera consulta dolor lumbar)
+(ejemplo: 22/04/2025 · sesión · 1ª Mesa Laboral - acuerdo de reintegro gradual)
+Incluye todos los eventos que puedas identificar en orden cronológico.
+
+═══════ SEGUIMIENTO LABORAL (MESA / COMITÉ) ═══════
+- Tipo de proceso (Mesa Laboral / Comité Medicina Laboral / Otro):
+- Número de sesión (si aplica):
+- Acuerdos o decisiones tomadas en esta sesión:
+- Estado del proceso (activo / suspendido / cerrado / calificado):
+- Porcentaje de PCL (si se menciona):
+- IPS / institución tratante:
+- Asesor ARL / profesional responsable:
+
+═══════ ALERTAS Y ACCIONES URGENTES ═══════
+- Vencimientos próximos (fechas exactas):
+- Acciones inmediatas requeridas:
+- Riesgos o alertas identificados:
+
+═══════ RESUMEN EJECUTIVO ═══════
+(2-3 líneas con el estado actual del caso, lo más importante para el seguimiento)
+
+Reglas:
+- Si un campo no aparece en el documento, escribe "No especificado".
+- Sé preciso y usa datos EXACTOS del documento.
+- NO inventes información ni la deduzcas.
+- Las fechas en formato DD/MM/AAAA.`;
+
+const EXAM_PROMPT=`Eres un asistente médico especializado en exámenes médicos ocupacionales en Colombia.
+
+Analiza este documento de examen ocupacional (periódico, pre-ingreso, post-incapacidad o egreso) y extrae:
+
+═══════ DATOS DE IDENTIFICACIÓN ★ ═══════
+- Nombre completo: ★
+- Número de cédula: ★
+- Edad:
+- Cargo / puesto:
+- Empresa / Contrato al que pertenece: ★
+- EPS:
+
+═══════ TIPO DE EXAMEN ★ ═══════
+- Tipo de examen (periódico / pre-ingreso / post-incapacidad / egreso): ★
+- Fecha del examen: ★
+- IPS / institución que realizó el examen:
+- Médico evaluador:
+
+═══════ DIAGNÓSTICOS ★ ═══════
+- Diagnóstico principal (con CIE-10): ★
+- Diagnósticos secundarios:
+- Hallazgos clínicos relevantes:
+- Paraclínicos realizados y resultados:
+
+═══════ CONDUCTAS Y RECOMENDACIONES ★ ═══════
+- Concepto de aptitud (apto / no apto / apto con restricciones / pendiente): ★
+- Restricciones específicas (detallar cada una): ★
+- Conducta médica indicada (manejo, tratamiento, intervenciones): ★
+- Remisiones a especialista (cuál y urgencia):
+- Recomendaciones para el puesto de trabajo:
+- Recomendaciones de promoción y prevención:
+
+═══════ TIEMPO DE SEGUIMIENTO ★ ═══════
+- Frecuencia de seguimiento recomendada: ★
+- Fecha próximo examen / control: ★
+- Días estimados de seguimiento:
+- ¿Requiere reubicación laboral?:
+- ¿Requiere readaptación o adecuación del puesto?:
+
+═══════ RESUMEN EJECUTIVO ═══════
+(2-3 líneas con el resultado del examen y plan de seguimiento)
+
+Reglas:
+- Si un campo no aparece en el documento, escribe "No especificado".
+- Sé preciso y usa datos EXACTOS del documento.
+- NO inventes información.
+- Las fechas en formato DD/MM/AAAA.`;
+
+/* Convierte ArrayBuffer a base64 en chunks para evitar stack overflow en archivos grandes */
+function toBase64(ab){
+  const bytes=new Uint8Array(ab);
+  let bin='';
+  const chunk=8192;
+  for(let i=0;i<bytes.length;i+=chunk)
+    bin+=String.fromCharCode.apply(null,bytes.subarray(i,Math.min(i+chunk,bytes.length)));
+  return btoa(bin);
+}
+
+async function analyzePDF(b64,apiKey,model,customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-beta':'pdfs-2024-09-25',
+      'anthropic-dangerous-request-builder':'true'
+    },
+    body:JSON.stringify({model,max_tokens:2500,
+      messages:[{role:'user',content:[
+        {type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}},
+        {type:'text',text:prompt}
+      ]}]})
+  });
+  if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
+  const d=await resp.json();
+  return d.content?.[0]?.text||'Sin respuesta';
+}
+
+async function analyzeText(txt,filename,apiKey,model,customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-request-builder':'true'
+    },
+    body:JSON.stringify({model,max_tokens:2500,
+      messages:[{role:'user',content:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`}]})
+  });
+  if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
+  const d=await resp.json();
+  return d.content?.[0]?.text||'Sin respuesta';
+}
+
+/* ══════════════════════════════════════════════════
+   GOOGLE GEMINI — API gratuita
+══════════════════════════════════════════════════ */
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+
+async function analyzeGeminiPDF(b64, apiKey, model, customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const resp=await fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      contents:[{parts:[
+        {inline_data:{mime_type:'application/pdf', data:b64}},
+        {text: prompt}
+      ]}],
+      generationConfig:{maxOutputTokens:2500}
+    })
+  });
+  if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
+  const d=await resp.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta';
+}
+
+async function analyzeGeminiText(txt, filename, apiKey, model, customPrompt){
+  const prompt=customPrompt||ANALYSIS_PROMPT;
+  const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const resp=await fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      contents:[{parts:[{
+        text:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,7000)}\n---`
+      }]}],
+      generationConfig:{maxOutputTokens:2500}
+    })
+  });
+  if(!resp.ok){ const e=await resp.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${resp.status}`); }
+  const d=await resp.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta';
+}
+
+/* ── Modo manual cuando la API no está disponible ── */
+function showManualFallback(rid, filename, ext, localText){
+  document.getElementById('st-'+rid).innerHTML=
+    `<span style="color:var(--warn-tx,#92400e);font-size:12px"><i class="ti ti-wifi-off"></i> Sin acceso a la API</span>`;
+  const body=document.getElementById('body-'+rid);
+  body.style.display='';
+
+  const isPDF = ext==='pdf';
+  const hasText = localText && localText.trim().length>0;
+
+  const promptToCopy = hasText
+    ? `${ANALYSIS_PROMPT}\n\nDOCUMENTO: "${filename}"\n---\n${localText.slice(0,7000)}\n---`
+    : ANALYSIS_PROMPT;
+
+  body.innerHTML=`
+  <div style="background:#fef9ec;border:1px solid #f5d676;border-radius:12px;padding:16px;font-size:13px;color:#78350f">
+    <p style="font-weight:600;margin-bottom:8px"><i class="ti ti-wifi-off"></i> La API de Anthropic no está accesible desde esta red</p>
+    <p style="margin-bottom:10px;color:#92400e">Esto suele ocurrir en redes corporativas o con antivirus que bloquean conexiones externas.
+    Puedes analizar el documento <strong>manualmente</strong> en Claude.ai u otro asistente:</p>
+    <ol style="padding-left:18px;line-height:1.8;color:#78350f">
+      ${isPDF ? `<li>Abre <a href="https://claude.ai" target="_blank" style="color:var(--blue)">claude.ai</a> en tu navegador</li>
+      <li>Sube el archivo <strong>${escHtml(filename)}</strong> en el chat</li>
+      <li>Copia y pega el prompt de abajo en el chat</li>`
+      : `<li>Abre <a href="https://claude.ai" target="_blank" style="color:var(--blue)">claude.ai</a> en tu navegador</li>
+      <li>Haz clic en el botón <strong>"Copiar texto + prompt"</strong></li>
+      <li>Pega el contenido en el chat de Claude.ai</li>`}
+    </ol>
+  </div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn-pri" onclick="copyManualPrompt('${rid}','${escHtml(filename).replace(/'/g,"\\'")}')">
+      <i class="ti ti-copy"></i> ${isPDF ? 'Copiar prompt para Claude.ai' : 'Copiar texto + prompt'}
+    </button>
+    <button class="btn-sec" onclick="document.getElementById('${rid}').remove()">
+      <i class="ti ti-x"></i> Descartar
+    </button>
+  </div>
+  <div id="copy-ok-${rid}" style="display:none;margin-top:6px">
+    <span class="st-badge st-ok">✅ ¡Copiado! Pégalo en Claude.ai</span>
+  </div>`;
+
+  // Guardar texto para el botón de copia
+  _docLocalText[rid+'_prompt'] = promptToCopy;
+}
+
+function copyManualPrompt(rid, filename){
+  const txt = _docLocalText[rid+'_prompt'] || ANALYSIS_PROMPT;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const el=document.getElementById('copy-ok-'+rid);
+    if(el){el.style.display='';setTimeout(()=>el.style.display='none',4000);}
+  }).catch(()=>{
+    // fallback para navegadores sin clipboard API
+    const ta=document.createElement('textarea');
+    ta.value=txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    const el=document.getElementById('copy-ok-'+rid);
+    if(el){el.style.display='';setTimeout(()=>el.style.display='none',4000);}
+  });
+}
+
+function showDocResult(rid,txt){
+  document.getElementById('st-'+rid).innerHTML=
+    `<span style="color:var(--ok-tx);font-size:12px"><i class="ti ti-check"></i> Completado</span>`;
+  const body=document.getElementById('body-'+rid);
+  body.style.display='';
+
+  // Opciones para vincular al caso
+  const incOpts=INC_CASES.map(c=>
+    `<option value="inc_${c.id}">${c.nombre.split(' ').slice(0,2).join(' ')} (Mesa/Comité)</option>`
+  ).join('');
+  const custOpts=DB.inc.custom.map(c=>
+    `<option value="cust_${c.id}">${c.nombre.split(' ').slice(0,2).join(' ')} (caso personalizado)</option>`
+  ).join('');
+  const exaOpts=DB.exa.persons.map(p=>
+    `<option value="exa_${p.id}">${p.nombre.split(' ').slice(0,2).join(' ')} — ${TLBL[p.tipo]}</option>`
+  ).join('');
+
+  body.innerHTML=`
+  <div class="analysis-box">${escHtml(txt)}</div>
+  <div class="route-box">
+    <p class="route-title"><i class="ti ti-arrow-right"></i> Guardar análisis como novedad en un caso existente</p>
+    <select class="route-sel" id="rsel-${rid}">
+      <option value="">— Selecciona dónde guardar este análisis —</option>
+      <optgroup label="Mesa / Comité Laboral (pre-cargados)">${incOpts}</optgroup>
+      ${DB.inc.custom.length?`<optgroup label="Mesa / Comité Laboral (personalizados)">${custOpts}</optgroup>`:''}
+      ${DB.exa.persons.length?`<optgroup label="Exámenes Ocupacionales">${exaOpts}</optgroup>`:''}
+    </select>
+    <div style="display:flex;gap:8px">
+      <button class="btn-pri" style="flex:1" onclick="routeDoc('${rid}')">
+        <i class="ti ti-device-floppy"></i> Guardar en el caso seleccionado
+      </button>
+      <button class="btn-sm" onclick="crearExaDesdePDF('${rid}')">
+        <i class="ti ti-user-plus"></i> Crear nuevo en Exámenes
+      </button>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-top:8px">
+    <button class="btn-del" onclick="document.getElementById('${rid}').remove()">
+      <i class="ti ti-trash"></i> Descartar
+    </button>
+  </div>`;
+}
+
+function routeDoc(rid){
+  const sel=document.getElementById('rsel-'+rid);
+  const val=sel?.value||''; if(!val){alert('Selecciona un caso antes de guardar.');return;}
+  const txt=DOC_RESULTS[rid]||''; if(!txt)return;
+  const resumen=`[Análisis IA] ${txt.substring(0,600)}${txt.length>600?'…':''}`;
+  if(val.startsWith('inc_')){
+    const cid=val.replace('inc_','');
+    if(!DB.inc.cases[cid]) DB.inc.cases[cid]={open:false,tareasDone:{},novedades:[],estado:'activo'};
+    DB.inc.cases[cid].novedades.unshift({fecha:nowStr(),texto:resumen});
+    dbSave(); alert('Análisis guardado. Ve a "Mesa / Comité Laboral" para verlo.');
+  } else if(val.startsWith('cust_')){
+    const cid=val.replace('cust_','');
+    const c=DB.inc.custom.find(c=>c.id===cid);
+    if(c){ if(!c.actas)c.actas=[]; c.actas.unshift({fecha:nowStr(),texto:resumen}); dbSave(); alert('Análisis guardado.'); }
+  } else if(val.startsWith('exa_')){
+    const pid=val.replace('exa_','');
+    const p=DB.exa.persons.find(p=>p.id===pid);
+    if(p){ p.novedades.unshift({fecha:nowStr(),texto:resumen}); dbSave(); alert('Análisis guardado.'); }
+  }
+}
+function crearExaDesdePDF(rid){
+  const txt=DOC_RESULTS[rid]||'';
+  const nombre=prompt('Nombre del paciente:',''); if(!nombre)return;
+  const cc=prompt('Cédula:',''); if(!cc)return;
+  DB.exa.persons.unshift({
+    id:'x'+Date.now(),nombre:nombre.trim(),cc:cc.trim(),
+    contrato:'',cargo:'',tipo:'periodico',fecha:nowDate(),
+    concepto:'pendiente',alt:txt.substring(0,800),
+    plan:'Extraído de análisis de documento',
+    novedades:[{fecha:nowStr(),texto:'[Creado desde análisis IA]\n'+txt}],
+    ingreso:nowDate()
+  });
+  dbSave();
+  alert('Caso creado. Ve a "Exámenes Ocupacionales" para completar la información.');
+}
+
+/* ════════════════════════════════════════════
+   CONFIGURACIÓN
+════════════════════════════════════════════ */
+function onProviderChange(){
+  const p=document.getElementById('cfg-provider').value;
+  document.getElementById('panel-groq').style.display   = p==='groq'  ?'':'none';
+  document.getElementById('panel-gemini').style.display = p==='gemini'?'':'none';
+  document.getElementById('panel-claude').style.display = p==='claude'?'':'none';
+}
+function saveApiKey(){
+  const p=document.getElementById('cfg-provider').value;
+  localStorage.setItem('arl_provider', p);
+  if(p==='groq'){
+    const key=(document.getElementById('cfg-groq-key').value||'').trim();
+    if(!key){showApiSt('Ingresa tu API Key de Groq.','no');return;}
+    localStorage.setItem('arl_groq_key', key);
+    localStorage.setItem('arl_groq_model', document.getElementById('cfg-groq-model').value);
+  } else if(p==='gemini'){
+    const key=(document.getElementById('cfg-gemini-key').value||'').trim();
+    if(!key){showApiSt('Ingresa tu API Key de Google.','no');return;}
+    localStorage.setItem('arl_gemini_key', key);
+    localStorage.setItem('arl_gemini_model', document.getElementById('cfg-gemini-model').value);
+  } else {
+    const key=(document.getElementById('cfg-api-key').value||'').trim();
+    if(!key){showApiSt('Ingresa una clave válida.','no');return;}
+    localStorage.setItem('arl_api_key', key);
+    localStorage.setItem('arl_model', document.getElementById('cfg-model').value);
+  }
+  showApiSt('✅ Configuración guardada.','ok');
+}
+async function netCheck(url,timeout=5000){
+  /* Prueba de conectividad sin leer la respuesta (mode:no-cors) */
+  const ctrl=new AbortController();
+  const tid=setTimeout(()=>ctrl.abort(),timeout);
+  try{ await fetch(url,{mode:'no-cors',signal:ctrl.signal}); return true; }
+  catch(e){ return false; }
+  finally{ clearTimeout(tid); }
+}
+
+async function testApiKey(){
+  const provider=document.getElementById('cfg-provider').value;
+  if(provider==='groq'){
+    const key=(document.getElementById('cfg-groq-key').value||'').trim();
+    if(!key){showApiSt('Ingresa tu API Key de Groq.','no');return;}
+    await testGroqKey(key); return;
+  }
+  const key = provider==='gemini'
+    ? (document.getElementById('cfg-gemini-key').value||'').trim()
+    : (document.getElementById('cfg-api-key').value||'').trim();
+  if(!key){showApiSt('Ingresa una clave primero.','no');return;}
+
+  if(provider==='gemini'){ await testGeminiKey(key); return; }
+
+  /* ── Paso 1: internet básico (Claude) ── */
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Paso 1/3 — Verificando internet…','info');
+  const hasNet=await netCheck('https://www.google.com');
+  if(!hasNet){
+    showApiSt('❌ <strong>Sin conexión a internet.</strong> Verifica tu red y vuelve a intentarlo.','no');
+    return;
+  }
+
+  /* ── Paso 2: acceso a Anthropic ── */
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Paso 2/3 — Verificando acceso a api.anthropic.com…','info');
+  const hasAnthro=await netCheck('https://api.anthropic.com');
+  if(!hasAnthro){
+    showApiSt(`❌ <strong>api.anthropic.com está bloqueado</strong> en tu red.<br>
+      Soluciones posibles:<br>
+      &bull; Pide a tu área de TI que permita <code>api.anthropic.com</code><br>
+      &bull; Usa la herramienta sin el módulo de IA (modo manual disponible)<br>
+      &bull; Conéctate desde una red diferente (datos móviles, hotspot)`, 'no');
+    return;
+  }
+
+  /* ── Paso 3: API key ── */
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Paso 3/3 — Verificando API Key…','info');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,
+        'anthropic-version':'2023-06-01','anthropic-dangerous-request-builder':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5',max_tokens:5,
+        messages:[{role:'user',content:'hola'}]})
+    });
+    if(r.ok) showApiSt('✅ <strong>Conexión exitosa.</strong> La clave es válida y todo funciona.','ok');
+    else{
+      const e=await r.json().catch(()=>({}));
+      const msg=e.error?.message||`HTTP ${r.status}`;
+      if(r.status===401) showApiSt(`❌ <strong>API Key inválida o expirada.</strong><br>Obtén una nueva en <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>`,'no');
+      else showApiSt('❌ Error de API: '+escHtml(msg),'no');
+    }
+  }catch(e){
+    showApiSt(`❌ <strong>Error al llamar la API.</strong> La conexión llega a Anthropic pero la solicitud fue bloqueada (posiblemente por un proxy corporativo con inspección HTTPS).<br>
+      Detalle: <code>${escHtml(e.message)}</code>`,'no');
+  }
+}
+async function detectGeminiModels(){
+  const key=(document.getElementById('cfg-gemini-key').value||'').trim();
+  if(!key){showApiSt('⚠️ Ingresa primero tu API Key de Google.','info');return;}
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Detectando modelos disponibles para tu cuenta…','info');
+  try{
+    const r=await fetch(`${GEMINI_BASE}?key=${encodeURIComponent(key)}`);
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(d.error?.message||`HTTP ${r.status}`);
+    const all=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent'));
+    if(!all.length) throw new Error('No se encontraron modelos compatibles con generateContent.');
+    const names=all.map(m=>m.name.replace('models/',''));
+    const sel=document.getElementById('cfg-gemini-model');
+    const best=names.find(n=>n.includes('flash-lite'))||names.find(n=>n.match(/flash(?!.*preview)/i))||names.find(n=>n.includes('flash'))||names[0];
+    sel.innerHTML=names.map(n=>`<option value="${n}"${n===best?' selected':''}>${n}</option>`).join('');
+    sel.value=best;
+    localStorage.setItem('arl_gemini_model',best);
+    showApiSt(`✅ <strong>${names.length} modelos detectados.</strong> Seleccionado automáticamente: <strong>${best}</strong>. Guarda la configuración.`,'ok');
+  }catch(e){
+    showApiSt(`❌ Error detectando modelos: <code>${escHtml(e.message)}</code><br>Verifica que tu API Key sea válida.`,'no');
+  }
+}
+async function testGeminiKey(key){
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Verificando conexión con Google Gemini…','info');
+  try{
+    const rList=await fetch(`${GEMINI_BASE}?key=${encodeURIComponent(key)}`);
+    const dList=await rList.json().catch(()=>({}));
+    if(rList.ok){
+      const all=(dList.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent'));
+      if(all.length){
+        const names=all.map(m=>m.name.replace('models/',''));
+        const best=names.find(n=>n.includes('flash-lite'))||names.find(n=>n.match(/flash(?!.*preview)/i))||names.find(n=>n.includes('flash'))||names[0];
+        const sel=document.getElementById('cfg-gemini-model');
+        sel.innerHTML=names.map(n=>`<option value="${n}"${n===best?' selected':''}>${n}</option>`).join('');
+        sel.value=best;
+        localStorage.setItem('arl_gemini_model',best);
+        const url=`${GEMINI_BASE}/${best}:generateContent?key=${encodeURIComponent(key)}`;
+        const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({contents:[{parts:[{text:'hola'}]}],generationConfig:{maxOutputTokens:5}})});
+        if(r.ok) showApiSt(`✅ <strong>Conexión exitosa.</strong> Modelo seleccionado: <strong>${best}</strong> (${names.length} disponibles). Guarda la configuración.`,'ok');
+        else{
+          const e=await r.json().catch(()=>({}));
+          showApiSt('❌ Error al probar modelo: '+escHtml(e.error?.message||`HTTP ${r.status}`),'no');
+        }
+        return;
+      }
+    }
+  }catch(_){}
+  const model=document.getElementById('cfg-gemini-model').value||'gemini-2.0-flash-lite';
+  try{
+    const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:'hola'}]}],generationConfig:{maxOutputTokens:5}})});
+    if(r.ok) showApiSt('✅ <strong>Conexión exitosa con Google Gemini.</strong>','ok');
+    else{
+      const e=await r.json().catch(()=>({}));
+      const msg=e.error?.message||`HTTP ${r.status}`;
+      if(r.status===400&&msg.includes('API_KEY')) showApiSt(`❌ <strong>API Key inválida.</strong> Obtén una en <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/app/apikey</a>`,'no');
+      else showApiSt('❌ Error: '+escHtml(msg),'no');
+    }
+  }catch(e){
+    showApiSt(`❌ Error de red al conectar con Google. Verifica tu conexión.<br><code>${escHtml(e.message)}</code>`,'no');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   GROQ — API gratuita sin restricciones de región
+══════════════════════════════════════════════════ */
+const GROQ_BASE = 'https://api.groq.com/openai/v1/chat/completions';
+
+async function ensurePdfJs(){
+  if(window.pdfjsLib) return;
+  await new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload=()=>{ window.pdfjsLib.GlobalWorkerOptions.workerSrc=
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(); };
+    s.onerror=rej; document.head.appendChild(s);
+  });
+}
+
+async function extractPDFText(arrayBuffer){
+  await ensurePdfJs();
+  const pdf=await window.pdfjsLib.getDocument({data:arrayBuffer}).promise;
+  let text='';
+  for(let i=1;i<=Math.min(pdf.numPages,30);i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    text+=content.items.map(it=>it.str).join(' ')+'\n';
+  }
+  return text.trim()||'(No se pudo extraer texto del PDF)';
+}
+
+/* ───── Conversión PDF → DOCX (uso interno) ─────
+   Toma el texto del PDF (extraído con PDF.js) y lo empaqueta como un
+   archivo .docx mínimo válido (zip con XML). Devuelve un nuevo File.
+   Se llama automáticamente antes de cualquier análisis para uniformar
+   el flujo: todo termina pasando por la ruta DOCX (mammoth + IA). */
+function _xmlEsc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+async function pdfFileToDocxFile(pdfFile){
+  if(typeof JSZip==='undefined') throw new Error('JSZip no disponible (necesario para convertir PDF a DOCX)');
+  await ensurePdfJs();
+  const ab = await pdfFile.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({data:ab}).promise;
+  // Extraer texto página por página (un parráfo por línea de texto)
+  const paragraphs = [];
+  const maxPages = Math.min(pdf.numPages, 50);
+  for(let i=1;i<=maxPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    // Encabezado de página
+    paragraphs.push(`══════════ Página ${i} de ${pdf.numPages} ══════════`);
+    // Reconstruir líneas agrupando por Y (PDF.js entrega items con coordenadas)
+    const lines = {};
+    for(const it of content.items){
+      const y = it.transform ? Math.round(it.transform[5]) : 0;
+      (lines[y] = lines[y] || []).push(it.str);
+    }
+    const ys = Object.keys(lines).map(Number).sort((a,b)=>b-a); // top→bottom
+    for(const y of ys){
+      const line = lines[y].join(' ').replace(/\s+/g,' ').trim();
+      if(line) paragraphs.push(line);
+    }
+    paragraphs.push(''); // separador entre páginas
+  }
+  if(paragraphs.length===0) paragraphs.push('(No se pudo extraer texto del PDF)');
+
+  // Construir DOCX mínimo (estructura OOXML)
+  const zip = new JSZip();
+  zip.file('[Content_Types].xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`);
+  zip.folder('_rels').file('.rels',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+  const body = paragraphs.map(line =>
+    line === ''
+      ? '<w:p/>'
+      : `<w:p><w:r><w:t xml:space="preserve">${_xmlEsc(line)}</w:t></w:r></w:p>`
+  ).join('');
+  zip.folder('word').file('document.xml',
+`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr/></w:body></w:document>`);
+
+  const blob = await zip.generateAsync({
+    type:'blob',
+    mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  });
+  const newName = pdfFile.name.replace(/\.pdf$/i, '.docx');
+  return new File([blob], newName, {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+}
+
+/* Si el archivo es PDF lo convierte a DOCX; si ya es DOCX/DOC lo deja igual.
+   Cualquier otro formato (PPTX, etc.) se devuelve sin cambios para que
+   el flujo original lo maneje. */
+async function ensureDocxFromPdf(file, onStatus){
+  if(!file) return file;
+  const ext = (file.name.split('.').pop()||'').toLowerCase();
+  if(ext!=='pdf') return file;
+  if(typeof onStatus==='function') onStatus(`Convirtiendo ${file.name} a DOCX…`);
+  try{
+    return await pdfFileToDocxFile(file);
+  }catch(e){
+    console.warn('Falló conversión PDF→DOCX, se usará el PDF original:', e);
+    return file; // fallback: dejar el PDF original
+  }
+}
+
+async function analyzeGroq(txt, filename, apiKey, model, customPrompt){
+  const prompt = customPrompt || ANALYSIS_PROMPT;
+  const resp=await fetch(GROQ_BASE,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${apiKey}`},
+    body:JSON.stringify({
+      model: model,
+      messages:[{
+        role:'user',
+        content:`${prompt}\n\nDOCUMENTO: "${filename}"\n---\n${txt.slice(0,12000)}\n---`
+      }],
+      max_tokens:2500,
+      temperature:0.2
+    })
+  });
+  if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||`HTTP ${resp.status}`);}
+  const d=await resp.json();
+  return d.choices?.[0]?.message?.content||'Sin respuesta';
+}
+
+async function testGroqKey(key){
+  showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Verificando conexión con Groq…','info');
+  const model=document.getElementById('cfg-groq-model').value||'llama-3.3-70b-versatile';
+  try{
+    const r=await fetch(GROQ_BASE,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+      body:JSON.stringify({model,messages:[{role:'user',content:'hola'}],max_tokens:5})
+    });
+    if(r.ok) showApiSt(`✅ <strong>Conexión exitosa con Groq.</strong> Modelo: <strong>${model}</strong>. La clave es válida y el análisis funcionará.`,'ok');
+    else{
+      const e=await r.json().catch(()=>({}));
+      const msg=e.error?.message||`HTTP ${r.status}`;
+      if(r.status===401) showApiSt(`❌ <strong>API Key inválida.</strong> Obtén una en <a href="https://console.groq.com" target="_blank" style="color:var(--blue)">console.groq.com</a>`,'no');
+      else showApiSt('❌ Error Groq: '+escHtml(msg),'no');
+    }
+  }catch(e){
+    showApiSt(`❌ Error de red: <code>${escHtml(e.message)}</code>`,'no');
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   REPORTE DE CASO — con marco legal colombiano
+══════════════════════════════════════════════════ */
+let _repFiles = [];
+let _repText = null;
+
+function onRepDrag(e,active){
+  e.preventDefault();
+  document.getElementById('rep-drop').classList.toggle('drag',active);
+}
+function onRepDrop(e){
+  e.preventDefault();
+  document.getElementById('rep-drop').classList.remove('drag');
+  const fs=e.dataTransfer?.files;
+  if(fs && fs.length) handleRepFiles(fs);
+}
+
+function handleRepFiles(files){
+  if(!files || !files.length) return;
+  const accepted=['pdf','docx','doc'];
+  const rejected=[];
+  for(const f of files){
+    const ext=f.name.split('.').pop().toLowerCase();
+    if(!accepted.includes(ext)){rejected.push(f.name);continue;}
+    // evitar duplicados por nombre+tamaño
+    if(!_repFiles.some(x=>x.name===f.name && x.size===f.size)) _repFiles.push(f);
+  }
+  if(rejected.length) alert('Formato no soportado:\n'+rejected.join('\n'));
+  renderRepFilesList();
+  document.getElementById('rep-gen-btn').disabled = _repFiles.length===0;
+}
+
+function renderRepFilesList(){
+  const cont=document.getElementById('rep-files-list');
+  if(!cont) return;
+  if(_repFiles.length===0){cont.innerHTML='';return;}
+  cont.innerHTML = `
+    <div style="background:var(--info-bg);border:1px solid var(--info-bdr);border-radius:var(--rads);padding:10px 12px;font-size:12.5px">
+      <p style="margin:0 0 8px;color:var(--info-tx);font-weight:700;display:flex;align-items:center;gap:6px">
+        <i class="ti ti-files"></i> ${_repFiles.length} archivo${_repFiles.length>1?'s':''} cargado${_repFiles.length>1?'s':''}
+      </p>
+      ${_repFiles.map((f,i)=>`
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(0,0,0,.06)">
+          <i class="ti ti-file-${f.name.toLowerCase().endsWith('.pdf')?'type-pdf':'type-doc'}" style="font-size:16px;color:var(--blue)"></i>
+          <span style="flex:1;color:var(--tx);font-weight:600;word-break:break-all">${escHtml(f.name)}</span>
+          <span style="color:var(--mut);font-size:11px">${fmtBytes(f.size)}</span>
+          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="removeRepFile(${i})" title="Quitar"><i class="ti ti-x"></i></button>
+        </div>
+      `).join('')}
+      <button class="btn-sec" style="margin-top:8px;width:100%;font-size:12px" onclick="resetRepFile()"><i class="ti ti-trash"></i> Quitar todos</button>
+    </div>
+  `;
+}
+
+function removeRepFile(i){
+  _repFiles.splice(i,1);
+  renderRepFilesList();
+  document.getElementById('rep-gen-btn').disabled = _repFiles.length===0;
+}
+
+function resetRepFile(){
+  _repFiles=[]; _repText=null;
+  document.getElementById('rep-gen-btn').disabled=true;
+  document.getElementById('rep-status').innerHTML='';
+  document.getElementById('rep-result').innerHTML='';
+  renderRepFilesList();
+  const drop=document.getElementById('rep-drop');
+  drop.innerHTML=`
+    <i class="ti ti-files"></i>
+    <p class="drop-title">Arrastra o selecciona archivos</p>
+    <p class="drop-sub">Puedes subir varios documentos · Incapacidades · Historias clínicas · Conceptos · Exámenes</p>
+    <div class="fmt-tags">
+      <span class="fmt-tag f-pdf"><i class="ti ti-file-type-pdf"></i> PDF</span>
+      <span class="fmt-tag f-docx"><i class="ti ti-file-type-doc"></i> DOCX</span>
+    </div>
+    <input type="file" id="rep-file" accept=".pdf,.docx,.doc" multiple onchange="handleRepFiles(this.files)" style="display:none">
+  `;
+}
+
+function buildReportPrompt(tipo, anon, recom){
+  const tipoTxt = {
+    breve: 'BREVE EJECUTIVO — Estilo: claro, conciso, redacción profesional pero accesible.',
+    detallado: 'DETALLADO CLÍNICO-LABORAL — Estilo: completo, técnico, incluye todos los hallazgos médicos y laborales relevantes encontrados en los documentos.',
+    empleador: 'PARA EMPLEADOR — Estilo: enfocado en aptitud laboral, restricciones y plan de reintegro. SIN diagnósticos clínicos detallados (solo mencionar "patología osteomuscular", "patología cardiovascular", etc.).',
+    arl: 'PARA ARL / INTERCONSULTA — Estilo: formato técnico para envío a Mesa Laboral o ARL, con datos clínicos esenciales y solicitudes claras.'
+  }[tipo]||'';
+  const anonTxt = {
+    parcial: 'ANONIMIZACIÓN PARCIAL: mantén el nombre completo y la cédula. Datos sensibles (VIH, salud mental, adicciones, embarazo, orientación sexual) deben enmascararse como "diagnóstico de carácter reservado".',
+    iniciales: 'ANONIMIZACIÓN POR INICIALES: usa solo iniciales del nombre (ej. "J.G.M."). Reemplaza los últimos 4 dígitos de la cédula por "XXXX". Datos sensibles deben enmascararse.',
+    total: 'ANONIMIZACIÓN TOTAL: NO incluyas nombre, cédula, fecha de nacimiento ni ningún dato identificable. Usa "el/la trabajador(a)" o "el paciente". Datos sensibles deben enmascararse o omitirse.'
+  }[anon]||'';
+  const recomTxt = recom==='si'
+    ? 'En el bloque "Plan de Manejo y Seguimiento" INCLUYE conductas y recomendaciones concretas y accionables.'
+    : 'En el bloque "Plan de Manejo y Seguimiento" limítate a describir lo que el documento indica, SIN sugerir nuevas conductas.';
+
+  return `Eres un médico de salud ocupacional. Genera un REPORTE DE CASO consolidando la información de UNO O VARIOS documentos cargados (puede haber múltiples archivos del mismo paciente: historias clínicas, conceptos, incapacidades, exámenes, etc.). Integra todos los hallazgos en un único reporte coherente.
+
+MARCO LEGAL APLICABLE (debe cumplirse en todo momento):
+• Ley 23 de 1981 (art. 34 y 38) — La historia clínica es un documento privado y reservado. El secreto profesional médico es inviolable.
+• Resolución 1995 de 1999 del Ministerio de Salud — La historia clínica solo puede ser conocida por el equipo de salud tratante, las autoridades competentes y el usuario.
+• Ley 1581 de 2012 — Los datos de salud son datos sensibles. Requieren protección reforzada y consentimiento expreso para su tratamiento.
+
+TIPO DE REPORTE SOLICITADO: ${tipoTxt}
+NIVEL DE ANONIMIZACIÓN: ${anonTxt}
+${recomTxt}
+
+ESTRUCTURA OBLIGATORIA DEL REPORTE — RESPETA EXACTAMENTE estos encabezados, separadores y viñetas (no cambies el orden, no agregues secciones extra):
+
+• Nombre:
+• Identificación:
+• Edad:
+• EPS:
+• Cargo:
+• Fecha de consulta:
+
+________________________________________
+Antecedentes y Evolución Medica
+
+(Síntesis cronológica y narrativa de los antecedentes patológicos, quirúrgicos, laborales relevantes y la evolución del caso a partir de TODOS los documentos cargados. Si hay varias atenciones, intégralas en orden cronológico.)
+
+________________________________________
+Estado Clínico Actual
+Examen Físico:
+Estado General:
+Condición Metabólica:
+Situación Administrativa:
+
+________________________________________
+Consolidado de Incapacidades
+
+INSTRUCCIONES OBLIGATORIAS PARA ESTA SECCIÓN — DEBES CALCULAR EXPLÍCITAMENTE:
+
+1) Tabla cronológica de TODAS las incapacidades encontradas en los documentos (de más antigua a más reciente), una por fila, con este formato exacto:
+   N° | Fecha inicio (dd/mm/yyyy) | Fecha fin (dd/mm/yyyy) | Días | Dx (CIE-10 si aparece) | Entidad que emite
+
+2) Si un documento da inicio + fin pero NO los días → calcúlalos (incluyendo ambos extremos: días = (fin - inicio) + 1).
+   Si da inicio + días pero NO el fin → calcula el fin = inicio + días - 1.
+   Si solo da fin + días → calcula el inicio = fin - días + 1.
+
+3) Cierra OBLIGATORIAMENTE con estas tres líneas, en este orden y con el formato exacto (mantén las negritas con asteriscos):
+
+**TOTAL DE DÍAS DE INCAPACIDAD ACUMULADOS: XXX días**
+**FECHA DE VENCIMIENTO DE LA ÚLTIMA INCAPACIDAD: dd/mm/yyyy**
+**ESTADO A LA FECHA DEL REPORTE: [vigente / vencida hace N días / pendiente prórroga]**
+
+4) Si NO encuentras ninguna incapacidad en los documentos, escribe textualmente: "No se encontraron incapacidades en los documentos analizados." y no calcules nada.
+
+5) NO inventes incapacidades, NO sumes días que no aparecen en los documentos, NO uses cifras aproximadas — solo números exactos derivados del texto.
+
+________________________________________
+Plan de Manejo y Seguimiento
+Nueva Incapacidad:
+Pendientes:
+Mesa Laboral ARL:
+Comité Medicina Laboral Magnex:
+
+________________________________________
+AVISO DE CONFIDENCIALIDAD:
+"Este documento contiene información médica de carácter reservado conforme a la Ley 23 de 1981, la Resolución 1995 de 1999 y la Ley 1581 de 2012. Su uso está restringido al destinatario autorizado. Cualquier reproducción, distribución o divulgación no autorizada está prohibida."
+
+REGLAS ESTRICTAS:
+- NO inventes información. Solo usa datos presentes en los documentos.
+- Si un campo no aparece en los documentos, escribe "No referido en los documentos" después del campo. NO dejes el campo vacío y NO inventes.
+- Si recibes múltiples documentos, INTÉGRALOS en un único reporte (no hagas un reporte por archivo).
+- Respeta el nivel de anonimización solicitado.
+- Mantén el formato exacto (viñetas con •, líneas de "________________________________________" como separadores, dos puntos al final de cada campo).
+- Redacta en español, profesional y respetuoso.`;
+}
+
+async function generarReporte(){
+  if(!_repFiles || _repFiles.length===0){alert('Sube al menos un archivo primero');return;}
+  const provider=localStorage.getItem('arl_provider')||'groq';
+  const apiKey = provider==='groq'
+    ? localStorage.getItem('arl_groq_key')||''
+    : provider==='gemini'
+      ? localStorage.getItem('arl_gemini_key')||''
+      : localStorage.getItem('arl_api_key')||'';
+  if(!apiKey){
+    alert('Configura tu API Key en Configuración primero.');
+    goTab('cfg'); return;
+  }
+
+  const tipo=document.getElementById('rep-tipo').value;
+  const anon=document.getElementById('rep-anon').value;
+  const recom=document.getElementById('rep-recom').value;
+  const prompt=buildReportPrompt(tipo,anon,recom);
+
+  const btn=document.getElementById('rep-gen-btn');
+  btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Generando reporte…';
+
+  const setStatus=(msg)=>{
+    document.getElementById('rep-status').innerHTML=
+      `<div style="background:var(--info-bg);border:1px solid var(--info-bdr);color:var(--info-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
+        <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:16px"></i>
+        <span>${msg}</span>
+      </div>`;
+  };
+  setStatus(`Extrayendo texto de ${_repFiles.length} documento${_repFiles.length>1?'s':''}…`);
+  document.getElementById('rep-result').innerHTML='';
+
+  try{
+    // Paso 1: convertir todos los PDFs a DOCX (uso interno, flujo uniforme)
+    for(let i=0;i<_repFiles.length;i++){
+      const f=_repFiles[i];
+      if((f.name.split('.').pop()||'').toLowerCase()==='pdf'){
+        setStatus(`Convirtiendo PDF a DOCX (${i+1}/${_repFiles.length}): ${escHtml(f.name)}`);
+        _repFiles[i] = await ensureDocxFromPdf(f);
+      }
+    }
+    renderRepFilesList();
+
+    // Paso 2: extraer texto de TODOS los archivos (ya como DOCX) y concatenar
+    const partes=[];
+    for(let i=0;i<_repFiles.length;i++){
+      const f=_repFiles[i];
+      setStatus(`Extrayendo texto del archivo ${i+1} de ${_repFiles.length}: ${escHtml(f.name)}`);
+      const ext=f.name.split('.').pop().toLowerCase();
+      let txt='';
+      if(ext==='pdf'){
+        // Fallback: solo si la conversión a DOCX falló
+        const ab=await f.arrayBuffer();
+        txt=await extractPDFText(ab);
+      } else {
+        const ab=await f.arrayBuffer();
+        if(typeof mammoth==='undefined') throw new Error('mammoth.js no disponible');
+        const r=await mammoth.extractRawText({arrayBuffer:ab});
+        txt=r.value||'';
+      }
+      partes.push(`══════════ DOCUMENTO ${i+1} de ${_repFiles.length}: ${f.name} ══════════\n\n${txt}`);
+    }
+    const txtUnido = partes.join('\n\n');
+    _repText = txtUnido;
+
+    setStatus(`Generando reporte consolidado a partir de ${_repFiles.length} documento${_repFiles.length>1?'s':''}… esto puede tardar 15-30 segundos.`);
+
+    const fileLabel = _repFiles.length===1 ? _repFiles[0].name : `${_repFiles.length} documentos consolidados`;
+    // Llamar IA
+    let reporte;
+    if(provider==='groq'){
+      const model=localStorage.getItem('arl_groq_model')||'llama-3.3-70b-versatile';
+      reporte=await analyzeGroq(txtUnido, fileLabel, apiKey, model, prompt);
+    } else if(provider==='gemini'){
+      const model=localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite';
+      reporte=await analyzeGeminiText(txtUnido+'\n\n'+prompt, fileLabel, apiKey, model);
+    } else {
+      const model=localStorage.getItem('arl_model')||'claude-sonnet-4-5';
+      reporte=await analyzeText(txtUnido+'\n\n'+prompt, fileLabel, apiKey, model);
+    }
+
+    showReporte(reporte);
+    document.getElementById('rep-status').innerHTML='';
+  }catch(e){
+    document.getElementById('rep-status').innerHTML=
+      `<div style="background:var(--err-bg);border:1px solid var(--err-bdr);color:var(--err-tx);padding:11px 14px;border-radius:var(--rads);font-size:13px">
+        <i class="ti ti-alert-circle"></i> <strong>Error:</strong> ${escHtml(e.message)}
+      </div>`;
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-sparkles"></i> Generar reporte';
+  }
+}
+
+function showReporte(texto){
+  const fecha=new Date().toLocaleString('es-CO',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('rep-result').innerHTML=`
+    <div class="rep-result-card">
+      <div class="rep-result-hdr">
+        <p class="rep-result-title"><i class="ti ti-file-text-shield"></i> Reporte generado · ${escHtml(fecha)}</p>
+        <div class="rep-result-actions">
+          <button onclick="copiarReporte()" title="Copiar"><i class="ti ti-copy"></i> Copiar</button>
+          <button onclick="descargarReporte()" title="Descargar"><i class="ti ti-download"></i> Descargar</button>
+          <button onclick="imprimirReporte()" title="Imprimir"><i class="ti ti-printer"></i> Imprimir</button>
+        </div>
+      </div>
+      <div class="rep-result-body" id="rep-result-body">${escHtml(texto)}</div>
+      <div class="rep-result-foot">
+        <i class="ti ti-shield-lock"></i>
+        <span><strong>Documento confidencial.</strong> Información protegida por la Ley 23 de 1981, la Resolución 1995 de 1999 y la Ley 1581 de 2012. Distribución restringida al destinatario autorizado.</span>
+      </div>
+    </div>
+  `;
+}
+
+function copiarReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  navigator.clipboard.writeText(el.innerText).then(()=>{
+    const t=document.getElementById('toast');
+    if(t){t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1500);}
+  });
+}
+function descargarReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  const fecha=new Date().toISOString().slice(0,10);
+  const nombre = (_repFiles && _repFiles.length===1)
+    ? _repFiles[0].name.replace(/\.[^.]+$/,'')
+    : (_repFiles && _repFiles.length>1 ? `consolidado_${_repFiles.length}docs` : 'caso');
+  const blob=new Blob([el.innerText],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`Reporte_${nombre}_${fecha}.txt`;
+  a.click(); URL.revokeObjectURL(url);
+}
+function imprimirReporte(){
+  const el=document.getElementById('rep-result-body');
+  if(!el) return;
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>Reporte de Caso</title>
+    <style>body{font-family:Arial,sans-serif;max-width:780px;margin:30px auto;padding:0 25px;line-height:1.6;color:#222}
+    .hdr{border-bottom:2px solid #003087;padding-bottom:10px;margin-bottom:18px}
+    .hdr h1{font-size:18px;color:#003087;margin:0}
+    .meta{font-size:11px;color:#666;margin-top:4px}
+    .body{white-space:pre-wrap;font-size:13px}
+    .foot{border-top:1px solid #ddd;margin-top:25px;padding-top:12px;font-size:10.5px;color:#7c4008;background:#fef7e6;padding:10px;border-radius:4px}
+    </style></head><body>
+    <div class="hdr"><h1>Reporte de Caso</h1>
+    <div class="meta">Generado: ${new Date().toLocaleString('es-CO')} · Médico Cluster · José Gómez</div></div>
+    <div class="body">${escHtml(el.innerText)}</div>
+    <div class="foot"><strong>Documento confidencial.</strong> Información protegida por la Ley 23 de 1981, Resolución 1995 de 1999 y Ley 1581 de 2012. Distribución restringida.</div>
+    <script>window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
+}
+
+function showApiSt(msg,type){
+  /* msg puede contener HTML seguro (los callers escapan datos externos con escHtml) */
+  const cls=type==='ok'?'ok':type==='info'?'info':'no';
+  document.getElementById('api-status').innerHTML=
+    `<span class="st-badge st-${cls}" style="white-space:normal;line-height:1.6">${msg}</span>`;
+}
+async function changePin(){
+  const old=(document.getElementById('pin-old').value||'').trim();
+  const n1 =(document.getElementById('pin-new').value||'').trim();
+  const n2 =(document.getElementById('pin-new2').value||'').trim();
+  const st  =document.getElementById('pin-status');
+  if(!old||!n1||!n2){st.innerHTML='<span class="st-badge st-no">Completa todos los campos.</span>';return;}
+  if(!/^\d{4}$/.test(n1)){st.innerHTML='<span class="st-badge st-no">El nuevo PIN debe ser de 4 dígitos.</span>';return;}
+  if(n1!==n2){st.innerHTML='<span class="st-badge st-no">Los PINs nuevos no coinciden.</span>';return;}
+  if(await hashPin(old)!==localStorage.getItem(SALT_KEY)){st.innerHTML='<span class="st-badge st-no">PIN actual incorrecto.</span>';return;}
+  localStorage.setItem(SALT_KEY,await hashPin(n1));
+  ['pin-old','pin-new','pin-new2'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('lock-hint').textContent='Ingresa tu PIN para continuar';
+  st.innerHTML='<span class="st-badge st-ok">✅ PIN cambiado correctamente.</span>';
+}
+function saveLockT(){
+  localStorage.setItem('arl_lock_t',document.getElementById('cfg-lock-t').value);
+  resetLockT(); showToast();
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify({inc:DB.inc,exa:DB.exa,exportedAt:new Date().toISOString()},null,2)],
+    {type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='arl_workspace_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function exportCSV(){
+  const H=['Nombre','Cédula','Contrato','Cargo','Tipo','Fecha Examen','Concepto','Hallazgo','Plan','Registrado'];
+  const rows=DB.exa.persons.map(p=>[
+    p.nombre,p.cc,p.contrato,p.cargo,TLBL[p.tipo],p.fecha,CLBL[p.concepto],p.alt,p.plan,p.ingreso
+  ].map(v=>`"${(v||'').replace(/"/g,'""')}"`));
+  const csv=[H.join(','),...rows.map(r=>r.join(','))].join('\r\n');
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='arl_examenes_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(input){
+  const file=input.files[0]; if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(!confirm(`¿Importar datos? Esto reemplazará los datos actuales.`))return;
+      if(d.inc) DB.inc={...DB.inc,...d.inc};
+      if(d.exa) DB.exa=d.exa;
+      dbSave(); render(); alert('✅ Datos importados correctamente.');
+    }catch(err){ alert('Error al importar: '+err.message); }
+  };
+  r.readAsText(file); input.value='';
+}
+function clearAll(){
+  if(!confirm('¿Borrar TODOS los datos personalizados?\n(Los casos pre-cargados se mantienen)'))return;
+  if(!confirm('Confirmación final: ¿continuar?'))return;
+  DB.inc.cases={}; DB.inc.custom=[]; DB.inc.openCustom={};
+  DB.exa={persons:[],open:{}}; DB.docs=[];
+  ensureIncCases();
+  dbSave(); render();
+  alert('Datos personalizados eliminados.');
+}
+
+/* ════════════════════════════════════════════
+   INICIO
+════════════════════════════════════════════ */
+initSecurity();
+</script></body></html>
