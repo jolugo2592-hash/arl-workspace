@@ -695,9 +695,10 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
       <div class="cfg-row">
         <label>Modelo Gemini</label>
         <select id="cfg-gemini-model">
-          <option value="gemini-1.5-flash" selected>Gemini 1.5 Flash (gratis · rápido)</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro (gratis · más preciso)</option>
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash (gratis · más nuevo)</option>
+          <option value="gemini-2.0-flash-lite" selected>Gemini 2.0 Flash Lite (gratis · recomendado)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash (gratis · más potente)</option>
+          <option value="gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash (gratis · experimental)</option>
+          <option value="gemini-pro">Gemini Pro (gratis · alternativa)</option>
         </select>
       </div>
       <div class="cfg-note" style="background:var(--ok-bg);border-color:var(--ok-bdr);color:var(--ok-tx)">
@@ -993,7 +994,7 @@ function dbLoad(){
   const gk=document.getElementById('cfg-gemini-key');
   if(gk) gk.value=localStorage.getItem('arl_gemini_key')||'';
   const gm=document.getElementById('cfg-gemini-model');
-  if(gm) gm.value=localStorage.getItem('arl_gemini_model')||'gemini-1.5-flash';
+  if(gm) gm.value=localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite';
   const ki=document.getElementById('cfg-api-key');
   if(ki) ki.value=localStorage.getItem('arl_api_key')||'';
   const ms=document.getElementById('cfg-model');
@@ -1866,7 +1867,7 @@ async function processDoc(file, apiKey, provider='gemini'){
 
   const isGemini = provider==='gemini';
   const model = isGemini
-    ? (localStorage.getItem('arl_gemini_model')||'gemini-1.5-flash')
+    ? (localStorage.getItem('arl_gemini_model')||'gemini-2.0-flash-lite')
     : (localStorage.getItem('arl_model')||'claude-sonnet-4-5');
 
   try{
@@ -2005,7 +2006,7 @@ async function analyzeText(txt,filename,apiKey,model){
 /* ══════════════════════════════════════════════════
    GOOGLE GEMINI — API gratuita
 ══════════════════════════════════════════════════ */
-const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1/models';
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 
 async function analyzeGeminiPDF(b64, apiKey, model){
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
@@ -2267,7 +2268,7 @@ async function testApiKey(){
 }
 async function testGeminiKey(key){
   showApiSt('<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Verificando conexión con Google Gemini…','info');
-  const model=document.getElementById('cfg-gemini-model').value||'gemini-1.5-flash';
+  const model=document.getElementById('cfg-gemini-model').value||'gemini-2.0-flash-lite';
   try{
     const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(key)}`;
     const r=await fetch(url,{
