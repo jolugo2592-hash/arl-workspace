@@ -695,8 +695,8 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg)
       <div class="cfg-row">
         <label>Modelo Gemini</label>
         <select id="cfg-gemini-model">
-          <option value="gemini-1.5-flash" selected>Gemini 1.5 Flash (gratis · rápido)</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro (gratis · más preciso)</option>
+          <option value="gemini-1.5-flash-latest" selected>Gemini 1.5 Flash (gratis · rápido)</option>
+          <option value="gemini-1.5-pro-latest">Gemini 1.5 Pro (gratis · más preciso)</option>
           <option value="gemini-2.0-flash">Gemini 2.0 Flash (gratis · más nuevo)</option>
         </select>
       </div>
@@ -2005,7 +2005,7 @@ async function analyzeText(txt,filename,apiKey,model){
 /* ══════════════════════════════════════════════════
    GOOGLE GEMINI — API gratuita
 ══════════════════════════════════════════════════ */
-const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
+const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1/models';
 
 async function analyzeGeminiPDF(b64, apiKey, model){
   const url=`${GEMINI_BASE}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
